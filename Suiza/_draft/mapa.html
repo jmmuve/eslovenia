@@ -1,0 +1,148 @@
+<!-- ================================================================
+  mapa.html — MAPA LEAFLET AUTOCONTENIDO
+  ⚠️  L.map() existe SOLO en este fichero. No añadir en base.html ni end.html.
+  ⚠️  Leaflet en base.html: SIN integrity ni crossorigin.
+================================================================ -->
+
+<section id="mapa-ruta" aria-labelledby="mapa-title">
+  <h2 class="section-title" id="mapa-title">🗺️ Mapa de la Ruta</h2>
+  <div id="route-map" style="height:520px;width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2563eb"></div> Día 1 — Llegada Zúrich · Lucerna</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#16a34a"></div> Días 2–3 — Monte Pilatus / Rigi · Lucerna ciudad</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#9333ea"></div> Día 4 — Trümmelbach · Interlaken · Grindelwald</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#dc2626"></div> Día 5 — Jungfraujoch (3.454 m) ★</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#0891b2"></div> Día 6 — First · Bachalpsee · Männlichen</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#6b7280"></div> Día 7 — Berna (capital UNESCO)</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#ca8a04"></div> Día 8 — Ginebra · Montreux · Chillon</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#0f766e"></div> Día 9 — Lausana · Museo Olímpico</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#be185d"></div> Día 10 — Regreso desde GVA</div>
+  </div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MAPA LEAFLET — única inicialización en todo el HTML
+   ⚠️  NO duplicar este bloque en base.html ni end.html
+══════════════════════════════════════════════════════════════ */
+(function() {
+  function initRouteMap() {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var map = L.map('route-map', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([46.85, 7.5], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    function mkIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: '<svg viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="' + color + '"/><circle cx="12" cy="11" r="5" fill="#fff"/></svg>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    var days = [
+      { color: '#2563eb', points: [
+        { lat: 47.4582, lng: 8.5559, name: 'Zúrich (ZRH)', info: 'Día 1 — Llegada' },
+        { lat: 47.0502, lng: 8.3093, name: 'Lucerna', info: 'Días 1–3 — Base' }
+      ]},
+      { color: '#16a34a', points: [
+        { lat: 46.9787, lng: 8.2521, name: 'Monte Pilatus (2.132 m)', info: 'Día 2 — Excursión' },
+        { lat: 47.0565, lng: 8.4861, name: 'Monte Rigi (1.798 m)', info: 'Día 2 — Alternativa' },
+        { lat: 47.0508, lng: 8.3060, name: 'Puente Kapellbrücke', info: 'Día 3' },
+        { lat: 47.0573, lng: 8.3102, name: 'Löwendenkmal', info: 'Día 3' },
+        { lat: 47.0496, lng: 8.3358, name: 'Museum of Transport', info: 'Día 3' }
+      ]},
+      { color: '#9333ea', points: [
+        { lat: 46.5783, lng: 7.9126, name: 'Cascadas Trümmelbach', info: 'Día 4' },
+        { lat: 46.6862, lng: 7.8632, name: 'Interlaken', info: 'Día 4' },
+        { lat: 46.6243, lng: 8.0412, name: 'Grindelwald', info: 'Días 4–6 — Base' }
+      ]},
+      { color: '#dc2626', points: [
+        { lat: 46.5931, lng: 7.9083, name: 'Lauterbrunnen', info: 'Día 5' },
+        { lat: 46.5472, lng: 7.9853, name: 'Jungfraujoch (3.454 m)', info: 'Día 5 — Top of Europe ★' }
+      ]},
+      { color: '#0891b2', points: [
+        { lat: 46.6583, lng: 8.0584, name: 'First (2.168 m)', info: 'Día 6' },
+        { lat: 46.6672, lng: 8.0634, name: 'Bachalpsee', info: 'Día 6' },
+        { lat: 46.6269, lng: 7.9432, name: 'Männlichen', info: 'Día 6' }
+      ]},
+      { color: '#6b7280', points: [
+        { lat: 46.9480, lng: 7.4474, name: 'Berna', info: 'Día 7 — Capital federal UNESCO' },
+        { lat: 46.9479, lng: 7.4474, name: 'Zytglogge', info: 'Día 7' },
+        { lat: 46.9494, lng: 7.4591, name: 'Rosengarten', info: 'Día 7' },
+        { lat: 46.9469, lng: 7.4617, name: 'BärenPark', info: 'Día 7' }
+      ]},
+      { color: '#ca8a04', points: [
+        { lat: 46.2044, lng: 6.1432, name: 'Ginebra', info: 'Días 8–10 — Base' },
+        { lat: 46.2059, lng: 6.1559, name: "Jet d'Eau", info: 'Día 8' },
+        { lat: 46.2262, lng: 6.1393, name: 'Palacio de las Naciones (ONU)', info: 'Día 8' },
+        { lat: 46.4312, lng: 6.9107, name: 'Montreux', info: 'Día 8 tarde' },
+        { lat: 46.4147, lng: 6.9279, name: 'Castillo de Chillon', info: 'Día 8 tarde' }
+      ]},
+      { color: '#0f766e', points: [
+        { lat: 46.5197, lng: 6.6323, name: 'Lausana', info: 'Día 9' },
+        { lat: 46.5067, lng: 6.6296, name: 'Museo Olímpico', info: 'Día 9' },
+        { lat: 46.5066, lng: 6.6278, name: 'Puerto de Ouchy', info: 'Día 9' }
+      ]},
+      { color: '#be185d', points: [
+        { lat: 46.2380, lng: 6.1089, name: 'Aeropuerto Ginebra (GVA)', info: 'Día 10 — Salida' }
+      ]}
+    ];
+
+    var allLatLngs = [];
+
+    days.forEach(function(day) {
+      var dayLatLngs = [];
+      day.points.forEach(function(p) {
+        var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
+        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        allLatLngs.push([p.lat, p.lng]);
+        dayLatLngs.push([p.lat, p.lng]);
+      });
+      if (dayLatLngs.length > 1) {
+        L.polyline(dayLatLngs, { color: day.color, weight: 3, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+      }
+    });
+
+    var transfers = [
+      { from: [47.4582, 8.5559], to: [47.0502, 8.3093] },
+      { from: [47.0502, 8.3093], to: [46.6243, 8.0412] },
+      { from: [46.6243, 8.0412], to: [46.9480, 7.4474] },
+      { from: [46.9480, 7.4474], to: [46.2044, 6.1432] },
+      { from: [46.2044, 6.1432], to: [46.4312, 6.9107] },
+      { from: [46.4312, 6.9107], to: [46.5197, 6.6323] },
+      { from: [46.5197, 6.6323], to: [46.2380, 6.1089] }
+    ];
+
+    transfers.forEach(function(t) {
+      L.polyline([t.from, t.to], { color: '#d1d5db', weight: 2, opacity: 0.4, dashArray: '4 8' }).addTo(map);
+    });
+
+    if (allLatLngs.length > 0) {
+      map.fitBounds(allLatLngs, { padding: [30, 30] });
+    }
+
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+
+    // Forzar re-renderizado por si el contenedor no tenía dimensiones definitivas al init
+    setTimeout(function() { map.invalidateSize(); }, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouteMap);
+  } else {
+    initRouteMap();
+  }
+})();
+</script>

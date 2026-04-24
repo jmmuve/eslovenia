@@ -1,23 +1,39 @@
 # SPECS.md — Sistema de Generación de Guías de Viaje Web
 
-> **Propósito**: Documento operativo completo para que Claude pueda generar desde cero una guía de viaje interactiva para cualquier destino. Define el pipeline de tres ficheros, los procesos de transformación de datos, las fuentes de información y la especificación técnica completa del HTML resultante.
+> **Propósito**: Documento operativo completo para que Claude pueda generar desde cero una guía de viaje interactiva para cualquier destino. Define el pipeline de cuatro fases, los procesos de transformación de datos, y la especificación técnica completa del HTML resultante.
 >
-> **Referencia de implementación**: El viaje a Eslovenia (julio 2026) es el caso base. Los ficheros resultantes son `datos-enriquecidos.md` e `index.html`.
+> **Fuentes de datos e imágenes**: centralizadas en **[`FUENTES.md`](./FUENTES.md)**. Este documento las referencia pero no las duplica. Actualizar `FUENTES.md` para añadir o sustituir fuentes sin tocar este fichero.
+>
+> **Referencia de implementación**: El viaje a Eslovenia (julio 2026) es el caso base. Los ficheros resultantes son `datos-enriquecidos.md`, `draft.html` e `index.html`.
 
 ---
 
 ## El Pipeline
 
 ```
+requerimientos.yaml
+    │
+    │  FASE 0: Generación del datos-base.md
+    │  (Claude interpreta los requisitos mínimos y genera el fichero base)
+    ▼
 datos-base.md
     │
     │  FASE 1: Investigación y enriquecimiento
     │  (Claude busca, expande y estructura los datos)
+    │  ✦ Incluye IDs de Pexels verificados al final del fichero
     ▼
-datos-enriquecidos.md
+datos-enriquecidos.md  ←── para viajes 8+ días: ficheros por zona (ver §1.6)
     │
-    │  FASE 2: Generación del HTML
-    │  (Claude produce el index.html completo)
+    │  FASE 2: Generación del borrador HTML
+    │  (Claude produce draft.html ensamblando _draft/*.html con _templates/ como referencia)
+    │  ✦ Lee _templates/base-styles.css, base-scripts.js y mapa-template.html
+    │  ✦ Ensamblado: cat base.html mapa.html dias-*.html end.html > draft.html
+    ▼                                    ↑
+draft.html              _templates/base-styles.css
+    │                   _templates/base-scripts.js
+    │                   _templates/mapa-template.html
+    │  FASE 3: Datos reales + presupuesto
+    │  (Claude busca vuelos, hoteles y actividades reales y genera index.html)
     ▼
 index.html
 ```
@@ -28,13 +44,14 @@ Cada fase tiene entradas, procesos y salidas definidos. Este documento los espec
 
 ## Índice
 
-- [FASE 0 — Crear datos-base.md](#fase-0--crear-datos-basemd)
+- [FASE 0 — requerimientos.yaml → datos-base.md](#fase-0--requerimientosyaml--datos-basemd)
 - [FASE 1 — datos-base.md → datos-enriquecidos.md](#fase-1--datos-basemd--datos-enriquecidosmd)
   - [1.1 Proceso general de enriquecimiento](#11-proceso-general-de-enriquecimiento)
   - [1.2 Fuentes de información por tipo de dato](#12-fuentes-de-información-por-tipo-de-dato)
   - [1.3 Schema del fichero enriquecido](#13-schema-del-fichero-enriquecido)
   - [1.4 Transformaciones sección a sección](#14-transformaciones-sección-a-sección)
-- [FASE 2 — datos-enriquecidos.md → index.html](#fase-2--datos-enriquecidosmd--indexhtml)
+- [FASE 2 — datos-enriquecidos.md → draft.html](#fase-2--datos-enriquecidosmd--drafthtml)
+- [FASE 3 — draft.html → index.html (datos reales + presupuesto)](#fase-3--drafthtml--indexhtml-datos-reales--presupuesto)
   - [2.1 Stack técnico](#21-stack-técnico)
   - [2.2 Paleta de colores](#22-paleta-de-colores)
   - [2.3 Tipografías](#23-tipografías)
@@ -53,9 +70,84 @@ Cada fase tiene entradas, procesos y salidas definidos. Este documento los espec
 
 ---
 
-# FASE 0 — Crear `datos-base.md`
+# FASE 0 — `requerimientos.yaml` → `datos-base.md`
 
-`datos-base.md` es el fichero de entrada mínimo. Contiene solo los datos que el usuario conoce de antemano. Claude lo usa como punto de partida para la Fase 1.
+`requerimientos.yaml` es el punto de entrada mínimo del pipeline. Contiene únicamente los datos que el usuario conoce antes de planificar el viaje. A partir de él, Claude genera `datos-base.md`, que será la entrada de la Fase 1.
+
+## 0.1 Estructura de requerimientos.yaml
+
+```yaml
+zona: [descripción libre de la zona o tipo de viaje]
+
+fechas: DD/MM/AAAA - DD/MM/AAAA   # la duración se calcula a partir de aquí
+
+viajeros:
+  - [Nombre 1]
+  - [Nombre 2]
+  - ...
+
+vuelos:
+  directos: si / no
+  evitar_low_cost: si / no
+  horario_salida: HH:MM - HH:MM
+  horario_llegada: HH:MM - HH:MM
+  preferencia: barato / rapido
+
+vehiculo:
+  alquiler: si / no
+  plazas: [número]
+  con_equipaje: si / no
+
+preferencias:
+  - [condicionante libre]
+  - [condicionante libre]
+```
+
+### Ejemplo real (Suiza)
+
+```yaml
+zona: Naturaleza alpina y ciudades emblemáticas
+
+fechas: 02/08/2026 - 11/08/2026
+
+viajeros:
+  - Juanma
+  - Neli
+  - Alicia
+  - Diego
+  - Gemma
+  - Paco
+
+vuelos:
+  directos: si
+  evitar_low_cost: si
+  horario_salida: 10:00 - 14:00
+  horario_llegada: 18:00 - 20:00
+  preferencia: barato
+
+vehiculo:
+  alquiler: si
+  plazas: 9
+  con_equipaje: si
+
+preferencias:
+  - parking incluido
+  - vignette de autopista suiza obligatoria
+  - francos suizos o tarjeta sin comisiones
+```
+
+## 0.2 Proceso de generación de datos-base.md
+
+A partir de `requerimientos.yaml`, Claude debe:
+
+1. **Calcular la duración** del viaje a partir del rango de fechas
+2. **Proponer un itinerario** día a día coherente con la zona descrita, las fechas y el número de viajeros
+3. **Proponer aeropuertos** de origen (MAD) y destino más lógicos para la zona, respetando los filtros de vuelo indicados
+4. **Proponer alojamientos por zona** distribuidos según el itinerario (sin nombres concretos, solo ciudad/zona y número de noches)
+5. **Traducir las preferencias de vehículo** al formato de datos-base.md (tipo, recogida, devolución)
+6. **Incluir las preferencias** como notas adicionales
+
+> Los vuelos en `datos-base.md` generado desde `requerimientos.yaml` se marcan como `(por confirmar)` hasta que el usuario los concrete.
 
 ## Qué debe contener datos-base.md
 
@@ -263,11 +355,20 @@ PASO 2 — Clima por zonas (una sola vez)
    → Fuente: Climate-data.org, WeatherSpark
 
 PASO 3 — Imagen hero del destino (una sola vez)
-   → Buscar en Pexels una foto panorámica del destino general
-   → Anotar el ID
+   → Comprobar _cache/pexels-ids.md primero — si hay un ID para el destino, usarlo
+   → Si no está en caché: WebFetch("https://www.pexels.com/search/[destino en inglés]/")
+   → Extraer ID del HTML y verificar que la URL de producción carga correctamente
+   → ⛔ BLOQUEANTE: No pasar a PASO 4 sin al menos 1 ID de hero verificado (✅)
+   → Añadir el ID verificado a _cache/pexels-ids.md
 
 PASO 4 — Para cada DÍA del itinerario, en orden cronológico:
    4a. Imagen del día (Pexels ID para el header de la sección)
+       ⛔ BLOQUEANTE: buscar y verificar el ID ANTES de continuar con 4b–4e
+       → Comprobar _cache/pexels-ids.md — si hay un ID para el lugar principal del día, usarlo
+       → Si no está en caché: buscar por lugar exacto → zona → región → tipo de paisaje
+       → Verificar el ID con la URL de producción (w=1200&h=400&fit=crop)
+       → Si después de 3 intentos no hay ID válido, registrar "GRADIENTE" en la tabla
+       → Nunca omitir este paso ni marcarlo como pendiente — decidir ya (ID ✅ o GRADIENTE)
    4b. Distancia y tiempo del tramo del día (Google Maps)
    4c. Para cada LUGAR del día:
        - Historia (Wikipedia + Lonely Planet)
@@ -313,7 +414,7 @@ PASO 8 — Checklist pre-viaje (una sola vez)
 
 ## 1.2 Fuentes de información por tipo de dato
 
-> Todas las instrucciones de esta sección son genéricas y aplicables a cualquier destino. Sustituir `[Lugar]`, `[Ciudad]`, `[País]` por los valores reales del viaje.
+> Las URLs, patrones de búsqueda y notas de uso de cada fuente están centralizadas en **[`FUENTES.md`](./FUENTES.md)**. Este documento solo describe el proceso y los criterios de uso. Actualizar `FUENTES.md` cuando se añadan o sustituyan fuentes.
 
 Los datos del fichero enriquecido tienen dos orígenes distintos:
 
@@ -456,14 +557,7 @@ Bled (vuelta a base)
 2. O buscar directamente: `visit[país].com` / `[país].travel` / `[país]tourism.com`
 3. Verificar que es la web del gobierno o entidad nacional (no una agencia privada)
 
-| Fuente | URL | Qué buscar |
-|---|---|---|
-| Wikipedia ES/EN | `https://es.wikipedia.org/wiki/[País]` | Capital, moneda, idioma oficial, superficie, población |
-| Lonely Planet | `https://www.lonelyplanet.com/[pais]` → sección "Practical information" | Visados, electricidad, moneda, costumbres |
-| Web de turismo oficial | Buscar como se indica arriba | Información de entrada, recomendaciones oficiales |
-| Web de autopistas del país | Buscar `[país] vignette` o `[país] autopista peaje` | Peajes, vinjetas, coste y cómo comprarlas |
-| Ministerio de Exteriores ES | `https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-de-pais.aspx?IdPais=[código]` | Seguridad, emergencias, recomendaciones de viaje para españoles |
-| WikiTravel | `https://wikitravel.org/es/[País]` | Costumbres locales, propinas, transporte, consejos prácticos |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Información general del país
 
 **Datos a recopilar**:
 - País, capital, moneda, idioma oficial
@@ -491,14 +585,7 @@ Bled (vuelta a base)
 4. Buscar en Google `[lugar] historia curiosidades turismo` para encontrar artículos de blogs de viaje con datos más locales
 5. Consultar la web de turismo oficial del país (encontrada en el paso anterior) para descripciones oficiales
 
-| Fuente | URL | Uso |
-|---|---|---|
-| Wikipedia ES | `https://es.wikipedia.org/wiki/[Lugar]` | Historia, datos básicos, fechas de fundación, contexto |
-| Wikipedia EN | `https://en.wikipedia.org/wiki/[Place]` | Más detallado; usar cuando el artículo en español es escaso |
-| Lonely Planet | `https://www.lonelyplanet.com/` + país + lugar | Descripciones narrativas, por qué vale la pena visitar |
-| TripAdvisor | `https://www.tripadvisor.es/Tourism-[código]-[Ciudad].html` | Qué ver según viajeros reales, valoraciones |
-| Web de turismo oficial | (encontrada en paso de "Datos del país") | Descripción oficial del lugar |
-| Blogs de viaje | Buscar `[lugar] guía visita qué ver` en Google | Datos locales, consejos prácticos, itinerarios reales |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Historia e información turística
 
 **Qué extraer**:
 - Fecha de fundación o construcción (si es un monumento o ciudad histórica)
@@ -521,14 +608,7 @@ Bled (vuelta a base)
 5. Para cada punto de interés: buscar una descripción de 2–4 líneas que explique qué es y por qué merece la pena
 6. Incluir solo los puntos que encajan con el tiempo disponible ese día (no añadir más de lo que el grupo puede visitar)
 
-| Fuente | URL | Uso |
-|---|---|---|
-| TripAdvisor Atracciones | `https://www.tripadvisor.es/Attractions-[código]-[Ciudad].html` | Lista ordenada por popularidad con fotos y valoraciones |
-| Google Maps | Buscar el lugar → panel lateral "Lugares populares" | Mapa con clustering de puntos de interés |
-| Lonely Planet | `https://www.lonelyplanet.com/` + ruta al lugar → "Sights" | Descripción editorial profesional |
-| Wikipedia | Artículo del lugar → sección "Monumentos y lugares de interés" | Lista exhaustiva con historia de cada punto |
-| GetYourGuide | `https://www.getyourguide.es/[ciudad]-l[id]/` | Actividades con descripción detallada y tiempo estimado |
-| Civitatis | `https://www.civitatis.com/es/[ciudad]/` | Excursiones y actividades; útil para entender qué combina bien |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Qué ver y hacer
 
 **Qué registrar por punto de interés**:
 - Nombre oficial (en el idioma local y en español si difiere)
@@ -552,14 +632,7 @@ Bled (vuelta a base)
 5. Para horarios de temporada alta/baja: buscar `[lugar] horarios [mes del viaje]`
 6. Anotar si necesita reserva previa (muchos sitios importantes requieren reserva online)
 
-| Fuente | URL | Qué buscar |
-|---|---|---|
-| Web oficial del lugar | (buscar en Google `[nombre] official tickets`) | Precios oficiales, horarios, cómo reservar |
-| GetYourGuide | `https://www.getyourguide.es/` + lugar | Precios de entrada + tours; fiable y actualizado |
-| Civitatis | `https://www.civitatis.com/es/[ciudad]/` | Alternativa a GetYourGuide, muchas veces con entradas directas |
-| TripAdvisor | Ficha del lugar → pestaña "Info" | Precios y horarios reportados por viajeros (contrastar) |
-| Google Maps | Ficha del lugar → "Horario de apertura" | Horarios actualizados por el propio establecimiento |
-| Musement | `https://www.musement.com/es/` | Entradas con fecha para museos y monumentos populares |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Entradas, precios y horarios
 
 **Datos a recopilar**:
 - Precio de entrada adultos (€), precio reducido si existe (niños, jubilados, estudiantes)
@@ -582,13 +655,7 @@ Bled (vuelta a base)
 4. Contrastar con WeatherSpark para confirmar el patrón: `https://es.weatherspark.com/y/[codigo]/Tiempo-en-[Ciudad]`
 5. Redactar una descripción breve de las condiciones esperadas (no solo números)
 
-| Fuente | URL | Qué buscar |
-|---|---|---|
-| Climate-data.org | `https://es.climate-data.org/europa/[pais]/[ciudad]/` | Temperatura media, máx/mín por mes, precipitaciones mm |
-| WeatherSpark | `https://es.weatherspark.com/` + ciudad | Gráficas interactivas de temperatura, lluvia, horas de sol |
-| Wikipedia | `https://es.wikipedia.org/wiki/[Ciudad]` → sección Clima | Tabla de datos climáticos mensuales |
-| Meteoblue | `https://www.meteoblue.com/es/tiempo/historyclimate/climatemodelled/[ciudad]` | Histórico climático detallado |
-| AEMET equivalente local | Buscar `[país] servicio meteorológico nacional` | Datos oficiales del país |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Clima
 
 **Datos a extraer por zona**:
 - Temperatura media, máxima y mínima en el mes del viaje
@@ -601,7 +668,9 @@ Bled (vuelta a base)
 
 ### 🖼️ Imágenes (IDs de Pexels)
 
-**Cuándo**: Una vez recopilados todos los lugares, buscar una imagen por lugar y una imagen hero general.
+**Cuándo**: Buscar el ID de cada lugar **en el mismo momento** en que se investiga ese lugar (dentro del Paso 4 del orden de ejecución). No dejarlo para el final. Al terminar FASE 1, rellenar la tabla `## 🖼️ IDs de Pexels verificados` del schema con todos los IDs encontrados.
+
+> **Por qué importa el momento**: si se buscan los IDs al final se pierde el contexto de cada lugar. Además, tenerlos en `datos-enriquecidos.md` evita que el agente de FASE 2 tenga que hacer búsquedas adicionales, reduciendo el tiempo de generación HTML en ~3–5 minutos.
 
 **Proceso paso a paso**:
 
@@ -624,30 +693,17 @@ Claude no puede navegar visualmente Pexels. Usar este proceso:
    ```
    Los resultados de Google suelen incluir la URL con el ID numérico visible.
 
-4. **Verificar el ID obtenido** construyendo la URL de producción y comprobando que es coherente:
+4. **Verificar el ID obtenido** — la presencia del tag `<img>` no es suficiente. Verificar que la URL devuelve una imagen real (>5 KB):
    ```
    https://images.pexels.com/photos/[ID]/pexels-photo-[ID].jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop
    ```
-   Si el ID es válido, esta URL devuelve una imagen JPEG. Si falla, intentar con el siguiente ID encontrado.
+   Un ID válido devuelve una imagen JPEG de al menos 10 KB. Pexels puede devolver HTTP 200 con un placeholder de ~600 bytes para IDs inválidos o eliminados — ese caso también es un fallo. Si el tamaño es <5 KB, el ID no es válido: intentar con el siguiente.
 
 5. **Si no hay fotos del lugar exacto**, buscar por términos más generales en este orden: nombre de la región → nombre del país → tipo de paisaje (mountain lake, alpine village, mediterranean coast...).
 
 6. **Último recurso**: usar gradiente CSS como fallback — no inventar un ID que no se ha verificado.
 
-**Formato de URL de producción**:
-```
-https://images.pexels.com/photos/{ID}/pexels-photo-{ID}.jpeg?auto=compress&cs=tinysrgb&w={W}&h={H}&fit=crop
-```
-
-**Tamaños necesarios por uso**:
-| Uso | Ancho (w) | Alto (h) |
-|---|---|---|
-| Hero (imagen principal de la página) | 1920 | 1080 |
-| OG Image (meta tag para redes sociales) | 1200 | 630 |
-| Header de día (cabecera de sección) | 1200 | 400 |
-| Imagen grande en acordeón | 800 | 450 |
-| Thumbnail del acordeón | 160 | 160 |
-| Sección viajeros (fondo) | 1200 | 600 |
+> Fuentes, URL de producción y tamaños por uso: ver **[FUENTES.md](./FUENTES.md)** → Imágenes
 
 **Fallback si no hay imagen válida**: Usar gradiente CSS `linear-gradient(135deg, var(--primary), var(--turquoise))`. Añadir siempre `onerror="this.style.opacity='0'"` a cada `<img>`.
 
@@ -677,13 +733,7 @@ Claude no puede interactuar con Google Maps visualmente. Usar este proceso en or
 
 4. **Formato final requerido**: 6 decimales, punto como separador decimal (ej. `46.363200, 14.093600`). Nunca usar comas como separador decimal.
 
-**Formato de URL de Google Maps** (para usar en el HTML):
-```
-https://maps.google.com/?q=[nombre+del+lugar],[País]
-```
-- Usar `+` para los espacios
-- Para direcciones exactas: `https://maps.google.com/?q=[Calle+Número],[Ciudad],[País]`
-- Para coordenadas directas: `https://maps.google.com/?q=[lat],[lng]`
+> Fuentes y formatos de URL de Google Maps: ver **[FUENTES.md](./FUENTES.md)** → Coordenadas GPS y mapas
 
 **Qué registrar**:
 - Latitud (6 decimales) y longitud (6 decimales) de cada punto de interés
@@ -708,13 +758,7 @@ https://maps.google.com/?q=[nombre+del+lugar],[País]
 4. Buscar si hay restaurantes con reconocimiento especial: `https://guide.michelin.com/es/es/restaurants?location=[ciudad]`
 5. Consultar artículos de 2023–2024: buscar `mejores restaurantes [ciudad] [año]` para listas curadas recientes
 
-| Fuente | URL | Uso |
-|---|---|---|
-| TripAdvisor | `https://www.tripadvisor.es/Restaurants-[código]-[Ciudad].html` | Lista con valoraciones, precios y fotos |
-| Google Maps | Buscar `restaurantes [ciudad]` | Horarios actualizados, menú, valoraciones recientes |
-| Guía Michelin | `https://guide.michelin.com/es/es/restaurants` → filtrar por ciudad | Estrellas Michelin y Bib Gourmand (relación calidad/precio) |
-| TheFork | `https://www.thefork.es/restaurantes/[ciudad]` | Reservas online, menús con precios |
-| Eater / Time Out | Buscar `best restaurants [city] [year]` en Google | Artículos editoriales con selecciones curadas |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Gastronomía y restaurantes
 
 **Datos a recopilar por restaurante**:
 - Nombre completo
@@ -738,14 +782,7 @@ https://maps.google.com/?q=[nombre+del+lugar],[País]
 5. Para vehículos grandes (furgoneta): verificar altura máxima de los parkings cubiertos (suelen ser 1,9–2,1m)
 6. Identificar siempre una opción P+R si existe (parking periférico con transporte al centro)
 
-| Fuente | URL | Uso |
-|---|---|---|
-| Google Maps | Buscar `parking [ciudad]` | Ubicación, precio aproximado, horario |
-| ParkMe | `https://www.parkme.com` | Precios en tiempo real, mapa de disponibilidad |
-| EasyPark | `https://www.easypark.es` | Verificar cobertura de la app en esa ciudad/país |
-| Ayuntamiento local | Buscar `aparcamiento [ciudad] ayuntamiento` | Parkings municipales con precios oficiales |
-| Foros TripAdvisor | `https://www.tripadvisor.es/ShowForum-[código].html` | Consejos reales de viajeros sobre dónde aparcar |
-| Reddit | Buscar `r/travel [city] parking` o `r/[país] parking` | Experiencias recientes de viajeros |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Parkings
 
 **Datos a recopilar**:
 - Nombre del parking o descripción (ej. "Parking municipal junto al puerto")
@@ -769,13 +806,7 @@ https://maps.google.com/?q=[nombre+del+lugar],[País]
 5. Para grupos grandes: buscar casas rurales o villas cerca del destino (suelen ser más económicas que varios hoteles)
 6. Anotar alternativas más económicas en pueblos cercanos al punto de interés principal
 
-| Fuente | URL | Uso |
-|---|---|---|
-| Airbnb | `https://www.airbnb.es/s/[Ciudad]/homes` | Apartamentos y casas enteras, ideal para grupos |
-| Booking.com | `https://www.booking.com/searchresults.es.html?ss=[Ciudad]` | Amplia oferta, filtros de grupo, cancelación gratis |
-| Google Hotels | Buscar `hoteles [ciudad] [fechas]` en Google | Comparador de precios en tiempo real |
-| VRBO / HomeAway | `https://www.vrbo.com/es-es/` | Casas de alquiler vacacional para grupos grandes |
-| TripAdvisor Alojamientos | `https://www.tripadvisor.es/Hotels-[código]-[Ciudad].html` | Valoraciones detalladas de viajeros reales |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Alojamientos
 
 **Datos a incluir en el markdown**:
 - Zona recomendada y por qué (proximidad, precio, parking)
@@ -798,12 +829,7 @@ https://maps.google.com/?q=[nombre+del+lugar],[País]
 5. Verificar en Rome2Rio si hay alternativas de transporte relevantes (tren, ferry, autobús)
 6. Identificar tramos donde existe tren panorámico o autotren que valga la pena mencionar
 
-| Fuente | URL | Uso |
-|---|---|---|
-| Google Maps | `https://maps.google.com` → Cómo llegar | Distancia en km, tiempo estimado, ruta alternativa |
-| Rome2Rio | `https://www.rome2rio.com` | Comparativa de todos los medios de transporte disponibles |
-| Viamichelin | `https://www.viamichelin.es` | Cálculo de ruta con coste de peajes incluido |
-| Komoot | `https://www.komoot.com` | Para tramos de senderismo o rutas en bicicleta |
+> Fuentes y URLs: ver **[FUENTES.md](./FUENTES.md)** → Distancias y conducción
 
 **Datos a recopilar**:
 - Tramo (origen → destino)
@@ -963,6 +989,21 @@ El fichero `datos-enriquecidos.md` debe seguir esta estructura. Reemplazar `[DES
 
 ---
 
+## 🖼️ IDs de Pexels verificados
+
+| Uso | Lugar | ID Pexels | URL verificada |
+|-----|-------|-----------|----------------|
+| Hero (1920×1080) | [Destino general] | XXXXXXX | ✅ / ❌ |
+| Viajeros fondo (1200×600) | [Paisaje secundario] | XXXXXXX | ✅ / ❌ |
+| Header Día 1 (1200×400) | [Lugar día 1] | XXXXXXX | ✅ / ❌ |
+| Header Día 2 (1200×400) | [Lugar día 2] | XXXXXXX | ✅ / ❌ |
+| [... un header por cada día ...] | | | |
+| Acordeón [lugar] (800×450) | [Lugar] | XXXXXXX | ✅ / ❌ |
+
+> **Por qué esta sección existe aquí**: buscar IDs de Pexels en FASE 1 (junto con la investigación de cada lugar) evita que el agente de FASE 2 tenga que hacer búsquedas web adicionales, que son el segundo mayor cuello de botella de la generación HTML.
+
+---
+
 ## 💰 Presupuesto Estimado
 
 | Categoría | Por persona | Total grupo |
@@ -1078,10 +1119,18 @@ Antes de pasar a FASE 2, verificar que el fichero enriquecido cumple todos estos
 - [ ] Al menos 1 punto por día (para que el mapa tenga marcadores en todos los días)
 - [ ] URLs de Google Maps de cada punto
 
-**Imágenes**
-- [ ] ID de Pexels para la imagen hero general
-- [ ] ID de Pexels para el header de cada día
-- [ ] IDs verificados (la URL de producción carga correctamente)
+**Imágenes — GATE DE BLOQUEO**
+
+> ⛔ Si no se cumplen TODOS los puntos de esta sección, **FASE 2 no puede iniciarse**.
+> Resolver los IDs faltantes antes de continuar. Un HTML generado sin imágenes produce
+> secciones grises que son difíciles de corregir a posteriori y degradan la experiencia.
+
+- [ ] Tabla `## 🖼️ IDs de Pexels verificados` presente en el fichero con todas las filas
+- [ ] ID de Pexels para la imagen hero general marcado ✅ (no GRADIENTE, no vacío)
+- [ ] **Un ID por cada día del itinerario** — la tabla debe tener exactamente `N_días + 1` filas (hero + 1 por día) todas con ✅ o con "GRADIENTE" explícito
+- [ ] IDs verificados: cada ✅ significa que la URL `https://images.pexels.com/photos/{ID}/pexels-photo-{ID}.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop` fue comprobada y cargó una imagen real
+- [ ] **Ninguna fila vacía o con `[PEXELS_ID_PENDIENTE]`** — si falta algún ID, realizar la búsqueda ahora antes de continuar
+- [ ] Si algún día usa "GRADIENTE": está documentado como decisión explícita, no como olvido
 
 **Resumen final**
 - [ ] Tabla de km totales con todos los tramos
@@ -1094,11 +1143,634 @@ Antes de pasar a FASE 2, verificar que el fichero enriquecido cumple todos estos
 
 ---
 
+## 1.6 Paralelización y caché — Generación de alta velocidad
+
+### Paralelización en FASE 1
+
+La investigación de zonas geográficas es independiente entre sí. Lanzar **un agente por zona** simultáneamente:
+
+```
+[Coordinador]
+    ├── Agente Zona A → investiga días 1-3 → busca IDs Pexels para días 1-3 → escribe dia-01.md, dia-02.md, dia-03.md
+    ├── Agente Zona B → investiga días 4-6 → busca IDs Pexels para días 4-6 → escribe dia-04.md, dia-05.md, dia-06.md
+    ├── Agente Zona C → investiga días 7-8 → busca IDs Pexels para días 7-8 → escribe dia-07.md, dia-08.md
+    └── Agente Logística → escribe logistica.md (clima, vehículo, coordenadas, Pexels hero + tabla global IDs)
+         ↓ (esperar a que terminen todas las zonas)
+    Agente Resumen → lee todos los dia-XX.md → consolida IDs Pexels en logistica.md → escribe resumen.md
+```
+
+**Responsabilidad de imágenes por agente**:
+- Cada agente de zona busca los IDs Pexels de sus días como parte de Paso 4a (antes de investigar el resto del día)
+- El Agente Logística busca el ID hero y crea la tabla global `## 🖼️ IDs de Pexels verificados` en `logistica.md`
+- El Agente Resumen verifica que la tabla tiene exactamente `N_días + 1` filas con ✅ o GRADIENTE antes de dar FASE 1 por terminada
+
+**Tiempo FASE 1 con paralelización**: `max(tiempo_zona_más_lenta) + tiempo_resumen` ≈ **4–5 min** (vs ~10 min secuencial)
+
+### Paralelización en FASE 2 (máximo impacto)
+
+Una vez que todos los ficheros de datos existen, FASE 2 es **100% paralelizable**. Todos los pasos pueden lanzarse simultáneamente:
+
+```
+[Todos en paralelo]
+    ├── Agente Base    → lee logistica.md + templates → escribe _draft/base.html
+    ├── Agente Mapa    → lee gps-coords.md + datos-enriquecidos.md → escribe _draft/mapa.html
+    ├── Agente Día 1   → lee dia-01.md               → escribe _draft/dia-01.html
+    ├── Agente Día 2   → lee dia-02.md               → escribe _draft/dia-02.html
+    ├── ...
+    ├── Agente Día N   → lee dia-NN.md               → escribe _draft/dia-NN.html
+    └── Agente Cierre  → lee resumen.md              → escribe _draft/end.html
+         ↓ (esperar a que terminen todos)
+    Bash: cat _draft/base.html _draft/mapa.html _draft/dias-*.html _draft/end.html > draft.html
+```
+
+**Tiempo FASE 2 con paralelización**: `max(tiempo_agente_más_lento)` ≈ **2–3 min** (vs ~18 min secuencial)
+
+### Tabla de tiempos comparativa
+
+| Fase | Sin mejoras | + Paralelización | + Caché completa |
+|------|------------|-----------------|-----------------|
+| FASE 0 | ~2 min | ~2 min | **~30 s** |
+| FASE 1 | ~10 min | **~5 min** | **~1.5 min** |
+| FASE 2 | ~18 min | **~3 min** | **~2.5 min** |
+| PASO D | ~2 min | ~1 min | **~30 s** |
+| **Total** | **~32 min** | **~11 min** | **~5 min** |
+
+**Target: 5 minutos** — alcanzable con caché completa caliente. WebFetch refresca cachés caducadas sin infraestructura adicional.
+
 ---
 
-# FASE 2 — `datos-enriquecidos.md` → `index.html`
+### Sistema de caché con TTL
 
-La Fase 2 genera el HTML completo a partir del fichero de datos enriquecido. El resultado es un único `index.html` autocontenido, visual y funcional.
+Cada dato tiene una vida útil diferente. La caché evita búsquedas web redundantes; el TTL garantiza que los datos no queden obsoletos sin notarlo.
+
+#### Estructura de ficheros
+
+```
+_cache/
+  gps-coords.md              → GPS de lugares turísticos          TTL: permanente (verificar si hay error)
+  pexels-ids.md              → IDs Pexels verificados             TTL: permanente (re-verificar si roto)
+  gastronomy/
+    suiza.md                 → Gastronomía suiza completa         TTL: 365 días
+    eslovenia.md             → Gastronomía eslovena               TTL: 365 días
+    [país].md                → Un fichero por país
+  suiza/
+    precios.md               → Entradas, horarios, parking        TTL: 30 días ⚠️
+    restaurantes.md          → Restaurantes recomendados          TTL: 30 días ⚠️
+    info-pais.md             → Moneda, idioma, vignette, apps     TTL: 180 días
+    clima.md                 → Clima por zona y mes               TTL: 365 días
+  eslovenia/
+    precios.md               → Entradas, horarios, parking        TTL: 30 días ⚠️
+    restaurantes.md          → Restaurantes recomendados          TTL: 30 días ⚠️
+    info-pais.md             → Moneda, idioma, vinjeta, apps      TTL: 180 días
+    clima.md                 → Clima por zona y mes               TTL: 365 días
+  [país]/                    → Añadir directorio por cada destino nuevo
+```
+
+#### Formato de cabecera TTL (todas las cachés con TTL < 365 días)
+
+Cada fichero de caché lleva esta cabecera:
+
+```markdown
+<!-- cache-meta
+last_updated: YYYY-MM-DD
+ttl_days: 30
+expires: YYYY-MM-DD
+sources:
+  - https://url-oficial-1.com
+  - https://url-oficial-2.com
+refresh_tool: webfetch
+-->
+```
+
+#### Lógica de consulta de caché en FASE 1
+
+```
+Para cada dato necesario (precio, horario, restaurante, etc.):
+
+1. Leer el fichero de caché correspondiente
+2. Comparar "expires" con la fecha actual
+   ├── expires > hoy → dato válido → USAR DIRECTAMENTE, no buscar
+   └── expires ≤ hoy → caché CADUCADA → ir al paso 3
+
+3. Caché caducada: refrescar con WebFetch
+   └── Leer campo "sources" del fichero
+   └── WebFetch(url) para cada source
+   └── Actualizar el fichero de caché con los nuevos datos
+   └── Actualizar last_updated y expires
+   └── Continuar con el dato ya fresco
+
+4. Si WebFetch falla: usar WebSearch para encontrar la URL actualizada, luego WebFetch
+5. Si todo falla: usar el dato caducado con nota [DATO CADUCADO - verificar]
+```
+
+#### WebFetch — herramienta de scraping
+
+WebFetch está integrado en Claude Code — no requiere Docker ni configuración adicional.
+
+**Orden de prioridad para obtener datos web**:
+```
+1. Caché local (_cache/) → sin red, instantáneo
+2. WebFetch(url)         → para la URL concreta del campo "sources"
+3. WebSearch             → si la URL falla o es desconocida, buscar primero
+4. Dato caducado         → último recurso, con nota [DATO CADUCADO - verificar]
+```
+
+**Cuándo usar WebFetch en FASE 1**:
+- Refresco de caché caducada (`precios.md`, `restaurantes.md`)
+- Búsqueda de IDs Pexels cuando no están en `catalog.yaml`
+- Webs estáticas: Wikipedia, climate-data.org, webs de museos/parques
+- Páginas JS-heavy (GetYourGuide, TripAdvisor): intentar WebFetch primero; si el contenido está vacío, usar WebSearch como alternativa
+
+**Limitación**: WebFetch no ejecuta JavaScript pesado. Si una página requiere interacción o login, WebSearch puede encontrar la información en fuentes alternativas (blogs, agregadores).
+
+#### Tabla de coberturas de caché (destino Suiza)
+
+| Categoría | Caché | Estado | Cobertura |
+|-----------|-------|--------|-----------|
+| Imágenes Pexels | `_images/catalog.yaml` | ✅ caliente | 17 imágenes CH |
+| Imágenes local | `_images/suiza/local/` | ✅ descargadas | 16 ficheros |
+| GPS coordenadas | `_cache/gps-coords.md` | ✅ caliente | ~20 puntos CH |
+| Gastronomía | `_cache/gastronomy/suiza.md` | ✅ caliente | 12 platos + bebidas |
+| Precios/horarios | `_cache/suiza/precios.md` | ✅ fresca (30d) | Todos los días 1-10 |
+| Restaurantes | `_cache/suiza/restaurantes.md` | ✅ fresca (30d) | Por zona |
+| Info país | `_cache/suiza/info-pais.md` | ✅ fresca (180d) | Completa |
+| Clima | `_cache/suiza/clima.md` | ✅ fresca (365d) | Por zona y mes |
+
+Con esta caché caliente, **FASE 1 no hace ninguna búsqueda web** para Suiza → se reduce a leer ficheros y formatear datos → **~1.5 min**.
+
+#### Tabla de coberturas de caché (destino Eslovenia)
+
+| Categoría | Caché | Estado | Cobertura |
+|-----------|-------|--------|-----------|
+| Imágenes Pexels | `_images/catalog.yaml` | ✅ caliente | 1 imagen SI (completar) |
+| Imágenes local | `_images/eslovenia/local/` | ✅ descargadas | 1 fichero (completar) |
+| GPS coordenadas | `_cache/gps-coords.md` | ✅ caliente | Ver sección SI |
+| Gastronomía | `_cache/gastronomy/eslovenia.md` | ✅ caliente | Gastronomía eslovena |
+| Precios/horarios | `_cache/eslovenia/precios.md` | ✅ fresca (30d) | Todos los días del itinerario |
+| Restaurantes | `_cache/eslovenia/restaurantes.md` | ✅ fresca (30d) | Por zona |
+| Info país | `_cache/eslovenia/info-pais.md` | ✅ fresca (180d) | Completa |
+| Clima | `_cache/eslovenia/clima.md` | ✅ fresca (365d) | Por zona y mes |
+
+Con esta caché caliente, **FASE 1 no hace ninguna búsqueda web** para Eslovenia → ~1.5 min.
+
+#### Regla de actualización de caché
+
+Al terminar cualquier FASE 1:
+1. Si se encontró un dato que no estaba en caché → añadirlo al fichero correspondiente
+2. Si se refrescó una caché caducada → actualizar `last_updated` y `expires`
+3. Si se encontró un ID Pexels nuevo → añadirlo a `_images/catalog.yaml` con todos los campos
+4. Si se descargó una imagen nueva → guardarla en `_images/{país}/local/`
+
+---
+
+## 1.7 Catálogo de imágenes (`_images/`)
+
+El catálogo centraliza todas las imágenes usadas en las guías. Permite reutilizar imágenes entre viajes, buscar por lugar/tags/GPS, y migrar de Pexels a S3 propio sin tocar el HTML.
+
+### Estructura de directorios
+
+```
+_images/
+  catalog.yaml          → catálogo maestro (todos los viajes, exportable a DB)
+  suiza/
+    local/              → imágenes descargadas (vacío hasta que se descarguen)
+  eslovenia/
+    local/
+  [país]/
+    local/
+```
+
+### Schema de cada entrada (`catalog.yaml`)
+
+```yaml
+- id: "pexels-26973471"           # clave única: "{source}-{source_id}"
+  type: pexels                    # pexels | own | s3
+  source_id: "26973471"           # ID en Pexels (o nombre de fichero si own/s3)
+  urls:
+    original: "https://images.pexels.com/photos/26973471/..."
+    cdn: "https://.../{w}/{h}..."  # {w} y {h} se sustituyen al usar
+    local: null                   # "suiza/local/26973471.jpeg" al descargar
+    s3: null                      # "s3://bucket/suiza/26973471.jpeg" al subir
+  place:
+    name: "Kapellbrücke"
+    locality: "Lucerna"
+    region: "Cantón de Lucerna"
+    country: "Suiza"
+    country_code: "CH"            # ISO 3166-1 alpha-2
+  gps:
+    lat: 47.050800
+    lng: 8.306000
+    accuracy: exact               # exact | approx | region
+  description: "Puente de la Capilla..."
+  orientation: landscape          # landscape | portrait | square
+  primary_color: "#0EA5A0"        # color dominante (CSS fallback)
+  tags: [lucerna, kapellbrücke, puente, casco-antiguo, suiza]
+  usage_types: [day-header, accordion-thumb, accordion-img]
+  verified: true
+  verified_date: "2026-04-14"
+  size_bytes: 58354               # a w=800&h=450, verificado con curl
+```
+
+### Reglas de uso en FASE 1
+
+**Orden de consulta obligatorio** para cualquier imagen:
+
+```
+1. Leer _images/catalog.yaml
+   └─ Buscar por place.locality, place.country_code o tags
+   └─ Si hay entrada con verified: true → usar source_id directamente. FIN.
+
+2. Si no está en catálogo → Buscar en Pexels (WebFetch o WebSearch)
+   └─ Verificar con curl: tamaño >5 KB (HTTP 200 con <5 KB = placeholder vacío)
+   └─ Si válido → añadir entrada completa a _images/catalog.yaml
+   └─ Descargar imagen: curl -o _images/{país}/local/{ID}.jpeg "{CDN_URL_1920x1080}"
+   └─ Actualizar urls.local en catalog.yaml
+   └─ Añadir ID a la tabla 🖼️ del datos-enriquecidos.md correspondiente
+
+3. Si Pexels falla tras 3 intentos → registrar "GRADIENTE" en la tabla (no inventar ID)
+```
+
+**Verificación obligatoria** antes de usar cualquier ID del catálogo:
+```bash
+# Comprobar que el ID sigue siendo válido (los IDs de Pexels pueden eliminarse)
+curl -s -o /dev/null -w "%{size_download}" \
+  "https://images.pexels.com/photos/ID/pexels-photo-ID.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop"
+# Si resultado < 5000 → ID eliminado → buscar reemplazo y actualizar catalog.yaml
+```
+
+**Prioridad de URL** en el HTML generado (FASE 2):
+```
+1. urls.s3     → si existe (imagen propia en S3)
+2. urls.local  → si existe (imagen descargada) — usar como src con ruta relativa al HTML
+3. urls.cdn    → siempre disponible (Pexels CDN con {w} y {h} sustituidos)
+```
+
+Ejemplo de uso en FASE 2 al generar un `<img>`:
+```html
+<!-- Con local disponible (ruta relativa desde Suiza/draft.html al proyecto root) -->
+<img src="../_images/suiza/local/26973471.jpeg"
+     data-cdn="https://images.pexels.com/photos/26973471/pexels-photo-26973471.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop"
+     alt="Kapellbrücke, Lucerna" loading="lazy" onerror="this.src=this.dataset.cdn">
+
+<!-- Sin local (solo CDN) -->
+<img src="https://images.pexels.com/photos/26973471/pexels-photo-26973471.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop"
+     alt="Kapellbrücke, Lucerna" loading="lazy" onerror="this.style.opacity='0'">
+```
+
+> El atributo `onerror` es obligatorio en todos los `<img>` de Pexels. Si el CDN falla, la imagen se oculta y el gradiente CSS de fondo actúa como fallback visible.
+
+### Exportar a JSON / base de datos
+
+```bash
+# Exportar todas las imágenes a JSON
+python3 -c "
+import yaml, json
+data = yaml.safe_load(open('_images/catalog.yaml'))
+print(json.dumps(data['images'], indent=2, ensure_ascii=False))
+" > _images/catalog.json
+
+# Buscar por país
+python3 -c "
+import yaml
+data = yaml.safe_load(open('_images/catalog.yaml'))
+suiza = [img for img in data['images'] if img.get('place',{}).get('country_code') == 'CH']
+print(f'{len(suiza)} imágenes de Suiza')
+for img in suiza:
+    print(f\"  {img['source_id']} — {img['place'].get('name')} — {img['tags'][:3]}\")
+"
+
+# Buscar por proximidad GPS (radio ~10 km a Lucerna)
+python3 -c "
+import yaml, math
+def dist(lat1,lng1,lat2,lng2):
+    return math.sqrt((lat1-lat2)**2+(lng1-lng2)**2)*111
+data = yaml.safe_load(open('_images/catalog.yaml'))
+target = (47.0502, 8.3093)  # Lucerna
+nearby = [img for img in data['images']
+          if img['gps']['lat'] and dist(img['gps']['lat'],img['gps']['lng'],*target)<15]
+for img in nearby:
+    print(f\"{img['source_id']} — {img['place']['name']} — {img['description'][:50]}\")
+"
+```
+
+### Migrar a imágenes propias (S3)
+
+Cuando se tengan imágenes propias:
+1. Descargar la imagen: `curl -o _images/suiza/local/ID.jpeg "URL_CDN_800x450"`
+2. Subir a S3: `aws s3 cp _images/suiza/local/ID.jpeg s3://mi-bucket/travel/suiza/`
+3. Actualizar en `catalog.yaml`: `urls.local` y `urls.s3`
+4. En el HTML, el agente de FASE 2 debe preferir `urls.s3` si existe, luego `urls.cdn`
+
+---
+
+## 1.8 Estructura de ficheros por día
+
+Para cualquier viaje de más de 4 días, `datos-enriquecidos.md` crece rápidamente por encima del límite de lectura (10.000 tokens). La solución es producir **un fichero por día** desde FASE 1. Esto tiene dos ventajas clave:
+
+1. **Cada fichero cabe en una sola lectura** — sin lecturas fragmentadas con offset/limit.
+2. **La generación HTML puede hacerse día a día** — si hay que corregir o regenerar un día concreto, solo se toca ese fichero.
+
+### Estructura de ficheros recomendada
+
+```
+[destino]/
+  datos-enriquecidos/
+    logistica.md          → Viajeros, vuelos, vehículo, alojamientos, clima, consejos,
+                            IDs Pexels verificados, coordenadas GPS (tabla completa)
+    dia-01.md             → Datos completos del día 1 (historia, qué ver, parkings,
+    dia-02.md               gastronomía, restaurantes, horario sugerido, mapa ASCII)
+    dia-03.md             → Ídem día 3
+    ...                   → Un fichero por cada día del itinerario
+    dia-NN.md             → Ídem día N (último día)
+    resumen.md            → Km totales, gastronomía general del destino,
+                            presupuesto estimado, checklist pre-viaje
+```
+
+### Tamaño objetivo por fichero
+
+| Fichero | Líneas objetivo | Tokens aprox. | ¿Cabe en 1 read? |
+|---------|----------------|---------------|-----------------|
+| `logistica.md` | 80–150 líneas | ~3.000–5.000 | ✅ siempre |
+| `dia-XX.md` | 60–120 líneas | ~2.000–4.000 | ✅ siempre |
+| `resumen.md` | 100–200 líneas | ~3.000–6.000 | ✅ siempre |
+
+### Cómo genera Claude los ficheros día a día en FASE 1
+
+En el Paso 4 del orden de ejecución (sección 1.1), al terminar de investigar cada día, Claude **escribe inmediatamente** el fichero `dia-XX.md` antes de pasar al siguiente. No acumula todos los días en memoria para escribirlos al final.
+
+```
+Paso 4a → investiga Día 1 completo → escribe dia-01.md → pasa a Día 2
+Paso 4b → investiga Día 2 completo → escribe dia-02.md → pasa a Día 3
+...
+```
+
+Esto reduce el riesgo de pérdida de datos si la sesión se interrumpe y permite revisar días individuales antes de que termine toda la FASE 1.
+
+> **Retrocompatibilidad**: Los viajes ya generados con un único `datos-enriquecidos.md` (como Eslovenia y Suiza) siguen siendo válidos. Aplicar la estructura por día a partir del próximo viaje.
+
+---
+
+---
+
+# FASE 2 — `datos-enriquecidos.md` → `draft.html`
+
+La Fase 2 genera un borrador visual completo a partir del fichero de datos enriquecido. El resultado es un único `draft.html` autocontenido con toda la estructura y el diseño definitivos, pero con **datos inventados donde aún no se dispone de información real** (vuelos, precios de hoteles, coste de actividades, etc.).
+
+## Reglas de datos inventados en draft.html
+
+Los datos inventados deben ser **verosímiles** (rangos de precio reales del destino, fechas coherentes con el itinerario) pero están **claramente identificados** mediante dos mecanismos:
+
+### 1. Marca visual en el HTML
+
+Todo dato inventado se envuelve en un elemento con la clase `draft-placeholder`:
+
+```html
+<span class="draft-placeholder" title="Dato estimado — pendiente de confirmar en FASE 3">
+  ~320 € / persona
+</span>
+```
+
+El estilo de esta clase debe ser llamativo pero no intrusivo:
+
+```css
+.draft-placeholder {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 200, 0, 0.15),
+    rgba(255, 200, 0, 0.15) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  border-bottom: 2px dashed #f59e0b;
+  color: inherit;
+  cursor: help;
+  padding: 0 2px;
+}
+```
+
+### 2. Aviso global en la página
+
+El `draft.html` debe incluir un banner fijo en la parte superior de la página:
+
+```html
+<div class="draft-banner">
+  ⚠️ BORRADOR — Los datos marcados en amarillo son estimaciones. Confirmar en FASE 3.
+</div>
+```
+
+```css
+.draft-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #f59e0b;
+  color: #1c1917;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  letter-spacing: 0.05em;
+}
+```
+
+### Qué datos se inventan en FASE 2
+
+| Categoría | Dato inventado | Ejemplo |
+|---|---|---|
+| Vuelos | Compañía, número de vuelo, horario, precio | `Iberia IB1234 · 10:30 → 13:45 · ~180 €/persona` |
+| Hoteles | Nombre, precio por noche | `Hotel Alpen View · ~95 €/noche` |
+| Actividades | Precio de entrada | `~15 €/persona` |
+| Alquiler de vehículo | Precio total | `~420 € total (7 días)` |
+| Presupuesto total | Desglose y total | `~1.800 €/persona` |
+
+> Los textos narrativos, coordenadas GPS, imágenes de Pexels y datos geográficos investigados en FASE 1 son reales y no se marcan como inventados.
+
+---
+
+## 2.0 Generación incremental día a día
+
+FASE 2 no genera el HTML completo de una vez. Lo construye en pasos, cada uno centrado en una unidad mínima de trabajo. Esto permite:
+- Regenerar un solo día sin tocar el resto
+- Empezar a generar HTML aunque no estén listos todos los días de FASE 1
+- Mantener el contexto del agente pequeño en cada paso
+
+### Pasos de generación
+
+**Lanzar los pasos A, B.1…B.N y C todos en paralelo** (un agente por paso). Esperar a que terminen todos antes del ensamblado.
+
+```
+┌─ PASO A ──────────────────────────────────────────────────────────────┐
+│ Leer: logistica.md + _templates/base-styles.css + base-scripts.js    │
+│ Genera: _draft/base.html                                              │
+│ Contenido: head, CSS, draft-banner, hero, viajeros, vuelos, nav,     │
+│            info general (4 acordeones)                                │
+│ ⚠️  NO incluir sección #mapa-ruta ni script Leaflet en base.html.     │
+│     El mapa vive completamente en mapa.html (sección + script).      │
+└───────────────────────────────────────────────────────────────────────┘
+┌─ PASO MAPA ───────────────────────────────────────────────────────────┐
+│ Leer: _cache/gps-coords.md + datos-enriquecidos.md                   │
+│ Referencia: _templates/mapa-template.html                             │
+│ Genera: _draft/mapa.html                                              │
+│ Contenido: <section id="mapa-ruta"> + <script> con L.map() completo  │
+│ ⚠️  Este es el ÚNICO lugar donde L.map() puede aparecer.              │
+│     Validar: grep -c 'L\.map(' _draft/mapa.html → debe ser 1         │
+└───────────────────────────────────────────────────────────────────────┘
+┌─ PASO B.1 ──────────┐  ┌─ PASO B.2 ──────────┐  ┌─ PASO B.N ───────┐
+│ Leer: dia-01.md     │  │ Leer: dia-02.md      │  │ Leer: dia-NN.md  │
+│ Genera: dia-01.html │  │ Genera: dia-02.html  │  │ Genera: dia-NN   │
+│ ⚠️  TODOS los       │  │ thumbnail IMG con    │  │ thumbnail IMG con │
+│ accordion-thumb-    │  │ URL Pexels real,     │  │ URL Pexels real  │
+│ wrap deben tener    │  │ NO gradiente solo    │  │                  │
+│ <img> con Pexels    │  │                      │  │                  │
+└─────────────────────┘  └──────────────────────┘  └──────────────────┘
+┌─ PASO C ──────────────────────────────────────────────────────────────┐
+│ Leer: resumen.md                                                      │
+│ Genera: _draft/end.html                                               │
+│ Contenido: </main>, sección km, gastronomía general, footer + mapa   │
+│            ASCII, script BLOQUE 2 (acordeones, nav, lazy load)       │
+│ ⚠️  end.html NO debe contener L.map() — el mapa va en mapa.html.     │
+│     Verificar: grep -c 'L\.map(' _draft/end.html → debe ser 0        │
+└───────────────────────────────────────────────────────────────────────┘
+         ↓ (todos terminados)
+┌─ PASO D — Ensamblado + Validación ────────────────────────────────────┐
+│ 1. cat _draft/base.html _draft/mapa.html _draft/dias-*.html \         │
+│       _draft/end.html > draft.html                                    │
+│ 2. VALIDACIÓN OBLIGATORIA (ver checklist abajo) — NO saltar           │
+│ 3. Si la validación falla: corregir el fragmento afectado y repetir  │
+│    el ensamblado. No entregar draft.html con fallos conocidos.        │
+└───────────────────────────────────────────────────────────────────────┘
+```
+
+**Tiempo total**: ~2–3 min (el del agente más lento), independientemente del número de días.
+
+### Checklist de validación post-ensamblado (PASO D obligatorio)
+
+Ejecutar estos checks sobre `draft.html` antes de declarar el paso completado:
+
+```bash
+# 0. mapa.html existe y contiene exactamente 1 L.map()
+grep -c 'L\.map(' _draft/mapa.html
+# Esperado: 1 — si es 0, falta init; si es 2, hay duplicado en mapa.html
+
+# 0b. base.html y end.html NO contienen L.map()
+grep -c 'L\.map(' _draft/base.html
+# Esperado: 0 — si es ≥1, eliminar el bloque del mapa de base.html
+grep -c 'L\.map(' _draft/end.html
+# Esperado: 0 — si es ≥1, eliminar el bloque del mapa de end.html
+
+# 1. Un solo script de inicialización Leaflet en el HTML ensamblado (debe ser 1, no 2)
+grep -c "L\.map(" draft.html
+# Esperado: 1 — el único L.map() viene de mapa.html
+
+# 2. Ningún accordion-thumb-wrap vacío (sin <img> dentro)
+python3 -c "
+import re
+content = open('draft.html').read()
+thumbs = re.findall(r'accordion-thumb-wrap[^>]+>(.*?)</div>', content, re.DOTALL)
+empty = [i+1 for i,t in enumerate(thumbs) if '<img' not in t]
+print(f'Vacíos: {empty} de {len(thumbs)} total')
+print('OK' if not empty else 'FALLO — añadir imágenes')
+"
+
+# 3. Ningún accordion-img-wrap vacío
+python3 -c "
+import re
+content = open('draft.html').read()
+wraps = re.findall(r'accordion-img-wrap[^>]+>(.*?)</div>', content, re.DOTALL)
+empty = [i+1 for i,w in enumerate(wraps) if '<img' not in w]
+print(f'Vacíos: {empty} de {len(wraps)} total')
+print('OK' if not empty else 'FALLO — añadir imágenes')
+"
+
+# 4. Todos los day-header-bg tienen URL de Pexels (no solo gradiente)
+python3 -c "
+import re
+content = open('draft.html').read()
+headers = re.findall(r'day-header-bg[^>]+style=\"([^\"]+)\"', content)
+missing = [i+1 for i,h in enumerate(headers) if 'pexels.com' not in h]
+print(f'Sin Pexels: {missing} de {len(headers)} headers')
+print('OK' if not missing else 'FALLO — añadir IDs de día')
+"
+
+# 5. El div #route-map existe y tiene altura definida
+grep -c 'id="route-map"' draft.html
+# Esperado: 1
+
+# 6. Leaflet CSS y JS cargados en <head> SIN integrity ni crossorigin
+grep -c 'leaflet' draft.html
+# Esperado: ≥3 (link CSS + script JS + al menos 1 uso)
+
+# 6b. ⛔ BLOQUEANTE — Los tags de Leaflet NO deben tener integrity ni crossorigin
+#     Motivo: cuando el fichero se abre como file://, el origen es null y los navegadores
+#     pueden bloquear el script por la política CORS+SRI, haciendo que L quede undefined
+#     y el mapa no se inicialice silenciosamente.
+python3 -c "
+import re
+html = open('draft.html').read()
+head = html[:html.find('</head>')]
+leaflet_tags = re.findall(r'<(?:link|script)[^>]*leaflet[^>]*>', head)
+for tag in leaflet_tags:
+    if 'integrity' in tag or 'crossorigin' in tag:
+        print(f'ERROR: tag Leaflet con integrity/crossorigin: {tag}')
+        exit(1)
+print(f'OK — {len(leaflet_tags)} tags Leaflet sin integrity/crossorigin')
+"
+
+# 7. VERIFICACIÓN REAL DE URLS PEXELS — cada ID debe devolver >5 KB
+# ⚠️  Pexels devuelve HTTP 200 con placeholder de ~600 bytes para IDs inválidos.
+#     La presencia del tag <img> NO garantiza que la imagen cargue.
+python3 -c "
+import re, subprocess
+
+# IMPORTANTE: usar curl, no urllib — Pexels bloquea Python urllib con 403
+# pero devuelve imágenes reales a curl (navegador simulado)
+content = open('draft.html').read()
+ids = sorted(set(re.findall(r'pexels\.com/photos/(\d+)/', content)))
+print(f'Verificando {len(ids)} IDs únicos...')
+broken = []
+for id in ids:
+    url = f'https://images.pexels.com/photos/{id}/pexels-photo-{id}.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop'
+    r = subprocess.run(['curl','-s','-o','/dev/null','-w','%{size_download} %{http_code}',url],
+                       capture_output=True, text=True, timeout=10)
+    size, code = r.stdout.strip().split()
+    size = int(size)
+    if size < 5000:
+        broken.append(id)
+        print(f'  ❌ BROKEN ID={id} ({size} bytes, HTTP {code})')
+    else:
+        print(f'  ✅ OK     ID={id} ({size:,} bytes)')
+print()
+print('RESULTADO: OK' if not broken else f'FALLO — IDs rotos: {broken}')
+"
+```
+
+**Regla**: Si cualquier check devuelve FALLO, NO entregar el resultado. Corregir el fragmento `_draft/` correspondiente y reensamblar. El check 7 (URLs reales) es especialmente crítico — HTTP 200 no significa imagen válida.
+
+### Entradas verificadas antes de empezar
+
+| Input | Fichero | Requisito |
+|---|---|---|
+| Logística | `datos-enriquecidos/logistica.md` | IDs Pexels sin `[PENDIENTE]`, GPS completo |
+| Días | `datos-enriquecidos/dia-01.md` … `dia-NN.md` | Un fichero por día |
+| Resumen | `datos-enriquecidos/resumen.md` | Km, gastronomía, presupuesto, checklist |
+| Estilos base | `_templates/base-styles.css` | NO leer `index.html` de otro viaje |
+| Scripts base | `_templates/base-scripts.js` | NO leer `index.html` de otro viaje |
+
+> **Regla de oro**: el agente de cada paso lee **como máximo 2 ficheros** (el del día + los templates). Nunca más. Si necesita datos de otro día, es que el diseño de la sección está mal — revisar.
+
+### Cómo regenerar un día concreto
+
+Si después de revisar el draft.html hay que corregir el Día 5:
+
+```
+1. Editar datos-enriquecidos/dia-05.md con los cambios
+2. Ejecutar solo PASO B.5 → genera _draft/dia-05.html nuevo
+3. Ejecutar PASO D (ensamblado) → draft.html actualizado
+```
+
+Sin tocar ningún otro fichero.
 
 ---
 
@@ -1106,10 +1778,10 @@ La Fase 2 genera el HTML completo a partir del fichero de datos enriquecido. El 
 
 | Elemento | Valor |
 |---|---|
-| Archivo de salida | Un único `index.html` con CSS y JS embebidos |
+| Archivo de salida | Un único `draft.html` (borrador) con CSS y JS embebidos |
 | Dependencias externas | Google Fonts (Inter + Playfair Display) + Leaflet.js 1.9.4 |
-| Leaflet CSS | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.css` integrity=`sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=` |
-| Leaflet JS | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` integrity=`sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=` |
+| Leaflet CSS | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.css` — ⛔ SIN integrity ni crossorigin |
+| Leaflet JS | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` — ⛔ SIN integrity ni crossorigin |
 | Iconos | SVGs inline (pin de mapa rojo) + emojis Unicode |
 | Imágenes | Pexels — URL: `https://images.pexels.com/photos/{ID}/pexels-photo-{ID}.jpeg?auto=compress&cs=tinysrgb&w={W}&h={H}&fit=crop` |
 | Tiles del mapa | OpenStreetMap `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png` |
@@ -1211,13 +1883,21 @@ Usar tantas entradas como días tenga el viaje. Los colores deben ser suficiente
 
 ## 2.4 Estructura general de la página
 
+La página final se ensambla desde los siguientes ficheros en `_draft/`:
+
+```
+cat _draft/base.html _draft/mapa.html _draft/dias-*.html _draft/end.html > draft.html
+```
+
+Estructura resultante del HTML ensamblado:
+
 ```html
 <html lang="es">
 <head>
   <!-- Meta tags + OG tags -->
   <!-- Google Fonts -->
-  <!-- Leaflet CSS -->
-  <!-- Leaflet JS -->
+  <!-- Leaflet CSS (SIN integrity ni crossorigin) -->
+  <!-- Leaflet JS (SIN integrity ni crossorigin) -->
   <!-- <style> con TODO el CSS -->
 </head>
 <body>
@@ -1226,19 +1906,24 @@ Usar tantas entradas como días tenga el viaje. Los colores deben ser suficiente
   <div class="flights-section">        <!-- Boarding passes vuelos -->
   <nav id="main-nav">                  <!-- Navegación sticky -->
   <main>
-    <section id="info">                <!-- Info General (4 acordeones) -->
-    <section id="mapa-ruta">           <!-- Mapa Leaflet interactivo -->
-    <section id="dia-1">               <!-- Día 1 -->
-    <section id="dia-2">               <!-- Día 2 -->
+    <section id="info">                <!-- Info General (4 acordeones) [base.html] -->
+    <!-- ↓ mapa.html ─────────────────────────────────────────── -->
+    <section id="mapa-ruta">           <!-- Mapa Leaflet + <script> L.map() -->
+    <!-- ↑ ÚNICO L.map() de toda la página ──────────────────── -->
+    <section id="dia-1">               <!-- Día 1 [dias-01.html] -->
+    <section id="dia-2">               <!-- Día 2 [dias-02.html] -->
     ...
-    <section id="dia-N">               <!-- Día N -->
+    <section id="dia-N">               <!-- Día N [dias-NN.html] -->
+    <!-- ↓ end.html ──────────────────────────────────────────── -->
+  </main>
     <section id="km">                  <!-- Resumen kilómetros -->
     <section id="gastro">              <!-- Gastronomía general -->
-  </main>
   <footer>
-  <script>  <!-- TODO el JS -->
+  <script>  <!-- BLOQUE 2: acordeones, nav, lazy load — SIN L.map() -->
 </body>
 ```
+
+**Regla de oro del mapa**: `L.map()` aparece **exactamente una vez** en todo el HTML ensamblado, y esa única ocurrencia viene de `mapa.html`.
 
 ---
 
@@ -1951,17 +2636,42 @@ onerror="this.style.opacity='0'"
 
 ## 2.13 Checklist de implementación
 
-### Paso 1 — Preparar los datos
-- [ ] Leer `datos-enriquecidos.md` completo
-- [ ] Identificar número de días, lugares por día y zonas gastronómicas
-- [ ] Verificar que todos los IDs de Pexels cargan con el formato de URL indicado
-- [ ] Verificar que todas las coordenadas GPS son correctas
+### Paso A — Verificar datos y generar base.html
+- [ ] Leer `datos-enriquecidos/logistica.md`
+- [ ] **⛔ GATE**: Verificar que la sección `## 🖼️ IDs de Pexels verificados` tiene exactamente `N_días + 1` filas con ✅ o GRADIENTE. Si hay filas vacías o con `[PENDIENTE]`, **detener FASE 2 y completar los IDs en FASE 1 primero**.
+- [ ] Leer `_templates/base-styles.css` y `_templates/base-scripts.js`
+- [ ] Adaptar `:root` con los colores del destino (ver sección 2.2)
+- [ ] Generar `_draft/base.html`: head, CSS, draft-banner, hero (con ID Pexels), viajeros, vuelos, nav, info general (4 acordeones)
+- [ ] **⛔ NO incluir la sección #mapa-ruta ni script Leaflet en base.html** — el mapa vive íntegramente en `mapa.html`. Incluir L.map() fuera de mapa.html causa doble inicialización.
 
-### Paso 2 — Estructura HTML y CSS
-- [ ] Escribir el `<head>` completo con meta tags, OG tags y Google Fonts
-- [ ] Incluir Leaflet CSS y JS con los integrity hashes
-- [ ] Escribir TODO el CSS en un único bloque `<style>` antes del body
-- [ ] Variables CSS `:root` con la paleta adaptada al destino
+### Paso Mapa — Generar mapa.html
+- [ ] Leer `_cache/gps-coords.md` y `datos-enriquecidos.md` (coordenadas de todos los días)
+- [ ] Usar `_templates/mapa-template.html` como estructura de referencia
+- [ ] Generar `_draft/mapa.html`: `<section id="mapa-ruta">` + div `#route-map` + leyenda + `<script>` con `L.map()` completo
+- [ ] Rellenar array `days` con todos los puntos GPS del itinerario (colores por día)
+- [ ] Rellenar array `transfers` con líneas grises entre bases
+- [ ] Ajustar `setView([LAT, LNG], ZOOM)` al centro geográfico del destino
+- [ ] **⛔ Verificar antes de guardar**: `grep -c 'L.map(' _draft/mapa.html` debe dar exactamente **1**
+
+### Paso B — Generar día a día (repetir para cada día)
+- [ ] Leer `datos-enriquecidos/dia-NN.md` (solo ese fichero)
+- [ ] Usar el ID Pexels del header del día que está en `dia-NN.md` — **no buscar nuevos IDs en FASE 2, todos deben venir ya verificados de FASE 1**
+- [ ] Generar `_draft/dia-NN.html`: `<section id="dia-N">` completo con cabecera (URL Pexels en `background-image`), timeline, acordeones de lugares, gastronomía del día
+- [ ] **⛔ TODOS los `accordion-thumb-wrap` deben tener `<img>` con URL Pexels real** — usar el ID del lugar del `dia-NN.md`. Gradiente solo como `background` de fallback, nunca como único contenido.
+- [ ] **⛔ TODOS los `accordion-img-wrap` deben tener `<img>` con URL Pexels real** — misma regla.
+- [ ] Antes de escribir el fichero: contar cuántos `accordion-thumb-wrap` tiene y verificar que todos tienen `<img>`. Si falta alguno, buscarlo ahora (no lo dejó en datos: usar el ID del lugar del día como fallback mínimo).
+- [ ] Repetir para cada día del itinerario
+
+### Paso C — Generar end.html
+- [ ] Leer `datos-enriquecidos/resumen.md`
+- [ ] Generar `_draft/end.html`: `</main>`, sección km, gastronomía general, footer con mapa ASCII, `<script>` con BLOQUE 2 (acordeones, nav, lazy load), `</body></html>`
+- [ ] **⛔ end.html NO debe contener L.map() ni sección #mapa-ruta** — el mapa vive en mapa.html.
+- [ ] Verificar antes de guardar: `grep -c "L.map(" _draft/end.html` debe dar **0**
+
+### Paso D — Ensamblar draft.html + Validación
+- [ ] `cat _draft/base.html _draft/mapa.html _draft/dias-*.html _draft/end.html > draft.html`
+- [ ] **⛔ Ejecutar la checklist de validación post-ensamblado** (ver sección 2.0 — todos los checks bash). Si alguno falla, corregir el fragmento y reensamblar.
+- [ ] Solo declarar el paso completado cuando TODOS los checks pasen: mapa.html existe con 1 L.map(), base.html y end.html sin L.map(), 0 thumbnails vacíos, todos los day-headers con Pexels URL, `#route-map` presente.
 
 ### Paso 3 — Secciones estáticas
 - [ ] Hero con imagen Pexels correcta y parallax
@@ -1970,13 +2680,18 @@ onerror="this.style.opacity='0'"
 - [ ] Nav sticky con todos los botones (Info + Mapa + N días + Km + Gastronomía)
 - [ ] Info General (4 acordeones): vehículo, alojamientos, consejos, país
 
-### Paso 4 — Mapa Leaflet
-- [ ] Inicializar mapa con centro y zoom correctos
+### Paso 4 — Mapa Leaflet (fichero mapa.html)
+- [ ] **Generado en `_draft/mapa.html`** — nunca en base.html ni end.html
+- [ ] Inicializar mapa con centro y zoom correctos para el destino
 - [ ] Añadir todos los puntos GPS con colores por día y popups
 - [ ] Polylines de ruta por día (color sólido, dashArray '8 6')
-- [ ] Polylines de traslado entre días (gris, dashArray '4 8')
+- [ ] Polylines de traslado entre bases (gris '#d1d5db', dashArray '4 8')
 - [ ] `fitBounds` sobre todos los puntos
-- [ ] Leyenda del mapa con colores y nombres de día
+- [ ] Leyenda del mapa (.map-legend) con colores y nombres de día
+- [ ] `setTimeout(map.invalidateSize, 100)` para forzar re-renderizado
+- [ ] **⛔ Validar**: `grep -c 'L\.map(' _draft/mapa.html` → exactamente **1**
+- [ ] **⛔ Validar**: `grep -c 'L\.map(' _draft/base.html` → exactamente **0**
+- [ ] **⛔ Validar**: `grep -c 'L\.map(' _draft/end.html` → exactamente **0**
 
 ### Paso 5 — Secciones por día
 - [ ] Cabecera visual con imagen Pexels 1200×400, badges, título y km badge
@@ -2006,3 +2721,150 @@ onerror="this.style.opacity='0'"
 - [ ] `prefers-reduced-motion` aplicado
 - [ ] Mapa Leaflet encuadra correctamente todos los puntos con `fitBounds`
 - [ ] Idioma `<html lang="es">`
+
+---
+
+---
+
+# FASE 3 — `draft.html` → `index.html` (datos reales + presupuesto)
+
+La Fase 3 sustituye todos los datos inventados del `draft.html` por datos reales obtenidos de fuentes externas, y genera el presupuesto definitivo del viaje. El resultado es el `index.html` final, sin marcas de borrador.
+
+---
+
+## 3.1 Objetivo
+
+Reemplazar cada `<span class="draft-placeholder">` por el dato real correspondiente, eliminar el banner de borrador, y producir `index.html` como copia limpia y definitiva del `draft.html`.
+
+---
+
+## 3.2 Búsqueda de datos reales
+
+> Las URLs y patrones de búsqueda de cada fuente están en **[`FUENTES.md`](./FUENTES.md)** → secciones "Vuelos", "Alojamientos", "Alquiler de vehículo" y "Entradas, precios y horarios".
+
+### Vuelos
+
+**Fuentes**: ver `FUENTES.md` → [Vuelos].
+
+**Datos a obtener**:
+- Compañía y número de vuelo
+- Horario de salida y llegada (con escala si aplica)
+- Precio por persona (tarifa más económica que cumpla los filtros de `requerimientos.yaml`)
+- Clase de equipaje incluida
+
+**Proceso**:
+```
+1. WebSearch("vuelos Madrid [destino] [fecha ida] directos baratos")
+2. Verificar que cumple los filtros del requerimientos.yaml (directo, horario, compañía)
+3. Anotar precio, compañía, número de vuelo y horario
+4. Repetir para el vuelo de vuelta
+```
+
+**Criterio de selección**: el vuelo más barato que cumpla todos los filtros. Si ninguno cumple todos, indicar qué filtro se ha relajado y por qué.
+
+---
+
+### Hoteles y alojamientos
+
+**Fuentes**: ver `FUENTES.md` → [Alojamientos].
+
+**Datos a obtener por zona**:
+- Nombre del alojamiento
+- Tipo (apartamento, hotel, casa rural)
+- Precio por noche (para el número de viajeros del grupo)
+- Precio total de la zona (noches × precio/noche)
+- Valoración (puntuación + número de reseñas)
+- URL de reserva
+
+**Proceso**:
+```
+1. WebSearch("apartamento [N] personas [ciudad/zona] [fechas] booking")
+2. Seleccionar opción que cumpla preferencias del requerimientos.yaml (parking, tipo)
+3. Anotar nombre, precio/noche, precio total, valoración y URL
+4. Repetir para cada zona del itinerario
+```
+
+---
+
+### Alquiler de vehículo
+
+**Fuentes**: ver `FUENTES.md` → [Alquiler de vehículo].
+
+**Datos a obtener**:
+- Arrendadora y modelo de vehículo
+- Precio total del alquiler (todos los días)
+- Condiciones: kilometraje ilimitado, seguro incluido, conductor adicional
+- Aeropuerto de recogida y devolución
+
+**Proceso**:
+```
+1. WebSearch("alquiler furgoneta [N] plazas [aeropuerto] [fechas] rentalcars")
+2. Verificar que el vehículo admite equipaje para el grupo
+3. Anotar arrendadora, modelo, precio total y condiciones
+```
+
+---
+
+### Actividades y entradas
+
+**Fuentes**: web oficial de cada atracción, GetYourGuide.
+
+**Datos a obtener** (para cada actividad del itinerario):
+- Precio de entrada por persona
+- Necesidad de reserva previa (sí/no) y URL
+- Horario actualizado
+
+> Muchos de estos datos ya se han investigado en FASE 1. En FASE 3, verificar que siguen vigentes y actualizar si han cambiado.
+
+---
+
+## 3.3 Presupuesto definitivo
+
+Una vez recopilados todos los datos reales, generar la sección de presupuesto con el siguiente desglose:
+
+| Concepto | Coste total | Coste/persona |
+|---|---|---|
+| Vuelos (ida + vuelta) | X € | X € |
+| Alojamiento (todas las zonas) | X € | X € |
+| Alquiler de vehículo | X € | X € |
+| Combustible estimado | X € | X € |
+| Actividades y entradas | X € | X € |
+| Gastronomía estimada | X € | X € |
+| Gastos varios (parking, vignette, etc.) | X € | X € |
+| **TOTAL** | **X €** | **X €** |
+
+**Reglas del presupuesto**:
+- Los vuelos y el alojamiento son datos reales obtenidos en 3.2 — no estimar.
+- El combustible se calcula a partir de los km totales del itinerario, el consumo medio del vehículo (~10 L/100 km) y el precio del combustible en el destino.
+- La gastronomía se estima como media de menú del día × número de días × número de personas.
+- Los gastos varios se detallan línea a línea (vignette, peajes, parking, propinas...).
+
+---
+
+## 3.4 Generación de index.html
+
+Una vez obtenidos todos los datos reales:
+
+1. Tomar el `draft.html` como base
+2. Sustituir cada `<span class="draft-placeholder">...</span>` por el dato real, sin la clase ni el atributo `title`
+3. Eliminar el bloque `.draft-banner` del HTML
+4. Eliminar los estilos `.draft-placeholder` y `.draft-banner` del CSS
+5. Actualizar la sección de presupuesto con el desglose definitivo de 3.3
+6. Guardar como `index.html`
+
+> El `draft.html` se conserva como referencia histórica del borrador.
+
+---
+
+## 3.5 Checklist de FASE 3
+
+- [ ] Vuelo de ida: compañía, número, horario y precio reales obtenidos
+- [ ] Vuelo de vuelta: compañía, número, horario y precio reales obtenidos
+- [ ] Alojamiento de cada zona: nombre, precio/noche y URL de reserva
+- [ ] Alquiler de vehículo: arrendadora, modelo y precio total
+- [ ] Precios de actividades verificados y actualizados
+- [ ] Presupuesto completo generado con desglose por concepto y por persona
+- [ ] Todos los `draft-placeholder` reemplazados por datos reales
+- [ ] Banner de borrador eliminado
+- [ ] Estilos de borrador eliminados del CSS
+- [ ] Fichero guardado como `index.html`

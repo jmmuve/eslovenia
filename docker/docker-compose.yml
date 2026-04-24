@@ -1,0 +1,99 @@
+services:
+
+  # ---------------------------------------------------------------------------
+  # Redis — cola de trabajos y rate limiting
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: firecrawl-redis
+    command: redis-server --bind 0.0.0.0 --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - firecrawl
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Playwright — navegador headless para JS-heavy sites
+  # ---------------------------------------------------------------------------
+  playwright-service:
+    image: ghcr.io/mendableai/playwright-service:latest
+    container_name: firecrawl-playwright
+    environment:
+      - PORT=3000
+    networks:
+      - firecrawl
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # API — servidor principal de Firecrawl (puerto 3002)
+  # ---------------------------------------------------------------------------
+  api:
+    image: ghcr.io/mendableai/firecrawl:latest
+    container_name: firecrawl-api
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - REDIS_RATE_LIMIT_URL=redis://redis:6379
+      - PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000
+      - PORT=3002
+      - HOST=0.0.0.0
+    ports:
+      - "3002:3002"
+    depends_on:
+      redis:
+        condition: service_healthy
+      playwright-service:
+        condition: service_started
+    networks:
+      - firecrawl
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Worker — procesa la cola de scraping en background
+  # ---------------------------------------------------------------------------
+  worker:
+    image: ghcr.io/mendableai/firecrawl:latest
+    container_name: firecrawl-worker
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - REDIS_RATE_LIMIT_URL=redis://redis:6379
+      - PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000
+      - NUM_WORKERS_PER_QUEUE=${NUM_WORKERS_PER_QUEUE:-8}
+    command: ["node", "dist/src/services/queue-worker.js"]
+    depends_on:
+      redis:
+        condition: service_healthy
+      playwright-service:
+        condition: service_started
+    networks:
+      - firecrawl
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  firecrawl:
+    driver: bridge

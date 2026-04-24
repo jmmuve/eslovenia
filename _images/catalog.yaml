@@ -1,0 +1,797 @@
+# Image Catalog — Travel Guides
+# ============================================================
+# Schema v1.0 — exportable to any relational or document DB
+#
+# Campos:
+#   id            → clave única: "{source}-{source_id}"
+#   type          → "pexels" | "own" | "s3"
+#   source_id     → ID en el sistema origen (ej. ID numérico de Pexels)
+#   urls.cdn      → URL CDN con placeholders {w} y {h}
+#   urls.local    → ruta relativa dentro de _images/ (null hasta descargar)
+#   urls.s3       → URL S3 (null hasta subir)
+#   place         → jerarquía geográfica completa
+#   gps           → lat/lng WGS84 (6 decimales), accuracy: exact|approx|region
+#   tags          → array de términos para búsqueda full-text
+#   usage_types   → usos válidos: hero|day-header|accordion-thumb|accordion-img|og-image
+#   verified      → true si la URL fue verificada con curl (tamaño >5 KB)
+#   size_bytes    → tamaño a w=800&h=450 (referencia de verificación)
+#
+# Para exportar a JSON:
+#   python3 -c "import yaml,json,sys; print(json.dumps(yaml.safe_load(open('catalog.yaml'))['images'], indent=2))"
+#
+# Para exportar a SQL (PostgreSQL jsonb):
+#   python3 export_to_db.py  (ver scripts/)
+# ============================================================
+
+schema_version: "1.0"
+last_updated: "2026-04-14"
+
+images:
+
+  # ── SUIZA ────────────────────────────────────────────────
+
+  - id: "pexels-1458958"
+    type: pexels
+    source_id: "1458958"
+    urls:
+      original: "https://images.pexels.com/photos/1458958/pexels-photo-1458958.jpeg"
+      cdn: "https://images.pexels.com/photos/1458958/pexels-photo-1458958.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/1458958.jpeg"
+      s3: null
+    place:
+      name: "Alpes suizos"
+      locality: null
+      region: "Alpes"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.800000
+      lng: 8.000000
+      accuracy: region
+    description: "Paisaje alpino con picos nevados — imagen hero general de Suiza"
+    orientation: landscape
+    primary_color: "#1B6B4A"
+    tags:
+      - alpes
+      - montaña
+      - nieve
+      - suiza
+      - paisaje-alpino
+      - panorámica
+    usage_types:
+      - hero
+      - og-image
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 73113
+
+  - id: "pexels-26973471"
+    type: pexels
+    source_id: "26973471"
+    urls:
+      original: "https://images.pexels.com/photos/26973471/pexels-photo-26973471.jpeg"
+      cdn: "https://images.pexels.com/photos/26973471/pexels-photo-26973471.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/26973471.jpeg"
+      s3: null
+    place:
+      name: "Kapellbrücke"
+      locality: "Lucerna"
+      region: "Cantón de Lucerna"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 47.050800
+      lng: 8.306000
+      accuracy: exact
+    description: "Puente de la Capilla (Kapellbrücke) sobre el río Reuss, con la Torre del Agua"
+    orientation: landscape
+    primary_color: "#0EA5A0"
+    tags:
+      - lucerna
+      - kapellbrücke
+      - puente
+      - río
+      - casco-antiguo
+      - patrimonio-histórico
+      - suiza
+      - lago
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 58354
+
+  - id: "pexels-5210625"
+    type: pexels
+    source_id: "5210625"
+    urls:
+      original: "https://images.pexels.com/photos/5210625/pexels-photo-5210625.jpeg"
+      cdn: "https://images.pexels.com/photos/5210625/pexels-photo-5210625.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/5210625.jpeg"
+      s3: null
+    place:
+      name: "Löwendenkmal"
+      locality: "Lucerna"
+      region: "Cantón de Lucerna"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 47.057300
+      lng: 8.310200
+      accuracy: exact
+    description: "Escultura del León moribundo tallada en la roca, monumento a los guardias suizos"
+    orientation: landscape
+    primary_color: "#6B7280"
+    tags:
+      - lucerna
+      - löwendenkmal
+      - monumento
+      - escultura
+      - roca
+      - historia
+      - suiza
+    usage_types:
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 61139
+
+  - id: "pexels-28515627"
+    type: pexels
+    source_id: "28515627"
+    urls:
+      original: "https://images.pexels.com/photos/28515627/pexels-photo-28515627.jpeg"
+      cdn: "https://images.pexels.com/photos/28515627/pexels-photo-28515627.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/28515627.jpeg"
+      s3: null
+    place:
+      name: "Monte Pilatus"
+      locality: "Alpnachstad"
+      region: "Cantón de Obwalden"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.978700
+      lng: 8.252100
+      accuracy: exact
+    description: "Vista panorámica del Monte Pilatus (2.132 m) al atardecer desde la cima"
+    orientation: landscape
+    primary_color: "#DC2626"
+    tags:
+      - pilatus
+      - montaña
+      - cima
+      - lucerna
+      - excursión
+      - suiza
+      - atardecer
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 24167
+
+  - id: "pexels-32844505"
+    type: pexels
+    source_id: "32844505"
+    urls:
+      original: "https://images.pexels.com/photos/32844505/pexels-photo-32844505.jpeg"
+      cdn: "https://images.pexels.com/photos/32844505/pexels-photo-32844505.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/32844505.jpeg"
+      s3: null
+    place:
+      name: "Lago de los Cuatro Cantones"
+      locality: "Lucerna"
+      region: "Lago de Lucerna"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 47.056500
+      lng: 8.486100
+      accuracy: approx
+    description: "Crucero panorámico en el Lago de los Cuatro Cantones con el Monte Rigi al fondo"
+    orientation: landscape
+    primary_color: "#0891B2"
+    tags:
+      - lago-cuatro-cantones
+      - rigi
+      - crucero
+      - lucerna
+      - lago
+      - barco
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 81079
+
+  - id: "pexels-27971523"
+    type: pexels
+    source_id: "27971523"
+    urls:
+      original: "https://images.pexels.com/photos/27971523/pexels-photo-27971523.jpeg"
+      cdn: "https://images.pexels.com/photos/27971523/pexels-photo-27971523.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/27971523.jpeg"
+      s3: null
+    place:
+      name: "Grindelwald"
+      locality: "Grindelwald"
+      region: "Cantón de Berna — Oberland Bernés"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.624300
+      lng: 8.041200
+      accuracy: exact
+    description: "Cabaña de montaña con vista espectacular al valle alpino de Grindelwald y el Eiger"
+    orientation: landscape
+    primary_color: "#16A34A"
+    tags:
+      - grindelwald
+      - eiger
+      - alpes
+      - cabaña
+      - montaña
+      - valle
+      - oberland-bernés
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 66462
+
+  - id: "pexels-14714450"
+    type: pexels
+    source_id: "14714450"
+    urls:
+      original: "https://images.pexels.com/photos/14714450/pexels-photo-14714450.jpeg"
+      cdn: "https://images.pexels.com/photos/14714450/pexels-photo-14714450.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/14714450.jpeg"
+      s3: null
+    place:
+      name: "Jungfraujoch"
+      locality: "Grindelwald / Lauterbrunnen"
+      region: "Cantón de Berna — Oberland Bernés"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.547200
+      lng: 7.985300
+      accuracy: exact
+    description: "Pico nevado alpino en el Jungfraujoch (3.454 m) — Top of Europe"
+    orientation: landscape
+    primary_color: "#E2E8F0"
+    tags:
+      - jungfraujoch
+      - top-of-europe
+      - glaciar
+      - nieve
+      - alpes
+      - 3454m
+      - oberland-bernés
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 37296
+
+  - id: "pexels-13612696"
+    type: pexels
+    source_id: "13612696"
+    urls:
+      original: "https://images.pexels.com/photos/13612696/pexels-photo-13612696.jpeg"
+      cdn: "https://images.pexels.com/photos/13612696/pexels-photo-13612696.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/13612696.jpeg"
+      s3: null
+    place:
+      name: "First Cliff Walk"
+      locality: "Grindelwald"
+      region: "Cantón de Berna — Oberland Bernés"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.658300
+      lng: 8.058400
+      accuracy: exact
+    description: "First Cliff Walk en Grindelwald (2.168 m) — pasarela suspendida sobre el vacío"
+    orientation: landscape
+    primary_color: "#0891B2"
+    tags:
+      - first
+      - cliff-walk
+      - grindelwald
+      - senderismo
+      - altura
+      - alpes
+      - bachalpsee
+      - oberland-bernés
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 78859
+
+  - id: "pexels-31322251"
+    type: pexels
+    source_id: "31322251"
+    urls:
+      original: "https://images.pexels.com/photos/31322251/pexels-photo-31322251.jpeg"
+      cdn: "https://images.pexels.com/photos/31322251/pexels-photo-31322251.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/31322251.jpeg"
+      s3: null
+    place:
+      name: "Valle de Lauterbrunnen"
+      locality: "Lauterbrunnen"
+      region: "Cantón de Berna — Oberland Bernés"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.593100
+      lng: 7.908300
+      accuracy: exact
+    description: "Cascada majestuosa del valle de Lauterbrunnen — Staubbach Fall"
+    orientation: portrait
+    primary_color: "#1B6B4A"
+    tags:
+      - lauterbrunnen
+      - cascada
+      - staubbach
+      - trümmelbach
+      - valle
+      - alpes
+      - oberland-bernés
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 78874
+
+  - id: "pexels-13818274"
+    type: pexels
+    source_id: "13818274"
+    urls:
+      original: "https://images.pexels.com/photos/13818274/pexels-photo-13818274.jpeg"
+      cdn: "https://images.pexels.com/photos/13818274/pexels-photo-13818274.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/13818274.jpeg"
+      s3: null
+    place:
+      name: "Harder Kulm"
+      locality: "Interlaken"
+      region: "Cantón de Berna — Oberland Bernés"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.686200
+      lng: 7.863200
+      accuracy: approx
+    description: "Vista de Interlaken desde la montaña Harder Kulm con el lago al fondo"
+    orientation: landscape
+    primary_color: "#9333EA"
+    tags:
+      - interlaken
+      - harder-kulm
+      - lago-thun
+      - lago-brienz
+      - oberland-bernés
+      - panorámica
+      - suiza
+    usage_types:
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 97514
+
+  - id: "pexels-25949654"
+    type: pexels
+    source_id: "25949654"
+    urls:
+      original: "https://images.pexels.com/photos/25949654/pexels-photo-25949654.jpeg"
+      cdn: "https://images.pexels.com/photos/25949654/pexels-photo-25949654.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/25949654.jpeg"
+      s3: null
+    place:
+      name: "Casco antiguo de Berna"
+      locality: "Berna"
+      region: "Cantón de Berna"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.948000
+      lng: 7.447400
+      accuracy: approx
+    description: "Casas y arcadas del casco antiguo de Berna — Patrimonio UNESCO"
+    orientation: landscape
+    primary_color: "#6B7280"
+    tags:
+      - berna
+      - casco-antiguo
+      - patrimonio-unesco
+      - arcadas
+      - capital
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 98389
+
+  - id: "pexels-34540227"
+    type: pexels
+    source_id: "34540227"
+    urls:
+      original: "https://images.pexels.com/photos/34540227/pexels-photo-34540227.jpeg"
+      cdn: "https://images.pexels.com/photos/34540227/pexels-photo-34540227.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/34540227.jpeg"
+      s3: null
+    place:
+      name: "Lago Lemán — Montreux"
+      locality: "Montreux"
+      region: "Cantón de Vaud"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.431200
+      lng: 6.910700
+      accuracy: approx
+    description: "Vista panorámica del Lago Lemán en la zona de Montreux con los Alpes al fondo"
+    orientation: landscape
+    primary_color: "#CA8A04"
+    tags:
+      - lago-lemán
+      - montreux
+      - castillo-chillon
+      - lake-geneva
+      - alpes
+      - suiza
+      - cantón-vaud
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 47569
+    notes: "Reemplaza ID 7974366 (eliminado de Pexels). Usar para Montreux, Chillon y área Lago Lemán este."
+
+  - id: "pexels-12956558"
+    type: pexels
+    source_id: "12956558"
+    urls:
+      original: "https://images.pexels.com/photos/12956558/pexels-photo-12956558.jpeg"
+      cdn: "https://images.pexels.com/photos/12956558/pexels-photo-12956558.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/12956558.jpeg"
+      s3: null
+    place:
+      name: "Lavaux — Lago Lemán"
+      locality: "Lausana"
+      region: "Cantón de Vaud"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.506700
+      lng: 6.629600
+      accuracy: approx
+    description: "Viñedos de Lavaux en terrazas con el Lago Lemán y los Alpes — Patrimonio UNESCO"
+    orientation: landscape
+    primary_color: "#0F766E"
+    tags:
+      - lausana
+      - lavaux
+      - viñedos
+      - lago-lemán
+      - lake-geneva
+      - patrimonio-unesco
+      - ouchy
+      - suiza
+      - cantón-vaud
+    usage_types:
+      - day-header
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 91242
+
+  - id: "pexels-34540227-ginebra"
+    type: pexels
+    source_id: "34540227"
+    urls:
+      original: "https://images.pexels.com/photos/34540227/pexels-photo-34540227.jpeg"
+      cdn: "https://images.pexels.com/photos/34540227/pexels-photo-34540227.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: null
+      s3: null
+    place:
+      name: "Lago Lemán — Ginebra"
+      locality: "Ginebra"
+      region: "Cantón de Ginebra"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.205900
+      lng: 6.155900
+      accuracy: approx
+    description: "Vista panorámica del Lago Lemán desde Ginebra"
+    orientation: landscape
+    primary_color: "#CA8A04"
+    tags:
+      - ginebra
+      - lago-lemán
+      - lake-geneva
+      - suiza
+      - cantón-ginebra
+    usage_types:
+      - day-header
+      - accordion-thumb
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 47569
+
+  - id: "pexels-20605087"
+    type: pexels
+    source_id: "20605087"
+    urls:
+      original: "https://images.pexels.com/photos/20605087/pexels-photo-20605087.jpeg"
+      cdn: "https://images.pexels.com/photos/20605087/pexels-photo-20605087.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/20605087.jpeg"
+      s3: null
+    place:
+      name: "Jet d'Eau"
+      locality: "Ginebra"
+      region: "Cantón de Ginebra"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 46.205900
+      lng: 6.155900
+      accuracy: exact
+    description: "Fuente Jet d'Eau de 140 m sobre el Lago Lemán en Ginebra"
+    orientation: landscape
+    primary_color: "#0891B2"
+    tags:
+      - ginebra
+      - jet-d-eau
+      - fuente
+      - lago-lemán
+      - lake-geneva
+      - suiza
+      - monumento
+    usage_types:
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 23236
+
+  - id: "pexels-20848209"
+    type: pexels
+    source_id: "20848209"
+    urls:
+      original: "https://images.pexels.com/photos/20848209/pexels-photo-20848209.jpeg"
+      cdn: "https://images.pexels.com/photos/20848209/pexels-photo-20848209.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/20848209.jpeg"
+      s3: null
+    place:
+      name: "Aeropuerto de Zúrich (ZRH)"
+      locality: "Zúrich"
+      region: "Cantón de Zúrich"
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: 47.458200
+      lng: 8.555900
+      accuracy: exact
+    description: "Avión sobrevolando bosque cerca del Aeropuerto de Zúrich (ZRH)"
+    orientation: landscape
+    primary_color: "#BE185D"
+    tags:
+      - zúrich
+      - aeropuerto
+      - ZRH
+      - avión
+      - llegada
+      - salida
+      - suiza
+    usage_types:
+      - day-header
+      - accordion-thumb
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 31395
+
+  # ── GENÉRICAS (usadas en secciones de info general) ──────
+
+  - id: "pexels-1592384"
+    type: pexels
+    source_id: "1592384"
+    urls:
+      original: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg"
+      cdn: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/generic/local/1592384.jpeg"
+      s3: null
+    place:
+      name: null
+      locality: null
+      region: null
+      country: null
+      country_code: null
+    gps:
+      lat: null
+      lng: null
+      accuracy: null
+    description: "Furgoneta de camping / vehículo en carretera — imagen genérica de vehículo"
+    orientation: landscape
+    primary_color: "#D4A853"
+    tags:
+      - furgoneta
+      - vehículo
+      - campervan
+      - carretera
+      - viaje
+      - genérico
+    usage_types:
+      - accordion-thumb
+      - accordion-img
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 31783
+
+  - id: "pexels-258154"
+    type: pexels
+    source_id: "258154"
+    urls:
+      original: "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg"
+      cdn: "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/generic/local/258154.jpeg"
+      s3: null
+    place:
+      name: null
+      locality: null
+      region: null
+      country: null
+      country_code: null
+    gps:
+      lat: null
+      lng: null
+      accuracy: null
+    description: "Hotel / alojamiento — imagen genérica de hospedaje"
+    orientation: landscape
+    primary_color: "#D4A853"
+    tags:
+      - hotel
+      - alojamiento
+      - habitación
+      - genérico
+    usage_types:
+      - accordion-thumb
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 51236
+
+  - id: "pexels-730778"
+    type: pexels
+    source_id: "730778"
+    urls:
+      original: "https://images.pexels.com/photos/730778/pexels-photo-730778.jpeg"
+      cdn: "https://images.pexels.com/photos/730778/pexels-photo-730778.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/generic/local/730778.jpeg"
+      s3: null
+    place:
+      name: null
+      locality: null
+      region: null
+      country: null
+      country_code: null
+    gps:
+      lat: null
+      lng: null
+      accuracy: null
+    description: "Consejos de viaje / planificación — imagen genérica"
+    orientation: landscape
+    primary_color: "#0EA5A0"
+    tags:
+      - consejos
+      - planificación
+      - mapa
+      - viaje
+      - genérico
+    usage_types:
+      - accordion-thumb
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 39254
+
+  - id: "pexels-1659438"
+    type: pexels
+    source_id: "1659438"
+    urls:
+      original: "https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg"
+      cdn: "https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/suiza/local/1659438.jpeg"
+      s3: null
+    place:
+      name: "Suiza (genérica)"
+      locality: null
+      region: null
+      country: "Suiza"
+      country_code: "CH"
+    gps:
+      lat: null
+      lng: null
+      accuracy: null
+    description: "Imagen genérica de Suiza para sección de información del país"
+    orientation: landscape
+    primary_color: "#1B6B4A"
+    tags:
+      - suiza
+      - país
+      - información
+      - genérico
+    usage_types:
+      - accordion-thumb
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: 52319
+
+  # ── ESLOVENIA ─────────────────────────────────────────────
+
+  - id: "pexels-3525983"
+    type: pexels
+    source_id: "3525983"
+    urls:
+      original: "https://images.pexels.com/photos/3525983/pexels-photo-3525983.jpeg"
+      cdn: "https://images.pexels.com/photos/3525983/pexels-photo-3525983.jpeg?auto=compress&cs=tinysrgb&w={w}&h={h}&fit=crop"
+      local: "_images/eslovenia/local/3525983.jpeg"
+      s3: null
+    place:
+      name: "Lago Bled"
+      locality: "Bled"
+      region: "Alta Carniola"
+      country: "Eslovenia"
+      country_code: "SI"
+    gps:
+      lat: 46.363200
+      lng: 14.093600
+      accuracy: exact
+    description: "Vista aérea del Lago Bled con la isla y la iglesia al fondo"
+    orientation: landscape
+    primary_color: "#0EA5A0"
+    tags:
+      - bled
+      - lago-bled
+      - isla
+      - iglesia
+      - eslovenia
+      - alta-carniola
+      - vista-aérea
+      - patrimonio
+    usage_types:
+      - hero
+      - day-header
+      - og-image
+    verified: true
+    verified_date: "2026-04-14"
+    size_bytes: null
+    notes: "Verificar con curl antes de usar — no re-comprobado en sesión 2026-04-14"

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Itinerario completo del viaje a Luxemburgo — 21 al 24 de agosto 2026, 2 viajeros, 4 días por el Gran Ducado.">
+  <meta property="og:title" content="Luxemburgo 2026 · Itinerario de viaje">
+  <meta property="og:description" content="4 días por Luxemburgo: Ciudad de Luxemburgo, Castillo de Vianden, Mullerthal y Valle del Mosela.">
+  <meta property="og:image" content="https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+  <title>Luxemburgo · Agosto 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+:root {
+  --primary: #C8102E;
+  --primary-light: #E84060;
+  --primary-dark: #8B0020;
+  --accent: #003F8A;
+  --bg: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-dark: #1A1A2E;
+  --text: #2C2C2C;
+  --text-light: #6B7280;
+  --turquoise: #1565C0;
+  --border: #E5E7EB;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* ═══ HERO ═══ */
+#hero { position: relative; width: 100%; height: 100vh; min-height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(135deg, var(--primary-dark), var(--accent)); }
+#hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 50%; will-change: transform; }
+#hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.15) 100%); z-index: 1; }
+.hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 24px; }
+.hero-flag { font-size: 2.5rem; display: block; margin-bottom: 16px; animation: fadeInDown 0.8s ease both; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 700; letter-spacing: 0.06em; line-height: 1.1; color: #fff; animation: fadeInDown 0.9s ease 0.1s both; }
+.hero-subtitle { font-size: 1.2rem; font-weight: 400; color: rgba(255,255,255,0.88); margin-top: 16px; letter-spacing: 0.02em; animation: fadeInDown 1s ease 0.2s both; }
+.hero-scroll-btn { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 48px; background: none; border: none; color: rgba(255,255,255,0.85); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; animation: fadeInDown 1.1s ease 0.3s both; }
+.hero-scroll-btn:hover { color: #fff; }
+.hero-arrow { font-size: 1.5rem; animation: bounce 2s ease-in-out infinite; }
+
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ NAV ═══ */
+#main-nav { position: sticky; top: 0; z-index: 100; background: rgba(250,250,247,0.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s; }
+#main-nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+.nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; background: none; border: none; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--text-light); cursor: pointer; white-space: nowrap; position: relative; transition: color 0.2s; }
+.nav-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; right: 50%; height: 2px; background: var(--primary); transition: left 0.25s, right 0.25s; }
+.nav-btn:hover { color: var(--primary); }
+.nav-btn:hover::after { left: 16px; right: 16px; }
+.nav-btn.active { color: var(--primary); font-weight: 600; }
+.nav-btn.active::after { left: 16px; right: 16px; }
+
+/* ═══ MAIN LAYOUT ═══ */
+main { max-width: 900px; margin: 0 auto; padding: 0 24px 64px; }
+
+/* ═══ SECTION TITLES ═══ */
+.section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px; padding-top: 56px; }
+
+/* ═══ ACCORDION ═══ */
+.accordion { background: var(--bg-card); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); }
+.accordion-header { width: 100%; background: none; border: none; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; transition: background 0.2s; }
+.accordion-header:hover { background: var(--bg); }
+.accordion-header-content { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.accordion-thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: linear-gradient(135deg, var(--primary), var(--turquoise)); }
+.accordion-title { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.accordion-subtitle { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
+.accordion-chevron { font-size: 1.1rem; color: var(--text-light); transition: transform 0.25s ease; flex-shrink: 0; }
+.accordion-header[aria-expanded="true"] .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { padding: 0 20px 24px; border-top: 1px solid var(--border); }
+.accordion-body[hidden] { display: none; }
+.accordion-img-wrap { background: linear-gradient(135deg, var(--primary), var(--turquoise)); border-radius: 12px; overflow: hidden; margin: 20px 0; aspect-ratio: 16/9; }
+.accordion-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.4s ease; }
+.accordion-img-wrap img.loaded { opacity: 1; }
+
+/* ═══ CONTENT HELPERS ═══ */
+.content-section { margin-bottom: 18px; }
+.content-section h4 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px; }
+.content-section p { font-size: 0.92rem; line-height: 1.7; color: var(--text); }
+.bullet-list { list-style: none; padding: 0; margin: 0; }
+.bullet-list li { font-size: 0.92rem; line-height: 1.6; color: var(--text); padding: 3px 0 3px 22px; position: relative; }
+.bullet-list li::before { content: '✦'; position: absolute; left: 0; color: var(--accent); font-size: 0.7rem; top: 6px; }
+.practical-box { background: var(--bg); border-left: 3px solid var(--turquoise); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 12px; font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+.practical-box strong { color: var(--primary-dark); }
+.maps-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.map-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; font-weight: 500; color: var(--primary); text-decoration: none; transition: background 0.2s, border-color 0.2s; cursor: pointer; }
+.map-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.climate-card { background: var(--bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 14px; font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
+.climate-card strong { color: var(--text); font-size: 0.95rem; }
+
+/* ═══ DAY SECTION ═══ */
+.day-section { margin-top: 56px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.day-section.visible { opacity: 1; transform: translateY(0); }
+.day-header { position: relative; height: 300px; border-radius: 16px; overflow: hidden; display: flex; align-items: flex-end; margin-bottom: 32px; background: linear-gradient(135deg, var(--primary-dark), var(--accent)); }
+.day-header-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.day-header-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); }
+.day-header-content { position: relative; z-index: 2; padding: 28px 32px; color: #fff; width: 100%; }
+.day-badge { display: inline-block; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; }
+.day-date { font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+.day-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; line-height: 1.2; color: #fff; margin-bottom: 10px; }
+.day-km-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.18); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: rgba(255,255,255,0.95); font-weight: 500; }
+
+/* ═══ TIMELINE ═══ */
+.route-timeline { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.route-timeline h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 16px; }
+.timeline-steps { display: flex; flex-direction: column; gap: 0; }
+.timeline-step { display: flex; align-items: flex-start; gap: 14px; }
+.timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg-card); box-shadow: 0 0 0 2px var(--primary); flex-shrink: 0; margin-top: 3px; }
+.timeline-info { padding-bottom: 8px; flex: 1; }
+.timeline-place { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+.timeline-time { font-size: 0.8rem; color: var(--primary); font-weight: 500; }
+.timeline-leg { font-size: 0.78rem; color: var(--text-light); padding: 4px 0 4px 28px; font-style: italic; }
+
+/* ═══ TABLES ═══ */
+.km-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+.km-table th { text-align: left; padding: 12px 20px; background: var(--primary-dark); color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.km-table td { padding: 11px 20px; border-bottom: 1px solid var(--border); color: var(--text); }
+.km-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--primary-dark); }
+.km-table tr:nth-child(even) td { background: var(--bg); }
+.km-table tr:nth-child(odd) td { background: var(--bg-card); }
+.km-table tr:last-child td { background: rgba(200,16,46,0.08) !important; }
+
+.country-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; margin-bottom: 12px; }
+.country-table th { text-align: left; padding: 9px 12px; background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); border-bottom: 2px solid var(--border); }
+.country-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.country-table tr:last-child td { border-bottom: none; }
+.country-table tr:nth-child(even) td { background: var(--bg); }
+
+.info-alojamiento-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+.info-alojamiento-table th { text-align: left; padding: 9px 14px; background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); border-bottom: 2px solid var(--border); }
+.info-alojamiento-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.info-alojamiento-table tr:last-child td { border-bottom: none; }
+
+.gastro-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+.gastro-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-light); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+.gastro-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+.gastro-table tr:last-child td { border-bottom: none; }
+.gastro-table tr:nth-child(even) td { background: var(--bg); }
+.gastro-table td:first-child { font-weight: 600; color: var(--primary-dark); white-space: nowrap; }
+
+/* ═══ MISC ═══ */
+#km { margin-top: 56px; }
+#gastro { margin-top: 56px; }
+#info { margin-top: 56px; }
+#mapa-ruta { margin-top: 56px; }
+
+.gastro-zone-label { display: inline-block; background: rgba(200,16,46,0.1); color: var(--primary-dark); font-size: 0.75rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+.warning-box { background: rgba(0,63,138,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 16px; font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+.warning-box strong { color: var(--primary-dark); }
+.consejos-list { list-style: none; padding: 0; }
+.consejos-list li { padding: 6px 0 6px 24px; position: relative; font-size: 0.9rem; line-height: 1.6; border-bottom: 1px solid var(--border); }
+.consejos-list li:last-child { border-bottom: none; }
+.consejos-list li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+.restaurant-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.restaurant-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.restaurant-card h5 { font-size: 0.88rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+.restaurant-card p { font-size: 0.8rem; color: var(--text-light); line-height: 1.45; }
+
+.gps-pin { display: inline-flex; align-items: center; margin-left: 6px; opacity: 0.6; transition: opacity 0.2s, transform 0.2s; vertical-align: middle; text-decoration: none; }
+.gps-pin:hover { opacity: 1; transform: scale(1.2); }
+.qvitem { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+.qv-bullet { color: var(--accent); font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+.qv-text { flex: 1; }
+
+/* ═══ TRAVELERS ═══ */
+.travelers-section { position: relative; padding: 60px 24px; background: linear-gradient(135deg, var(--primary), var(--accent)); text-align: center; overflow: hidden; }
+.travelers-content { position: relative; z-index: 2; }
+.travelers-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 32px; }
+.travelers-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; max-width: 400px; margin: 0 auto; }
+.traveler-card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.traveler-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.traveler-name { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; color: #fff; letter-spacing: 0.03em; }
+
+/* ═══ FLIGHTS ═══ */
+.flights-section { background: var(--bg); padding: 40px 20px; }
+.flights-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px; text-align: center; }
+.flights-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .flights-grid { grid-template-columns: 1fr; } }
+.boarding-pass { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); }
+.bp-header { background: #1a1a1a; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+.bp-route { padding: 24px 20px; display: flex; align-items: center; gap: 16px; }
+.bp-iata { font-size: 2.8rem; font-weight: 800; color: var(--text); line-height: 1; }
+.bp-city { font-size: 0.75rem; color: var(--text-light); }
+.bp-arrow { flex: 1; text-align: center; color: var(--primary); font-size: 1.5rem; }
+.bp-duration { font-size: 0.75rem; color: var(--text-light); display: block; }
+.bp-footer { border-top: 2px dashed var(--border); padding: 12px 20px; display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-light); }
+.bp-time { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+.bp-badge { display: inline-block; background: var(--primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; }
+
+/* ═══ MAP LEGEND ═══ */
+.map-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; font-size: 0.82rem; color: var(--text-light); }
+.map-legend-item { display: flex; align-items: center; gap: 6px; }
+.map-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══ DRAFT ═══ */
+.draft-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #f59e0b; color: #1c1917; text-align: center; font-weight: 700; font-size: 0.85rem; padding: 8px 16px; letter-spacing: 0.05em; }
+.draft-placeholder { background: repeating-linear-gradient(45deg, rgba(255,200,0,0.15), rgba(255,200,0,0.15) 4px, transparent 4px, transparent 8px); border-bottom: 2px dashed #f59e0b; cursor: help; padding: 0 2px; }
+
+/* ═══ FOOTER ═══ */
+footer { background: var(--bg-dark); color: rgba(255,255,255,0.7); padding: 56px 24px 40px; margin-top: 80px; text-align: center; }
+.footer-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
+.footer-sub { font-size: 0.88rem; margin-bottom: 32px; color: rgba(255,255,255,0.55); }
+.footer-ascii { font-family: monospace; font-size: 0.78rem; line-height: 1.8; color: rgba(255,255,255,0.45); white-space: pre; display: inline-block; text-align: left; margin: 0 auto; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 3rem; }
+  .hero-subtitle { font-size: 1rem; }
+  main { padding: 0 16px 48px; }
+  .day-header { height: 200px; border-radius: 12px; }
+  .day-header-content { padding: 20px; }
+  .day-title { font-size: 1.4rem; }
+  .accordion-thumb { width: 60px; height: 60px; }
+  .section-title { font-size: 1.5rem; }
+  .footer-ascii { font-size: 0.65rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .day-section { opacity: 1; transform: none; }
+}
+  </style>
+</head>
+<body>
+
+<!-- DRAFT BANNER -->
+<div class="draft-banner">⚠️ BORRADOR — Los datos marcados en amarillo son estimaciones. Confirmar vuelos y alojamiento en FASE 3.</div>
+
+<!-- HERO -->
+<header id="hero">
+  <div id="hero-bg" style="background-image:url('https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop'), linear-gradient(135deg,var(--primary-dark),var(--accent))"></div>
+  <div id="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-flag">🇱🇺</span>
+    <h1 class="hero-title">Luxemburgo</h1>
+    <p class="hero-subtitle">21–24 agosto 2026 · 2 viajeros · 4 días por el Gran Ducado</p>
+    <button class="hero-scroll-btn" onclick="scrollToSection('info')">
+      Explorar <span class="hero-arrow">↓</span>
+    </button>
+  </div>
+</header>
+
+<!-- VIAJEROS -->
+<section class="travelers-section">
+  <div class="travelers-content">
+    <h2 class="travelers-title">Los Viajeros</h2>
+    <div class="travelers-grid">
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:linear-gradient(135deg,#C8102E,#003F8A)">J</div>
+        <span class="traveler-name">Juanma</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:linear-gradient(135deg,#003F8A,#C8102E)">N</div>
+        <span class="traveler-name">Neli</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VUELOS -->
+<div class="flights-section">
+  <h2 class="flights-title">✈️ Vuelos</h2>
+  <div class="flights-grid">
+    <!-- IDA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ VUELO IDA · Vie 21 ago 2026</span>
+        <span class="bp-badge">DIRECTO</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid T4</div>
+        </div>
+        <div class="bp-arrow">
+          ✈
+          <span class="bp-duration">~2h 30min</span>
+        </div>
+        <div>
+          <div class="bp-iata">LUX</div>
+          <div class="bp-city">Luxemburgo Findel</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;margin-bottom:2px">SALIDA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~12:00</span></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.72rem;margin-bottom:2px">VUELO</div>
+          <div style="font-weight:600"><span class="draft-placeholder" title="Por confirmar">LG/IB</span></div>
+          <div style="font-size:0.72rem;margin-top:4px"><span class="draft-placeholder" title="Dato estimado">~€180–250/pers</span></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~14:30</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- VUELTA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ VUELO VUELTA · Lun 24 ago 2026</span>
+        <span class="bp-badge">DIRECTO</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">LUX</div>
+          <div class="bp-city">Luxemburgo Findel</div>
+        </div>
+        <div class="bp-arrow">
+          ✈
+          <span class="bp-duration">~2h 30min</span>
+        </div>
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid T4</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;margin-bottom:2px">SALIDA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~15:00</span></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.72rem;margin-bottom:2px">VUELO</div>
+          <div style="font-weight:600"><span class="draft-placeholder" title="Por confirmar">LG/IB</span></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~17:30</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV STICKY -->
+<nav id="main-nav" role="navigation" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <button class="nav-btn" data-target="info" onclick="scrollToSection('info')">🏰 Info General</button>
+    <button class="nav-btn" data-target="mapa-ruta" onclick="scrollToSection('mapa-ruta')">🗺️ Mapa</button>
+    <button class="nav-btn" data-target="dia-1" onclick="scrollToSection('dia-1')">Día 1</button>
+    <button class="nav-btn" data-target="dia-2" onclick="scrollToSection('dia-2')">Día 2</button>
+    <button class="nav-btn" data-target="dia-3" onclick="scrollToSection('dia-3')">Día 3</button>
+    <button class="nav-btn" data-target="dia-4" onclick="scrollToSection('dia-4')">Día 4</button>
+    <button class="nav-btn" data-target="km" onclick="scrollToSection('km')">📏 Km</button>
+    <button class="nav-btn" data-target="gastro" onclick="scrollToSection('gastro')">🍽️ Gastronomía</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- INFO GENERAL -->
+<section id="info" aria-labelledby="info-title">
+  <h2 class="section-title" id="info-title">Información General</h2>
+
+  <!-- Acordeón 1: Datos Generales -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-pais">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/30217826/pexels-photo-30217826.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🇱🇺 Datos Generales — Luxemburgo</div>
+          <div class="accordion-subtitle">Euro · Francés ampliamente hablado · Sin adaptador · UTC+2 en agosto</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-pais" hidden>
+      <table class="country-table">
+        <thead><tr><th>Dato</th><th>Información</th></tr></thead>
+        <tbody>
+          <tr><td>Capital</td><td>Ciudad de Luxemburgo (Luxembourg-Ville)</td></tr>
+          <tr><td>Moneda</td><td>Euro (€) — Luxemburgo es miembro fundador de la Eurozona. Sin cambio de divisa.</td></tr>
+          <tr><td>Idiomas oficiales</td><td>Luxemburgués (Lëtzebuergesch) · Francés · Alemán · Inglés ampliamente hablado en turismo y hostelería</td></tr>
+          <tr><td>Electricidad</td><td>230V / 50Hz · Enchufe <strong>tipo F (Schuko)</strong> — igual que en España, no se necesita adaptador</td></tr>
+          <tr><td>Huso horario</td><td>CEST (UTC+2) en agosto — igual que España en verano</td></tr>
+          <tr><td>Pertenencia UE</td><td>Sí, miembro fundador desde 1957 · Espacio Schengen · Tarjeta Sanitaria Europea válida</td></tr>
+          <tr><td>Emergencias</td><td><strong>112</strong> (general: policía, bomberos, ambulancia) · <strong>113</strong> policía directa</td></tr>
+          <tr><td>Autopistas</td><td><strong>GRATUITAS</strong> para turismos — sin peaje, sin vignette</td></tr>
+          <tr><td>Velocidades</td><td>Autopista: 130 km/h · Nacional: 90 km/h · Ciudad: 50 km/h</td></tr>
+          <tr><td>Transporte público</td><td><strong>GRATUITO</strong> en todo el país desde 2020 · Buses, trenes, tranvía sin billete</td></tr>
+          <tr><td>Gasolina</td><td>La más barata de Europa Occidental — llenar SIEMPRE en Luxemburgo</td></tr>
+        </tbody>
+      </table>
+      <div class="climate-card">
+        <strong>Frases útiles en francés:</strong> Hola: <em>Bonjour</em> · Gracias: <em>Merci</em> · Por favor: <em>S'il vous plaît</em> · La cuenta: <em>L'addition, s'il vous plaît</em>
+        <br><strong>En luxemburgués:</strong> Hola: <em>Moien</em> · Gracias: <em>Merci villmols</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 2: Clima -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-clima">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Clima Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🌡️ Clima en Agosto</div>
+          <div class="accordion-subtitle">~23°C de día · ~13°C de noche · ~13 días de lluvia · Llevar impermeable</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-clima" hidden>
+      <table class="country-table">
+        <thead><tr><th>Zona</th><th>Temp. máx</th><th>Temp. mín</th><th>Condiciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Ciudad de Luxemburgo</strong></td><td>~23°C</td><td>~13°C</td><td>Variable · Tormentas vespertinas ocasionales</td></tr>
+          <tr><td><strong>Vianden / Valle del Our</strong></td><td>~23°C</td><td>~12°C</td><td>Similar · Valle encajado del río Our</td></tr>
+          <tr><td><strong>Mullerthal / Echternach</strong></td><td>~22°C</td><td>~12°C</td><td>Bosque húmedo · <strong>Llevar impermeable</strong></td></tr>
+          <tr><td><strong>Remich / Valle del Mosela</strong></td><td>~24°C</td><td>~14°C</td><td>Más soleado · Brisa del río · Viñedos</td></tr>
+        </tbody>
+      </table>
+      <div class="climate-card">
+        <strong>Consejo:</strong> Agosto tiene ~13–14 días de lluvia al mes, normalmente tormentas vespertinas breves. Llevar siempre un impermeable ligero (especialmente para el senderismo en Mullerthal). La app <strong>meteolux.lu</strong> ofrece previsión meteorológica oficial luxemburguesa.
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 3: Vehículo y Parking -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-transporte">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/19909061/pexels-photo-19909061.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Ciudad Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🚗 Vehículo, Parking y Alojamiento</div>
+          <div class="accordion-subtitle">Coche compacto · Autopistas gratis · P+R gratuito · 3 noches base Ciudad LUX</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-transporte" hidden>
+      <div class="content-section">
+        <h4>Vehículo recomendado</h4>
+        <ul class="bullet-list">
+          <li><strong>Coche compacto</strong> (4–5 plazas) — suficiente para 2 personas</li>
+          <li>Recogida y devolución: Aeropuerto Luxemburgo Findel</li>
+          <li>Precio estimado: <span class="draft-placeholder" title="Dato estimado">~€150–250 total (4 días · Sixt / Europcar / Hertz)</span></li>
+          <li>Reservar con 2–3 meses de antelación — agosto es temporada alta</li>
+          <li>Contratar <strong>seguro sin franquicia (CDW/SCDW)</strong></li>
+          <li>Fotografiar el vehículo al recoger y devolver</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Autopistas y parking</h4>
+        <div class="practical-box">
+          <strong>✅ Sin peaje, sin vignette</strong> — Las autopistas luxemburguesas son totalmente gratuitas para turismos.<br>
+          <strong>P+R gratuitos:</strong> Bouillon · Luxembourg-Sud · Kockelscheuer · Cloche d'Or (primeras 24h gratis + bus gratuito al centro)<br>
+          <strong>Parking céntrico:</strong> Place de l'Europe €1,60/h · Place d'Armes ~€2–4/h<br>
+          App útil: <strong>ParkIt Luxembourg</strong> — plazas libres en tiempo real
+        </div>
+      </div>
+      <div class="content-section">
+        <h4>Gasolina — llenar siempre en Luxemburgo</h4>
+        <div class="warning-box">
+          <strong>💡 Gasolina más barata de Europa Occidental:</strong> Diésel ~€2,007/L en Luxemburgo vs ~€2,266/L en Francia (~26 céntimos/L de diferencia). Llenad el depósito nada más entrar al país y antes de salir.
+        </div>
+      </div>
+      <div class="content-section">
+        <h4>Alojamiento — base Ciudad de Luxemburgo</h4>
+        <table class="info-alojamiento-table">
+          <thead><tr><th>Período</th><th>Noches</th><th>Zona</th><th>Tipo</th><th>Precio est.</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Vie 21 – Dom 23 ago</td>
+              <td>3</td>
+              <td>Ciudad de Luxemburgo — centro o Kirchberg</td>
+              <td>Hotel con parking o cerca de P+R</td>
+              <td><span class="draft-placeholder" title="Dato estimado">~€100–200/noche (x2)</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="climate-card">
+          <strong>Consejo alojamiento:</strong> Buscar en zonas de <strong>Kirchberg</strong> (moderno, bien comunicado, parkings grandes) o <strong>Gare</strong> (junto a estación). El casco histórico es peatonal — dejar el coche y moverse a pie o en bus gratuito.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 4: Consejos Prácticos -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-consejos">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/20054718/pexels-photo-20054718.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Luxemburgo noche" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">💡 Consejos Prácticos</div>
+          <div class="accordion-subtitle">Apps útiles · Transporte gratuito · Gasolina · Emergencias · Dinero</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-consejos" hidden>
+      <div class="content-section">
+        <h4>Dinero y pagos</h4>
+        <ul class="consejos-list">
+          <li><strong>Moneda:</strong> Euro (€) — sin cambio de divisa necesario</li>
+          <li><strong>Tarjeta:</strong> Luxemburgo es uno de los países más "cashless" de Europa · Visa y Mastercard aceptados en casi todo</li>
+          <li><strong>Efectivo:</strong> Útil para mercados, pequeñas tiendas y propinas</li>
+          <li><strong>Gasolina:</strong> La más barata de Europa Occidental — llenar SIEMPRE en Luxemburgo</li>
+          <li><strong>Propinas:</strong> No obligatorias · 5–10% si el servicio es bueno</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Apps recomendadas</h4>
+        <ul class="bullet-list">
+          <li><strong>Mobiliteit.lu</strong> — transporte público completo (bus, tren, tranvía) en tiempo real</li>
+          <li><strong>CFL Mobile</strong> — trenes luxemburgueses y billetes internacionales</li>
+          <li><strong>Google Maps offline</strong> — descargar mapa de Luxemburgo antes del viaje</li>
+          <li><strong>ParkIt Luxembourg / VDL app</strong> — plazas de parking disponibles en tiempo real</li>
+          <li><strong>Waze</strong> — navegación alternativa con tráfico en tiempo real</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Transporte público gratuito</h4>
+        <div class="practical-box">
+          Luxemburgo eliminó los billetes de transporte público en <strong>2020</strong>. Todos los buses, trenes y tranvías del país son completamente gratuitos — incluso para turistas. No hace falta ningún billete ni app para subirse a un bus. Ideal para moverse dentro de la Ciudad de Luxemburgo sin usar el coche.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>

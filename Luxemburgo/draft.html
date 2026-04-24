@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Itinerario completo del viaje a Luxemburgo — 21 al 24 de agosto 2026, 2 viajeros, 4 días por el Gran Ducado.">
+  <meta property="og:title" content="Luxemburgo 2026 · Itinerario de viaje">
+  <meta property="og:description" content="4 días por Luxemburgo: Ciudad de Luxemburgo, Castillo de Vianden, Mullerthal y Valle del Mosela.">
+  <meta property="og:image" content="https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+  <title>Luxemburgo · Agosto 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+:root {
+  --primary: #C8102E;
+  --primary-light: #E84060;
+  --primary-dark: #8B0020;
+  --accent: #003F8A;
+  --bg: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-dark: #1A1A2E;
+  --text: #2C2C2C;
+  --text-light: #6B7280;
+  --turquoise: #1565C0;
+  --border: #E5E7EB;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* ═══ HERO ═══ */
+#hero { position: relative; width: 100%; height: 100vh; min-height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(135deg, var(--primary-dark), var(--accent)); }
+#hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 50%; will-change: transform; }
+#hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.15) 100%); z-index: 1; }
+.hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 24px; }
+.hero-flag { font-size: 2.5rem; display: block; margin-bottom: 16px; animation: fadeInDown 0.8s ease both; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 700; letter-spacing: 0.06em; line-height: 1.1; color: #fff; animation: fadeInDown 0.9s ease 0.1s both; }
+.hero-subtitle { font-size: 1.2rem; font-weight: 400; color: rgba(255,255,255,0.88); margin-top: 16px; letter-spacing: 0.02em; animation: fadeInDown 1s ease 0.2s both; }
+.hero-scroll-btn { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 48px; background: none; border: none; color: rgba(255,255,255,0.85); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; animation: fadeInDown 1.1s ease 0.3s both; }
+.hero-scroll-btn:hover { color: #fff; }
+.hero-arrow { font-size: 1.5rem; animation: bounce 2s ease-in-out infinite; }
+
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ NAV ═══ */
+#main-nav { position: sticky; top: 0; z-index: 100; background: rgba(250,250,247,0.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s; }
+#main-nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+.nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; background: none; border: none; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--text-light); cursor: pointer; white-space: nowrap; position: relative; transition: color 0.2s; }
+.nav-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; right: 50%; height: 2px; background: var(--primary); transition: left 0.25s, right 0.25s; }
+.nav-btn:hover { color: var(--primary); }
+.nav-btn:hover::after { left: 16px; right: 16px; }
+.nav-btn.active { color: var(--primary); font-weight: 600; }
+.nav-btn.active::after { left: 16px; right: 16px; }
+
+/* ═══ MAIN LAYOUT ═══ */
+main { max-width: 900px; margin: 0 auto; padding: 0 24px 64px; }
+
+/* ═══ SECTION TITLES ═══ */
+.section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px; padding-top: 56px; }
+
+/* ═══ ACCORDION ═══ */
+.accordion { background: var(--bg-card); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); }
+.accordion-header { width: 100%; background: none; border: none; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; transition: background 0.2s; }
+.accordion-header:hover { background: var(--bg); }
+.accordion-header-content { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.accordion-thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: linear-gradient(135deg, var(--primary), var(--turquoise)); }
+.accordion-title { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.accordion-subtitle { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
+.accordion-chevron { font-size: 1.1rem; color: var(--text-light); transition: transform 0.25s ease; flex-shrink: 0; }
+.accordion-header[aria-expanded="true"] .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { padding: 0 20px 24px; border-top: 1px solid var(--border); }
+.accordion-body[hidden] { display: none; }
+.accordion-img-wrap { background: linear-gradient(135deg, var(--primary), var(--turquoise)); border-radius: 12px; overflow: hidden; margin: 20px 0; aspect-ratio: 16/9; }
+.accordion-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.4s ease; }
+.accordion-img-wrap img.loaded { opacity: 1; }
+
+/* ═══ CONTENT HELPERS ═══ */
+.content-section { margin-bottom: 18px; }
+.content-section h4 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px; }
+.content-section p { font-size: 0.92rem; line-height: 1.7; color: var(--text); }
+.bullet-list { list-style: none; padding: 0; margin: 0; }
+.bullet-list li { font-size: 0.92rem; line-height: 1.6; color: var(--text); padding: 3px 0 3px 22px; position: relative; }
+.bullet-list li::before { content: '✦'; position: absolute; left: 0; color: var(--accent); font-size: 0.7rem; top: 6px; }
+.practical-box { background: var(--bg); border-left: 3px solid var(--turquoise); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 12px; font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+.practical-box strong { color: var(--primary-dark); }
+.maps-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.map-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; font-weight: 500; color: var(--primary); text-decoration: none; transition: background 0.2s, border-color 0.2s; cursor: pointer; }
+.map-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.climate-card { background: var(--bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 14px; font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
+.climate-card strong { color: var(--text); font-size: 0.95rem; }
+
+/* ═══ DAY SECTION ═══ */
+.day-section { margin-top: 56px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.day-section.visible { opacity: 1; transform: translateY(0); }
+.day-header { position: relative; height: 300px; border-radius: 16px; overflow: hidden; display: flex; align-items: flex-end; margin-bottom: 32px; background: linear-gradient(135deg, var(--primary-dark), var(--accent)); }
+.day-header-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.day-header-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); }
+.day-header-content { position: relative; z-index: 2; padding: 28px 32px; color: #fff; width: 100%; }
+.day-badge { display: inline-block; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; }
+.day-date { font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+.day-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; line-height: 1.2; color: #fff; margin-bottom: 10px; }
+.day-km-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.18); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: rgba(255,255,255,0.95); font-weight: 500; }
+
+/* ═══ TIMELINE ═══ */
+.route-timeline { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.route-timeline h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 16px; }
+.timeline-steps { display: flex; flex-direction: column; gap: 0; }
+.timeline-step { display: flex; align-items: flex-start; gap: 14px; }
+.timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg-card); box-shadow: 0 0 0 2px var(--primary); flex-shrink: 0; margin-top: 3px; }
+.timeline-info { padding-bottom: 8px; flex: 1; }
+.timeline-place { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+.timeline-time { font-size: 0.8rem; color: var(--primary); font-weight: 500; }
+.timeline-leg { font-size: 0.78rem; color: var(--text-light); padding: 4px 0 4px 28px; font-style: italic; }
+
+/* ═══ TABLES ═══ */
+.km-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+.km-table th { text-align: left; padding: 12px 20px; background: var(--primary-dark); color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.km-table td { padding: 11px 20px; border-bottom: 1px solid var(--border); color: var(--text); }
+.km-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--primary-dark); }
+.km-table tr:nth-child(even) td { background: var(--bg); }
+.km-table tr:nth-child(odd) td { background: var(--bg-card); }
+.km-table tr:last-child td { background: rgba(200,16,46,0.08) !important; }
+
+.country-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; margin-bottom: 12px; }
+.country-table th { text-align: left; padding: 9px 12px; background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); border-bottom: 2px solid var(--border); }
+.country-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.country-table tr:last-child td { border-bottom: none; }
+.country-table tr:nth-child(even) td { background: var(--bg); }
+
+.info-alojamiento-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+.info-alojamiento-table th { text-align: left; padding: 9px 14px; background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); border-bottom: 2px solid var(--border); }
+.info-alojamiento-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.info-alojamiento-table tr:last-child td { border-bottom: none; }
+
+.gastro-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+.gastro-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-light); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+.gastro-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+.gastro-table tr:last-child td { border-bottom: none; }
+.gastro-table tr:nth-child(even) td { background: var(--bg); }
+.gastro-table td:first-child { font-weight: 600; color: var(--primary-dark); white-space: nowrap; }
+
+/* ═══ MISC ═══ */
+#km { margin-top: 56px; }
+#gastro { margin-top: 56px; }
+#info { margin-top: 56px; }
+#mapa-ruta { margin-top: 56px; }
+
+.gastro-zone-label { display: inline-block; background: rgba(200,16,46,0.1); color: var(--primary-dark); font-size: 0.75rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+.warning-box { background: rgba(0,63,138,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 16px; font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+.warning-box strong { color: var(--primary-dark); }
+.consejos-list { list-style: none; padding: 0; }
+.consejos-list li { padding: 6px 0 6px 24px; position: relative; font-size: 0.9rem; line-height: 1.6; border-bottom: 1px solid var(--border); }
+.consejos-list li:last-child { border-bottom: none; }
+.consejos-list li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+.restaurant-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.restaurant-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.restaurant-card h5 { font-size: 0.88rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+.restaurant-card p { font-size: 0.8rem; color: var(--text-light); line-height: 1.45; }
+
+.gps-pin { display: inline-flex; align-items: center; margin-left: 6px; opacity: 0.6; transition: opacity 0.2s, transform 0.2s; vertical-align: middle; text-decoration: none; }
+.gps-pin:hover { opacity: 1; transform: scale(1.2); }
+.qvitem { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+.qv-bullet { color: var(--accent); font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+.qv-text { flex: 1; }
+
+/* ═══ TRAVELERS ═══ */
+.travelers-section { position: relative; padding: 60px 24px; background: linear-gradient(135deg, var(--primary), var(--accent)); text-align: center; overflow: hidden; }
+.travelers-content { position: relative; z-index: 2; }
+.travelers-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 32px; }
+.travelers-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; max-width: 400px; margin: 0 auto; }
+.traveler-card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.traveler-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.traveler-name { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; color: #fff; letter-spacing: 0.03em; }
+
+/* ═══ FLIGHTS ═══ */
+.flights-section { background: var(--bg); padding: 40px 20px; }
+.flights-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px; text-align: center; }
+.flights-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .flights-grid { grid-template-columns: 1fr; } }
+.boarding-pass { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); }
+.bp-header { background: #1a1a1a; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+.bp-route { padding: 24px 20px; display: flex; align-items: center; gap: 16px; }
+.bp-iata { font-size: 2.8rem; font-weight: 800; color: var(--text); line-height: 1; }
+.bp-city { font-size: 0.75rem; color: var(--text-light); }
+.bp-arrow { flex: 1; text-align: center; color: var(--primary); font-size: 1.5rem; }
+.bp-duration { font-size: 0.75rem; color: var(--text-light); display: block; }
+.bp-footer { border-top: 2px dashed var(--border); padding: 12px 20px; display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-light); }
+.bp-time { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+.bp-badge { display: inline-block; background: var(--primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; }
+
+/* ═══ MAP LEGEND ═══ */
+.map-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; font-size: 0.82rem; color: var(--text-light); }
+.map-legend-item { display: flex; align-items: center; gap: 6px; }
+.map-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══ DRAFT ═══ */
+.draft-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #f59e0b; color: #1c1917; text-align: center; font-weight: 700; font-size: 0.85rem; padding: 8px 16px; letter-spacing: 0.05em; }
+.draft-placeholder { background: repeating-linear-gradient(45deg, rgba(255,200,0,0.15), rgba(255,200,0,0.15) 4px, transparent 4px, transparent 8px); border-bottom: 2px dashed #f59e0b; cursor: help; padding: 0 2px; }
+
+/* ═══ FOOTER ═══ */
+footer { background: var(--bg-dark); color: rgba(255,255,255,0.7); padding: 56px 24px 40px; margin-top: 80px; text-align: center; }
+.footer-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
+.footer-sub { font-size: 0.88rem; margin-bottom: 32px; color: rgba(255,255,255,0.55); }
+.footer-ascii { font-family: monospace; font-size: 0.78rem; line-height: 1.8; color: rgba(255,255,255,0.45); white-space: pre; display: inline-block; text-align: left; margin: 0 auto; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 3rem; }
+  .hero-subtitle { font-size: 1rem; }
+  main { padding: 0 16px 48px; }
+  .day-header { height: 200px; border-radius: 12px; }
+  .day-header-content { padding: 20px; }
+  .day-title { font-size: 1.4rem; }
+  .accordion-thumb { width: 60px; height: 60px; }
+  .section-title { font-size: 1.5rem; }
+  .footer-ascii { font-size: 0.65rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .day-section { opacity: 1; transform: none; }
+}
+  </style>
+</head>
+<body>
+
+<!-- DRAFT BANNER -->
+<div class="draft-banner">⚠️ BORRADOR — Los datos marcados en amarillo son estimaciones. Confirmar vuelos y alojamiento en FASE 3.</div>
+
+<!-- HERO -->
+<header id="hero">
+  <div id="hero-bg" style="background-image:url('https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop'), linear-gradient(135deg,var(--primary-dark),var(--accent))"></div>
+  <div id="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-flag">🇱🇺</span>
+    <h1 class="hero-title">Luxemburgo</h1>
+    <p class="hero-subtitle">21–24 agosto 2026 · 2 viajeros · 4 días por el Gran Ducado</p>
+    <button class="hero-scroll-btn" onclick="scrollToSection('info')">
+      Explorar <span class="hero-arrow">↓</span>
+    </button>
+  </div>
+</header>
+
+<!-- VIAJEROS -->
+<section class="travelers-section">
+  <div class="travelers-content">
+    <h2 class="travelers-title">Los Viajeros</h2>
+    <div class="travelers-grid">
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:linear-gradient(135deg,#C8102E,#003F8A)">J</div>
+        <span class="traveler-name">Juanma</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:linear-gradient(135deg,#003F8A,#C8102E)">N</div>
+        <span class="traveler-name">Neli</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VUELOS -->
+<div class="flights-section">
+  <h2 class="flights-title">✈️ Vuelos</h2>
+  <div class="flights-grid">
+    <!-- IDA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ VUELO IDA · Vie 21 ago 2026</span>
+        <span class="bp-badge">DIRECTO</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid T4</div>
+        </div>
+        <div class="bp-arrow">
+          ✈
+          <span class="bp-duration">~2h 30min</span>
+        </div>
+        <div>
+          <div class="bp-iata">LUX</div>
+          <div class="bp-city">Luxemburgo Findel</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;margin-bottom:2px">SALIDA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~12:00</span></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.72rem;margin-bottom:2px">VUELO</div>
+          <div style="font-weight:600"><span class="draft-placeholder" title="Por confirmar">LG/IB</span></div>
+          <div style="font-size:0.72rem;margin-top:4px"><span class="draft-placeholder" title="Dato estimado">~€180–250/pers</span></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~14:30</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- VUELTA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ VUELO VUELTA · Lun 24 ago 2026</span>
+        <span class="bp-badge">DIRECTO</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">LUX</div>
+          <div class="bp-city">Luxemburgo Findel</div>
+        </div>
+        <div class="bp-arrow">
+          ✈
+          <span class="bp-duration">~2h 30min</span>
+        </div>
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid T4</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;margin-bottom:2px">SALIDA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~15:00</span></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.72rem;margin-bottom:2px">VUELO</div>
+          <div style="font-weight:600"><span class="draft-placeholder" title="Por confirmar">LG/IB</span></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time"><span class="draft-placeholder" title="Por confirmar">~17:30</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV STICKY -->
+<nav id="main-nav" role="navigation" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <button class="nav-btn" data-target="info" onclick="scrollToSection('info')">🏰 Info General</button>
+    <button class="nav-btn" data-target="mapa-ruta" onclick="scrollToSection('mapa-ruta')">🗺️ Mapa</button>
+    <button class="nav-btn" data-target="dia-1" onclick="scrollToSection('dia-1')">Día 1</button>
+    <button class="nav-btn" data-target="dia-2" onclick="scrollToSection('dia-2')">Día 2</button>
+    <button class="nav-btn" data-target="dia-3" onclick="scrollToSection('dia-3')">Día 3</button>
+    <button class="nav-btn" data-target="dia-4" onclick="scrollToSection('dia-4')">Día 4</button>
+    <button class="nav-btn" data-target="km" onclick="scrollToSection('km')">📏 Km</button>
+    <button class="nav-btn" data-target="gastro" onclick="scrollToSection('gastro')">🍽️ Gastronomía</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- INFO GENERAL -->
+<section id="info" aria-labelledby="info-title">
+  <h2 class="section-title" id="info-title">Información General</h2>
+
+  <!-- Acordeón 1: Datos Generales -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-pais">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/30217826/pexels-photo-30217826.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🇱🇺 Datos Generales — Luxemburgo</div>
+          <div class="accordion-subtitle">Euro · Francés ampliamente hablado · Sin adaptador · UTC+2 en agosto</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-pais" hidden>
+      <table class="country-table">
+        <thead><tr><th>Dato</th><th>Información</th></tr></thead>
+        <tbody>
+          <tr><td>Capital</td><td>Ciudad de Luxemburgo (Luxembourg-Ville)</td></tr>
+          <tr><td>Moneda</td><td>Euro (€) — Luxemburgo es miembro fundador de la Eurozona. Sin cambio de divisa.</td></tr>
+          <tr><td>Idiomas oficiales</td><td>Luxemburgués (Lëtzebuergesch) · Francés · Alemán · Inglés ampliamente hablado en turismo y hostelería</td></tr>
+          <tr><td>Electricidad</td><td>230V / 50Hz · Enchufe <strong>tipo F (Schuko)</strong> — igual que en España, no se necesita adaptador</td></tr>
+          <tr><td>Huso horario</td><td>CEST (UTC+2) en agosto — igual que España en verano</td></tr>
+          <tr><td>Pertenencia UE</td><td>Sí, miembro fundador desde 1957 · Espacio Schengen · Tarjeta Sanitaria Europea válida</td></tr>
+          <tr><td>Emergencias</td><td><strong>112</strong> (general: policía, bomberos, ambulancia) · <strong>113</strong> policía directa</td></tr>
+          <tr><td>Autopistas</td><td><strong>GRATUITAS</strong> para turismos — sin peaje, sin vignette</td></tr>
+          <tr><td>Velocidades</td><td>Autopista: 130 km/h · Nacional: 90 km/h · Ciudad: 50 km/h</td></tr>
+          <tr><td>Transporte público</td><td><strong>GRATUITO</strong> en todo el país desde 2020 · Buses, trenes, tranvía sin billete</td></tr>
+          <tr><td>Gasolina</td><td>La más barata de Europa Occidental — llenar SIEMPRE en Luxemburgo</td></tr>
+        </tbody>
+      </table>
+      <div class="climate-card">
+        <strong>Frases útiles en francés:</strong> Hola: <em>Bonjour</em> · Gracias: <em>Merci</em> · Por favor: <em>S'il vous plaît</em> · La cuenta: <em>L'addition, s'il vous plaît</em>
+        <br><strong>En luxemburgués:</strong> Hola: <em>Moien</em> · Gracias: <em>Merci villmols</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 2: Clima -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-clima">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Clima Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🌡️ Clima en Agosto</div>
+          <div class="accordion-subtitle">~23°C de día · ~13°C de noche · ~13 días de lluvia · Llevar impermeable</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-clima" hidden>
+      <table class="country-table">
+        <thead><tr><th>Zona</th><th>Temp. máx</th><th>Temp. mín</th><th>Condiciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Ciudad de Luxemburgo</strong></td><td>~23°C</td><td>~13°C</td><td>Variable · Tormentas vespertinas ocasionales</td></tr>
+          <tr><td><strong>Vianden / Valle del Our</strong></td><td>~23°C</td><td>~12°C</td><td>Similar · Valle encajado del río Our</td></tr>
+          <tr><td><strong>Mullerthal / Echternach</strong></td><td>~22°C</td><td>~12°C</td><td>Bosque húmedo · <strong>Llevar impermeable</strong></td></tr>
+          <tr><td><strong>Remich / Valle del Mosela</strong></td><td>~24°C</td><td>~14°C</td><td>Más soleado · Brisa del río · Viñedos</td></tr>
+        </tbody>
+      </table>
+      <div class="climate-card">
+        <strong>Consejo:</strong> Agosto tiene ~13–14 días de lluvia al mes, normalmente tormentas vespertinas breves. Llevar siempre un impermeable ligero (especialmente para el senderismo en Mullerthal). La app <strong>meteolux.lu</strong> ofrece previsión meteorológica oficial luxemburguesa.
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 3: Vehículo y Parking -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-transporte">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/19909061/pexels-photo-19909061.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Ciudad Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">🚗 Vehículo, Parking y Alojamiento</div>
+          <div class="accordion-subtitle">Coche compacto · Autopistas gratis · P+R gratuito · 3 noches base Ciudad LUX</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-transporte" hidden>
+      <div class="content-section">
+        <h4>Vehículo recomendado</h4>
+        <ul class="bullet-list">
+          <li><strong>Coche compacto</strong> (4–5 plazas) — suficiente para 2 personas</li>
+          <li>Recogida y devolución: Aeropuerto Luxemburgo Findel</li>
+          <li>Precio estimado: <span class="draft-placeholder" title="Dato estimado">~€150–250 total (4 días · Sixt / Europcar / Hertz)</span></li>
+          <li>Reservar con 2–3 meses de antelación — agosto es temporada alta</li>
+          <li>Contratar <strong>seguro sin franquicia (CDW/SCDW)</strong></li>
+          <li>Fotografiar el vehículo al recoger y devolver</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Autopistas y parking</h4>
+        <div class="practical-box">
+          <strong>✅ Sin peaje, sin vignette</strong> — Las autopistas luxemburguesas son totalmente gratuitas para turismos.<br>
+          <strong>P+R gratuitos:</strong> Bouillon · Luxembourg-Sud · Kockelscheuer · Cloche d'Or (primeras 24h gratis + bus gratuito al centro)<br>
+          <strong>Parking céntrico:</strong> Place de l'Europe €1,60/h · Place d'Armes ~€2–4/h<br>
+          App útil: <strong>ParkIt Luxembourg</strong> — plazas libres en tiempo real
+        </div>
+      </div>
+      <div class="content-section">
+        <h4>Gasolina — llenar siempre en Luxemburgo</h4>
+        <div class="warning-box">
+          <strong>💡 Gasolina más barata de Europa Occidental:</strong> Diésel ~€2,007/L en Luxemburgo vs ~€2,266/L en Francia (~26 céntimos/L de diferencia). Llenad el depósito nada más entrar al país y antes de salir.
+        </div>
+      </div>
+      <div class="content-section">
+        <h4>Alojamiento — base Ciudad de Luxemburgo</h4>
+        <table class="info-alojamiento-table">
+          <thead><tr><th>Período</th><th>Noches</th><th>Zona</th><th>Tipo</th><th>Precio est.</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Vie 21 – Dom 23 ago</td>
+              <td>3</td>
+              <td>Ciudad de Luxemburgo — centro o Kirchberg</td>
+              <td>Hotel con parking o cerca de P+R</td>
+              <td><span class="draft-placeholder" title="Dato estimado">~€100–200/noche (x2)</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="climate-card">
+          <strong>Consejo alojamiento:</strong> Buscar en zonas de <strong>Kirchberg</strong> (moderno, bien comunicado, parkings grandes) o <strong>Gare</strong> (junto a estación). El casco histórico es peatonal — dejar el coche y moverse a pie o en bus gratuito.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 4: Consejos Prácticos -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-consejos">
+      <div class="accordion-header-content">
+        <img class="accordion-thumb" src="https://images.pexels.com/photos/20054718/pexels-photo-20054718.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Luxemburgo noche" loading="lazy" onerror="this.style.opacity='0'">
+        <div>
+          <div class="accordion-title">💡 Consejos Prácticos</div>
+          <div class="accordion-subtitle">Apps útiles · Transporte gratuito · Gasolina · Emergencias · Dinero</div>
+        </div>
+      </div>
+      <span class="accordion-chevron">▼</span>
+    </button>
+    <div class="accordion-body" id="acc-consejos" hidden>
+      <div class="content-section">
+        <h4>Dinero y pagos</h4>
+        <ul class="consejos-list">
+          <li><strong>Moneda:</strong> Euro (€) — sin cambio de divisa necesario</li>
+          <li><strong>Tarjeta:</strong> Luxemburgo es uno de los países más "cashless" de Europa · Visa y Mastercard aceptados en casi todo</li>
+          <li><strong>Efectivo:</strong> Útil para mercados, pequeñas tiendas y propinas</li>
+          <li><strong>Gasolina:</strong> La más barata de Europa Occidental — llenar SIEMPRE en Luxemburgo</li>
+          <li><strong>Propinas:</strong> No obligatorias · 5–10% si el servicio es bueno</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Apps recomendadas</h4>
+        <ul class="bullet-list">
+          <li><strong>Mobiliteit.lu</strong> — transporte público completo (bus, tren, tranvía) en tiempo real</li>
+          <li><strong>CFL Mobile</strong> — trenes luxemburgueses y billetes internacionales</li>
+          <li><strong>Google Maps offline</strong> — descargar mapa de Luxemburgo antes del viaje</li>
+          <li><strong>ParkIt Luxembourg / VDL app</strong> — plazas de parking disponibles en tiempo real</li>
+          <li><strong>Waze</strong> — navegación alternativa con tráfico en tiempo real</li>
+        </ul>
+      </div>
+      <div class="content-section">
+        <h4>Transporte público gratuito</h4>
+        <div class="practical-box">
+          Luxemburgo eliminó los billetes de transporte público en <strong>2020</strong>. Todos los buses, trenes y tranvías del país son completamente gratuitos — incluso para turistas. No hace falta ningún billete ni app para subirse a un bus. Ideal para moverse dentro de la Ciudad de Luxemburgo sin usar el coche.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+<!-- ================================================================
+  mapa.html — MAPA LEAFLET AUTOCONTENIDO
+  ⚠️  L.map() existe SOLO en este fichero. No añadir en base.html ni end.html.
+  ⚠️  Leaflet en base.html: SIN integrity ni crossorigin.
+================================================================ -->
+
+<section id="mapa-ruta" aria-labelledby="mapa-title">
+  <h2 class="section-title" id="mapa-title">🗺️ Mapa de la Ruta</h2>
+  <div id="route-map" style="height:480px;width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#C8102E"></div> Día 1 — Llegada Findel · Ciudad de Luxemburgo</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#003F8A"></div> Día 2 — Castillo de Vianden · Lago Upper Sûre</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2E8B57"></div> Día 3 — Mullerthal · Echternach · Valle del Mosela</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#8B0020"></div> Día 4 — Regreso desde Findel</div>
+  </div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MAPA LEAFLET — única inicialización en todo el HTML
+   ⚠️  NO duplicar este bloque en base.html ni end.html
+══════════════════════════════════════════════════════════════ */
+(function() {
+  function initRouteMap() {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var map = L.map('route-map', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([49.72, 6.18], 9);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    function mkIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: '<svg viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="' + color + '"/><circle cx="12" cy="11" r="5" fill="#fff"/></svg>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    var days = [
+      { color: '#C8102E', points: [
+        { lat: 49.6233, lng: 6.2044, name: 'Aeropuerto Findel (LUX)', info: 'Día 1 — Llegada' },
+        { lat: 49.6131, lng: 6.1339, name: 'Bock Casemates', info: 'Día 1 — Tardes' },
+        { lat: 49.6091, lng: 6.1347, name: 'Barrio del Grund', info: 'Día 1 — Noche' },
+        { lat: 49.6119, lng: 6.1300, name: 'Place d\'Armes', info: 'Día 1 — Centro' }
+      ]},
+      { color: '#003F8A', points: [
+        { lat: 49.9349, lng: 6.2028, name: 'Castillo de Vianden', info: 'Día 2 — Mañana' },
+        { lat: 49.9000, lng: 5.8667, name: 'Lago Upper Sûre', info: 'Día 2 — Tarde' }
+      ]},
+      { color: '#2E8B57', points: [
+        { lat: 49.7814, lng: 6.3508, name: 'Mullerthal / Gorges du Loup', info: 'Día 3 — Mañana' },
+        { lat: 49.8116, lng: 6.4213, name: 'Echternach', info: 'Día 3 — Mediodía' },
+        { lat: 49.5456, lng: 6.3669, name: 'Remich (Valle del Mosela)', info: 'Día 3 — Tarde' }
+      ]},
+      { color: '#8B0020', points: [
+        { lat: 49.6131, lng: 6.1372, name: 'Chemin de la Corniche', info: 'Día 4 — Mañana' },
+        { lat: 49.6233, lng: 6.2044, name: 'Aeropuerto Findel (LUX)', info: 'Día 4 — Regreso' }
+      ]}
+    ];
+
+    var allLatLngs = [];
+
+    days.forEach(function(day) {
+      var dayLatLngs = [];
+      day.points.forEach(function(p) {
+        var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
+        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        allLatLngs.push([p.lat, p.lng]);
+        dayLatLngs.push([p.lat, p.lng]);
+      });
+      if (dayLatLngs.length > 1) {
+        L.polyline(dayLatLngs, { color: day.color, weight: 3, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+      }
+    });
+
+    // Transferencias entre días
+    var transfers = [
+      { from: [49.6119, 6.1300], to: [49.9349, 6.2028] },   // Ciudad → Vianden
+      { from: [49.9349, 6.2028], to: [49.9000, 5.8667] },   // Vianden → Upper Sûre
+      { from: [49.9000, 5.8667], to: [49.6119, 6.1300] },   // Regreso a base
+      { from: [49.6119, 6.1300], to: [49.7814, 6.3508] },   // Ciudad → Mullerthal
+      { from: [49.5456, 6.3669], to: [49.6119, 6.1300] }    // Remich → Ciudad
+    ];
+
+    transfers.forEach(function(t) {
+      L.polyline([t.from, t.to], { color: '#d1d5db', weight: 2, opacity: 0.4, dashArray: '4 8' }).addTo(map);
+    });
+
+    if (allLatLngs.length > 0) {
+      map.fitBounds(allLatLngs, { padding: [30, 30] });
+    }
+
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+
+    setTimeout(function() { map.invalidateSize(); }, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouteMap);
+  } else {
+    initRouteMap();
+  }
+})();
+</script>
+<!-- ============================================================
+     DÍA 1 — viernes 21 agosto: Llegada → Ciudad de Luxemburgo
+     ============================================================ -->
+<section id="dia-1" class="day-section" aria-labelledby="dia1-title">
+
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 1</span>
+      <p class="day-date">viernes, 21 de agosto</p>
+      <h2 class="day-title" id="dia1-title">Llegada → Ciudad de Luxemburgo</h2>
+      <span class="day-km-badge">✈️ LUX Findel → Centro ~20 min</span>
+    </div>
+  </div>
+
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Aeropuerto Findel (LUX)</div>
+          <div class="timeline-time">~14:30 — Llegada y recogida del coche</div>
+        </div>
+      </div>
+      <div class="timeline-leg">~20 min al centro</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Bock Casemates</div>
+          <div class="timeline-time">Tarde — Entrada €11/pers · Hasta las 19:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">~10 min a pie</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Barrio del Grund · Cena</div>
+          <div class="timeline-time">Tarde-noche — Brasserie Bosso o similar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Bock Casemates -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-casemates">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--accent))">
+          <img src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Bock Casemates" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Bock Casemates</h3>
+          <p class="accordion-subtitle">Galerías subterráneas talladas en roca del s. X · Patrimonio Mundial UNESCO</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-casemates" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Ciudad de Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>Las Casemates del Bock son una red de galerías subterráneas excavadas en la roca arenisca, que se extienden bajo la antigua fortaleza del Bock, la roca sobre la que se fundó la Ciudad de Luxemburgo en el año 963. El sistema de túneles fue excavado originalmente en el siglo XVII bajo dominio español y ampliado sucesivamente por austriacos y prusianos, hasta alcanzar más de 23 km de galerías en su época de máximo esplendor.</p>
+        <p>Durante la Segunda Guerra Mundial sirvieron de refugio antiaéreo para más de 35.000 personas. Hoy se pueden visitar 17 km de galerías — el resto fue destruido tras el Tratado de Londres de 1867, que obligó al desmantelamiento de las fortificiones. El conjunto forma parte del Patrimonio Mundial de la UNESCO junto con las antiguas murallas.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Las galerías subterráneas:</strong> Laberinto de túneles y cámaras militares a varios niveles. Temperatura interior ~12°C.</span>
+            <a href="https://maps.google.com/?q=49.6131,6.1339" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Vistas del Grund desde el Bock:</strong> Panorama sobre el barrio del Grund, el río Alzette y el viaducto.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Ponte una capa:</strong> La temperatura interior es de unos 12°C — llevar algo de abrigo aunque sea agosto.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>🎟️ Entrada:</strong> Adultos €11 · <strong>⏰ Horario agosto:</strong> 9:45–19:00 (último acceso) · Duración ~45 min
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.6131,6.1339" target="_blank" rel="noopener" class="map-btn">📍 Bock Casemates</a>
+      </div>
+      <div class="climate-card">☀️ <strong>Clima — Ciudad de Luxemburgo (agosto)</strong><br>Temp. máx. ~23°C · mín. ~13°C · Tormentas breves vespertinas ocasionales · ~7h de sol al día</div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Barrio del Grund -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-grund">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--accent))">
+          <img src="https://images.pexels.com/photos/20054718/pexels-photo-20054718.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Grund Luxemburgo" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Barrio del Grund + Cena</h3>
+          <p class="accordion-subtitle">El barrio más pintoresco de Luxemburgo · Orillas del río Alzette</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-grund" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/20054718/pexels-photo-20054718.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Luxemburgo de noche" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>El Grund</h4>
+        <p>El Grund es el barrio medieval al pie de las murallas, en el fondo del valle del Alzette. Es el rincón más auténtico y fotogénico de Luxemburgo: casas medievales, jardines, terrazas junto al río y la Abadía de Neumünster reconvertida en centro cultural. Para bajar desde la meseta de la ciudad alta hasta el Grund hay ascensores públicos gratuitos o una bajada peatonal pintoresca.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver y hacer</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Paseo por las orillas del Alzette:</strong> Recorrido junto al río, bajo las murallas iluminadas al atardecer.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Abadía de Neumünster:</strong> Antigua abadía reconvertida en centro cultural. Exposiciones y conciertos en agosto.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Brasserie Bosso:</strong> Cocina tradicional luxemburguesa, terraza junto al río. Precio medio €20–30/pers.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>♿ Ascensores públicos:</strong> Gratuitos — conectan el Grund con la ciudad alta · Funcionan hasta medianoche
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.6091,6.1347" target="_blank" rel="noopener" class="map-btn">📍 Barrio del Grund</a>
+        <a href="https://maps.google.com/?q=49.6119,6.1300" target="_blank" rel="noopener" class="map-btn">📍 Place d'Armes</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     DÍA 2 — sábado 22 agosto: Castillo de Vianden + Lago Upper Sûre
+     ============================================================ -->
+<section id="dia-2" class="day-section" aria-labelledby="dia2-title">
+
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/28939950/pexels-photo-28939950.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 2</span>
+      <p class="day-date">sábado, 22 de agosto</p>
+      <h2 class="day-title" id="dia2-title">Castillo de Vianden · Valle del Our</h2>
+      <span class="day-km-badge">🚗 ~160 km · excursión completa</span>
+    </div>
+  </div>
+
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Ciudad de Luxemburgo — salida</div>
+          <div class="timeline-time">9:00 · 80 km · ~1h 20min</div>
+        </div>
+      </div>
+      <div class="timeline-leg">80 km · 1h 20min · Autopista N7 + N17</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Castillo de Vianden</div>
+          <div class="timeline-time">10:30 · Entrada €13/pers · Abierto 10:00–18:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">30 min · Vianden → Lago Upper Sûre</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Lago Upper Sûre (Lac de la Haute-Sûre)</div>
+          <div class="timeline-time">Tarde · Paisaje natural · Baño opcional</div>
+        </div>
+      </div>
+      <div class="timeline-leg">~1h 30min de vuelta a la base</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Ciudad de Luxemburgo — regreso</div>
+          <div class="timeline-time">~18:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Castillo de Vianden -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-vianden">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--accent))">
+          <img src="https://images.pexels.com/photos/14049728/pexels-photo-14049728.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Castillo de Vianden" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Castillo de Vianden ★</h3>
+          <p class="accordion-subtitle">Uno de los castillos medievales mejor conservados de Europa · s. XI–XIV</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-vianden" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/28939950/pexels-photo-28939950.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Castillo de Vianden en las colinas" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El Castillo de Vianden es uno de los mayores y más bellos castillos del arte románico y gótico en Europa. Construido entre los siglos X y XIV sobre restos de una fortaleza romana, fue residencia de los Condes de Vianden, entre los más poderosos señores feudales de la región del Rin. Victor Hugo vivió exiliado en Vianden en 1871 y quedó fascinado por el castillo y el pueblo — existe un pequeño museo dedicado a él en la misma villa.</p>
+        <p>Tras años de deterioro, el castillo fue restaurado meticulosamente entre 1977 y 2009. Hoy es el monumento más visitado de Luxemburgo después del casco histórico de la capital.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Salas medievales y capilla palatina:</strong> Interior completamente restaurado con mobiliario y exposiciones sobre la vida medieval.</span>
+            <a href="https://maps.google.com/?q=49.9349,6.2028" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Teleférico a las ruinas (si disponible en agosto):</strong> Vistas aéreas del castillo y el pueblo de Vianden desde las alturas.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Pueblo medieval de Vianden:</strong> Calles empedradas, casas medievales, puente sobre el río Our.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Museo Victor Hugo:</strong> Casa donde el escritor vivió exiliado en 1871. Pequeño pero interesante.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>🎟️ Entrada:</strong> Adultos €13 · Audioguía castellano +€2 · <strong>⏰ Horario agosto:</strong> 10:00–18:00 todos los días · Duración ~1h
+      </div>
+      <div class="practical-box">
+        <strong>🍽️ Almuerzo recomendado:</strong> Restaurant Victor Hugo (frente al museo) · Cocina luxemburguesa refinada · Terraza con vistas al castillo · €25–40/pers
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.9349,6.2028" target="_blank" rel="noopener" class="map-btn">📍 Castillo de Vianden</a>
+        <a href="https://maps.google.com/?q=49.9354,6.2017" target="_blank" rel="noopener" class="map-btn">📍 Pueblo de Vianden</a>
+      </div>
+      <div class="climate-card">☀️ <strong>Clima — Vianden (agosto)</strong><br>Temp. máx. ~23°C · mín. ~12°C · Valle del Our · Llevar algo de abrigo por las mañanas</div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Lago Upper Sûre -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-sûre">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--primary))">
+          <img src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Lago Luxemburgo" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Lago Upper Sûre (Haute-Sûre)</h3>
+          <p class="accordion-subtitle">Embalse natural en el corazón del Parque Natural Our · Paisaje verde y sereno</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-sûre" hidden>
+      <div class="content-section">
+        <h4>El lago</h4>
+        <p>El Lac de la Haute-Sûre es el principal embalse de Luxemburgo, en el corazón del Parque Natural de la región Our. Con 5,5 km² de superficie, es el destino natural más popular del norte del país. En verano se convierte en zona de actividades acuáticas: kayak, paddle surf, senderismo en la orilla.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué hacer</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>Paseo por la orilla:</strong> Senderos marcados alrededor del lago, vistas del bosque.</span></li>
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>Kayak o paddle surf:</strong> Alquiler disponible en Insenborn o Liefrange en temporada de verano.</span></li>
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>Picnic:</strong> Llevar algo de comida y disfrutar del paisaje tranquilo antes de volver a la base.</span></li>
+        </ul>
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.9000,5.8667" target="_blank" rel="noopener" class="map-btn">📍 Lago Upper Sûre</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+<!-- ============================================================
+     DÍA 3 — domingo 23 agosto: Mullerthal + Echternach + Mosela
+     ============================================================ -->
+<section id="dia-3" class="day-section" aria-labelledby="dia3-title">
+
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 3</span>
+      <p class="day-date">domingo, 23 de agosto</p>
+      <h2 class="day-title" id="dia3-title">Mullerthal · Echternach · Valle del Mosela</h2>
+      <span class="day-km-badge">🚗 ~120 km · día circular</span>
+    </div>
+  </div>
+
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Ciudad de Luxemburgo — salida temprana</div>
+          <div class="timeline-time">8:30 · 35 km · ~40 min hacia Echternach</div>
+        </div>
+      </div>
+      <div class="timeline-leg">35 km · 40 min · A1 → N11</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Mullerthal — Gorges du Loup</div>
+          <div class="timeline-time">9:30 · Senderismo ~2–3h · GRATUITO</div>
+        </div>
+      </div>
+      <div class="timeline-leg">5 min en coche · Gorges → Echternach</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Echternach — Casco histórico · Almuerzo</div>
+          <div class="timeline-time">12:30 · Basílica (gratis) · Restaurante local</div>
+        </div>
+      </div>
+      <div class="timeline-leg">30 km · 30 min · Echternach → Remich</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Remich — Valle del Mosela · Cata de vinos</div>
+          <div class="timeline-time">15:00 · Cata bodega ~€5–15/pers · Cena con vistas al río</div>
+        </div>
+      </div>
+      <div class="timeline-leg">30 min de vuelta a la base</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Ciudad de Luxemburgo — regreso</div>
+          <div class="timeline-time">~21:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Mullerthal -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-mullerthal">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#2E8B57)">
+          <img src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Mullerthal" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Mullerthal — Gorges du Loup ★</h3>
+          <p class="accordion-subtitle">La "Pequeña Suiza Luxemburguesa" · Rocas, bosques y barrancos · GRATUITO</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-mullerthal" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/17007958/pexels-photo-17007958.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Paisaje Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>La Pequeña Suiza Luxemburguesa</h4>
+        <p>La región de Mullerthal, conocida como la "Pequeña Suiza Luxemburguesa", es un paisaje espectacular de formaciones rocosas de arenisca, gargantas estrechas, bosques de hayas y pequeños arroyos. Las Gorges du Loup son la ruta más icónica: un sendero que discurre entre enormes bloques de roca esculpidos por la erosión, pasos estrechos y pequeñas cascadas.</p>
+        <p>El senderismo es completamente gratuito — se trata de espacio natural abierto. La dificultad es moderada, con algunos pasos que requieren escalar brevemente sobre la roca. En agosto es importante llegar pronto para encontrar parking.</p>
+      </div>
+      <div class="content-section">
+        <h4>Rutas recomendadas</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Gorges du Loup (Ruta B):</strong> ~2–3h · Circular desde Echternach · La más espectacular · Pasos estrechos entre rocas.</span>
+            <a href="https://maps.google.com/?q=49.7814,6.3508" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Berdorf:</strong> Rocas masivas y formaciones espectaculares · ~1h 30min · Más fácil que las Gorges.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>🅿️ Parking:</strong> Junto al lago de Echternach (gratuito o bajo coste) · Llegar antes de las 9:00 en agosto<br>
+        <strong>👟 Calzado:</strong> Zapatos de senderismo o deportivas con grip — el suelo es húmedo y rocoso<br>
+        <strong>🧥 Llevar:</strong> Impermeable ligero (bosque húmedo incluso con buen tiempo)
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.7814,6.3508" target="_blank" rel="noopener" class="map-btn">📍 Gorges du Loup</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Echternach -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-echternach">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--primary))">
+          <img src="https://images.pexels.com/photos/30217826/pexels-photo-30217826.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Echternach" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Echternach — La ciudad más antigua de Luxemburgo</h3>
+          <p class="accordion-subtitle">Abadía benedictina s. VII · Basílica San Willibrord · Orillas del Sûre</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-echternach" hidden>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>Echternach es la ciudad más antigua de Luxemburgo, fundada por el monje anglosajón San Willibrord en el año 698, cuando construyó una abadía benedictina que se convirtió en uno de los principales centros de evangelización de la Europa carolingia. La ciudad conserva su casco medieval prácticamente intacto, con la Place du Marché porticada y el lago artificial que en verano es punto de baño y actividades acuáticas.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Basílica de San Willibrord:</strong> Románica del s. XI, con la cripta donde reposan los restos del santo. Entrada gratuita.</span>
+            <a href="https://maps.google.com/?q=49.8116,6.4213" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Place du Marché:</strong> Plaza porticada medieval con terrazas y restaurantes. Ideal para almorzar.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Lago de Echternach:</strong> Playa artificial con baño en verano. Perfecto para un descanso antes de seguir al Mosela.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>🎟️ Basílica:</strong> Gratuita · Museo de la Abadía: €3 (jul–ago, 10h–17h)
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.8116,6.4213" target="_blank" rel="noopener" class="map-btn">📍 Echternach centro</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Valle del Mosela -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-mosela">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2E8B57,var(--accent))">
+          <img src="https://images.pexels.com/photos/19909061/pexels-photo-19909061.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Luxemburgo" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Valle del Mosela — Remich · Vinos</h3>
+          <p class="accordion-subtitle">Viñedos en terrazas · Crémant luxemburgués · Terrazas sobre el río</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-mosela" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/19909061/pexels-photo-19909061.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>La región vinícola de Luxemburgo</h4>
+        <p>El Valle del Mosela luxemburgués es una de las regiones vinícolas más septentrionales de Europa, con viñedos en terrazas de pizarra y caliza que producen excelentes blancos: Riesling, Pinot Gris, Auxerrois y el Crémant de Luxembourg, el espumoso DO del país que compite en calidad con el champagne a una fracción del precio.</p>
+        <p>Remich es el principal centro turístico del valle, con un paseo fluvial animado, terrazas de restaurantes sobre el Mosela y bodegas visitables. La visita a una bodega con cata es una experiencia muy asequible y recomendable.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué hacer en Remich</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Visita y cata en bodega:</strong> €5–15/persona · Varias bodegas en Remich y Wormeldange · Reservar con antelación en agosto.</span>
+            <a href="https://maps.google.com/?q=49.5456,6.3669" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Paseo por el puerto fluvial:</strong> El Mosela es una vía navegable — en verano pasan barcos de crucero.</span>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Cena en Brasserie Beim Renert:</strong> Cocina luxemburguesa tradicional · Terraza con vistas directas al Mosela · €20–35/pers.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>🍷 Comprar para llevar:</strong> Crémant de Luxembourg en las bodegas o supermercados locales · Excelente relación calidad-precio · Buen souvenir gastronómico
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.5456,6.3669" target="_blank" rel="noopener" class="map-btn">📍 Remich (Mosela)</a>
+      </div>
+      <div class="climate-card">🌤️ <strong>Clima — Valle del Mosela (agosto)</strong><br>Temp. máx. ~24°C · La zona más soleada del itinerario · Brisa del río agradable · Ideal para terrazas</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     DÍA 4 — lunes 24 agosto: Mañana libre → Regreso
+     ============================================================ -->
+<section id="dia-4" class="day-section" aria-labelledby="dia4-title">
+
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/30217826/pexels-photo-30217826.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 4</span>
+      <p class="day-date">lunes, 24 de agosto</p>
+      <h2 class="day-title" id="dia4-title">Corniche · MUDAM → Regreso</h2>
+      <span class="day-km-badge">✈️ Vuelo de vuelta a Madrid</span>
+    </div>
+  </div>
+
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Chemin de la Corniche</div>
+          <div class="timeline-time">9:00 · "El balcón más bello de Europa" · GRATUITO</div>
+        </div>
+      </div>
+      <div class="timeline-leg">~15 min a pie</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Palacio Gran Ducal + Place d'Armes</div>
+          <div class="timeline-time">10:00 · Exterior libre · Última foto del centro</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Opcional: MUDAM (10:00–18:00, €10/pers)</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Última comida en Ciudad de Luxemburgo</div>
+          <div class="timeline-time">12:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">20 min al aeropuerto</div>
+      <div class="timeline-step">
+        <span class="timeline-dot"></span>
+        <div class="timeline-info">
+          <div class="timeline-place">Aeropuerto Findel (LUX) · Vuelo de regreso</div>
+          <div class="timeline-time"><span class="draft-placeholder" title="Por confirmar">~15:00 · LUX → MAD</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Chemin de la Corniche -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-corniche">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary-dark),var(--accent))">
+          <img src="https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" alt="Corniche Luxemburgo" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Chemin de la Corniche</h3>
+          <p class="accordion-subtitle">"El balcón más bello de Europa" · Vistas panorámicas del Grund y las murallas · GRATUITO</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-corniche" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/28995635/pexels-photo-28995635.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Ciudad de Luxemburgo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>El paseo</h4>
+        <p>El Chemin de la Corniche es un paseo peatonal que bordea las antiguas murallas medievales desde la catedral Notre-Dame hasta la Casemate du Bock, ofreciendo vistas espectaculares sobre el barrio del Grund, el río Alzette y las torres de la fortaleza. Es absolutamente gratuito y accesible las 24 horas. Se le conoce popularmente como "el balcón más bello de Europa".</p>
+      </div>
+      <div class="content-section">
+        <h4>En la zona</h4>
+        <ul style="list-style:none;padding:0">
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>Palacio Gran Ducal:</strong> Sede oficial del Gran Duque. Exterior visitable · En agosto hay visitas guiadas por el interior (reservar con antelación).</span>
+            <a href="https://maps.google.com/?q=49.6121,6.1303" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>MUDAM (opcional):</strong> Museo de Arte Moderno en el Parc Dräi Eechelen · Edificio de I.M. Pei sobre ruinas de la fortaleza · €10 adultos · Abre a las 10:00.</span>
+            <a href="https://maps.google.com/?q=49.6244,6.1594" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem"><span class="qv-bullet">✦</span><span class="qv-text"><strong>Pont Adolphe:</strong> El puente más fotografiado de Luxemburgo · Vista desde la Corniche o desde abajo.</span></li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>⏰ Gestión del tiempo:</strong> Corniche + Palacio ~1h · MUDAM +1h 30min · Salir hacia el aeropuerto con 2h de antelación · Aeropuerto Findel está a solo 20 min del centro
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=49.6131,6.1372" target="_blank" rel="noopener" class="map-btn">📍 Chemin de la Corniche</a>
+        <a href="https://maps.google.com/?q=49.6244,6.1594" target="_blank" rel="noopener" class="map-btn">📍 MUDAM</a>
+        <a href="https://maps.google.com/?q=49.6092,6.1269" target="_blank" rel="noopener" class="map-btn">📍 Pont Adolphe</a>
+        <a href="https://maps.google.com/?q=49.6233,6.2044" target="_blank" rel="noopener" class="map-btn">✈️ Aeropuerto Findel</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+</main>
+
+  <!-- SECCIÓN KM -->
+  <section id="km" aria-labelledby="km-title">
+    <div style="max-width:900px;margin:0 auto;padding:0 24px">
+      <h2 class="section-title" id="km-title">📏 Kilómetros y Tiempos</h2>
+      <table class="km-table">
+        <thead>
+          <tr><th>Tramo</th><th>Km</th><th>Tiempo (aprox.)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Aeropuerto Findel → Ciudad de Luxemburgo (hotel)</td>
+            <td>~10 km</td>
+            <td>20 min</td>
+          </tr>
+          <tr>
+            <td>Ciudad de Luxemburgo → Castillo de Vianden</td>
+            <td>~80 km</td>
+            <td>1h 20min</td>
+          </tr>
+          <tr>
+            <td>Vianden → Lago Upper Sûre</td>
+            <td>~35 km</td>
+            <td>30 min</td>
+          </tr>
+          <tr>
+            <td>Upper Sûre → Ciudad de Luxemburgo</td>
+            <td>~70 km</td>
+            <td>1h 10min</td>
+          </tr>
+          <tr>
+            <td>Ciudad → Mullerthal (Gorges du Loup)</td>
+            <td>~35 km</td>
+            <td>40 min</td>
+          </tr>
+          <tr>
+            <td>Mullerthal → Echternach</td>
+            <td>~5 km</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td>Echternach → Remich (Valle del Mosela)</td>
+            <td>~45 km</td>
+            <td>50 min</td>
+          </tr>
+          <tr>
+            <td>Remich → Ciudad de Luxemburgo</td>
+            <td>~25 km</td>
+            <td>30 min</td>
+          </tr>
+          <tr>
+            <td>Ciudad de Luxemburgo → Aeropuerto Findel</td>
+            <td>~10 km</td>
+            <td>20 min</td>
+          </tr>
+          <tr style="font-weight:700;border-top:2px solid currentColor">
+            <td><strong>TOTAL CONDUCCIÓN APROXIMADA</strong></td>
+            <td><strong>~315 km</strong></td>
+            <td><strong>~5h 30min</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECCIÓN GASTRONOMÍA GENERAL -->
+  <section id="gastro" aria-labelledby="gastro-title">
+    <div style="max-width:900px;margin:0 auto;padding:0 24px">
+      <h2 class="section-title" id="gastro-title">🍽️ Gastronomía Luxemburguesa</h2>
+      <div class="accordion">
+
+        <button class="accordion-header" aria-expanded="true" aria-controls="gastro-platos">
+          🥘 Platos Típicos
+        </button>
+        <div class="accordion-body" id="gastro-platos">
+          <table class="km-table">
+            <thead>
+              <tr><th>Plato</th><th>Región</th><th>Descripción</th><th>Dónde probarlo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Judd mat Gaardebounen</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>El plato nacional: cuello de cerdo ahumado con habas verdes y patatas · Sabor contundente y ahumado</td>
+                <td>Restaurantes tradicionales en Ciudad de Luxemburgo</td>
+              </tr>
+              <tr>
+                <td><strong>Paschtéit</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>Vol-au-vent relleno de carne y setas en salsa cremosa · Plato festivo luxemburgués por excelencia</td>
+                <td>Brasseries y restaurantes clásicos</td>
+              </tr>
+              <tr>
+                <td><strong>Bouneschlupp</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>Sopa de judías verdes con patatas, tocino y nata · Reconfortante y típica de otoño-invierno</td>
+                <td>Cualquier restaurante tradicional</td>
+              </tr>
+              <tr>
+                <td><strong>Gromperekichelcher</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>Tortitas crujientes de patata con cebolla y perejil · El snack de calle luxemburgués · Muy populares en ferias</td>
+                <td>Puestos callejeros y ferias · Brasseries</td>
+              </tr>
+              <tr>
+                <td><strong>Friture de la Moselle</strong></td>
+                <td><span class="gastro-zone-label">Valle del Mosela</span></td>
+                <td>Fritura de pescado del río Mosela (goujons, brema, lucio) · Acompañada de salsa tártara</td>
+                <td>Remich · Restaurantes del Mosela</td>
+              </tr>
+              <tr>
+                <td><strong>Quiche luxembourgeoise</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>Quiche con nata, bacon y queso · Más esponjosa que la lorraine · Omnipresente en panaderías</td>
+                <td>Panaderías y brasseries en toda la ciudad</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button class="accordion-header" aria-expanded="true" aria-controls="gastro-bebidas">
+          🍷 Vinos y Bebidas Típicas
+        </button>
+        <div class="accordion-body" id="gastro-bebidas">
+          <table class="km-table">
+            <thead>
+              <tr><th>Bebida</th><th>Región</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Crémant de Luxembourg</strong></td>
+                <td><span class="gastro-zone-label">Mosela (DO)</span></td>
+                <td>Espumoso DO elaborado con método champenoise · Uvas Pinot Blanc, Auxerrois y Riesling · Mucho mejor precio que el Champagne · Ideal en las bodegas de Remich</td>
+              </tr>
+              <tr>
+                <td><strong>Riesling luxemburgués</strong></td>
+                <td><span class="gastro-zone-label">Mosela</span></td>
+                <td>El blanco más expresivo del Mosela luxemburgués · Mineral, fresco, elegante · Maridar con friture y queso</td>
+              </tr>
+              <tr>
+                <td><strong>Rivaner (Müller-Thurgau)</strong></td>
+                <td><span class="gastro-zone-label">Mosela</span></td>
+                <td>El vino blanco más producido en Luxemburgo · Ligero, afrutado y fácil de beber · El vino cotidiano del luxemburgués</td>
+              </tr>
+              <tr>
+                <td><strong>Auxerrois</strong></td>
+                <td><span class="gastro-zone-label">Mosela</span></td>
+                <td>Variedad autóctona del Mosela · Blanco redondo y suave con notas de miel y melocotón</td>
+              </tr>
+              <tr>
+                <td><strong>Bofferding</strong></td>
+                <td><span class="gastro-zone-label">Ciudad de Luxemburgo</span></td>
+                <td>La cerveza nacional luxemburguesa · Lager rubia suave · La más vendida del país desde 1842</td>
+              </tr>
+              <tr>
+                <td><strong>Mirabelle eau-de-vie</strong></td>
+                <td><span class="gastro-zone-label">Nacional</span></td>
+                <td>Aguardiente de ciruelas mirabelle · El digestivo tradicional luxemburgués · Aromático y frutal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p class="footer-title">Luxemburgo 2026 🇱🇺</p>
+  <p class="footer-sub">21–24 agosto · 2 viajeros · ~315 km por el Gran Ducado</p>
+  <pre class="footer-ascii">
+  MAD (Madrid) ──────────────────────────► LUX Findel
+                   ~2h 30min · Luxair/Iberia     │
+                                                  │ 10 km / 20 min
+                                                  ▼
+                              ★ CIUDAD DE LUXEMBURGO (Base · 3 noches)
+                                   │ Bock Casemates · Grund · Place d'Armes
+                                   │
+             ┌─────────────────────┤ DÍA 2 ─────────────────────┐
+             │                     │                             │
+             │  80 km / 1h 20min   │                  70 km / 1h 10min
+             ▼                     │                             ▼
+  Castillo de Vianden               │               Upper Sûre ◄─ 35km / 30min
+  (Valle del Our)                   │               (Embalse)
+                                   │
+             ┌─────────────────────┤ DÍA 3 ──────────────────┐
+             │                     │                          │
+             │  35 km / 40min      │                35km / 30min
+             ▼                     │                          ▼
+  Mullerthal / Gorges du Loup       │                      Remich
+  ──► Echternach (5km)             │               (Valle del Mosela)
+                                   │
+                                   │ DÍA 4
+                                   │ Chemin de la Corniche · MUDAM
+                                   │
+                                   │ 10 km / 20 min
+                                   ▼
+                              LUX Findel ──────────────────► MAD (Madrid)
+  </pre>
+</footer>
+
+<script>
+/**
+ * Luxemburgo/_draft/end.html — JavaScript BLOQUE 2 únicamente
+ * Mapa Leaflet: ver mapa.html (fichero independiente)
+ */
+
+/* ══════════════════════════════════════════════════════════════
+   BLOQUE 2 — ACORDEONES, NAV, PARALLAX, FADE-IN, LAZY LOAD
+   (único bloque JS en end.html — el mapa va en mapa.html)
+══════════════════════════════════════════════════════════════ */
+(function() {
+  'use strict';
+
+  /* ── ACORDEONES ──────────────────────────────────── */
+  function initAccordions() {
+    const headers = document.querySelectorAll('.accordion-header');
+
+    headers.forEach(function(header) {
+      const bodyId = header.getAttribute('aria-controls');
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+
+      if (header.getAttribute('aria-expanded') === 'true') {
+        body.removeAttribute('hidden');
+      }
+
+      header.addEventListener('click', function() {
+        const isOpen = header.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          header.setAttribute('aria-expanded', 'false');
+          body.setAttribute('hidden', '');
+        } else {
+          header.setAttribute('aria-expanded', 'true');
+          body.removeAttribute('hidden');
+        }
+      });
+
+      header.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          header.click();
+        }
+      });
+    });
+  }
+
+  /* ── LAZY LOAD CON FADE-IN ───────────────────────── */
+  function initLazyImages() {
+    const images = document.querySelectorAll('.accordion-img-wrap img, .accordion-thumb');
+    images.forEach(function(img) {
+      if (img.complete && img.naturalWidth > 0) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function() {
+          img.classList.add('loaded');
+        });
+        img.addEventListener('error', function() {
+          img.style.display = 'none';
+        });
+      }
+    });
+  }
+
+  /* ── PARALLAX HERO ───────────────────────────────── */
+  var heroBg = document.getElementById('hero-bg');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updateParallax() {
+    if (prefersReducedMotion || !heroBg) return;
+    var scrolled = window.pageYOffset;
+    heroBg.style.transform = 'translateY(' + (scrolled * 0.4) + 'px)';
+  }
+
+  /* ── SCROLL SPY + NAV ────────────────────────────── */
+  var nav = document.getElementById('main-nav');
+  var navBtns = document.querySelectorAll('.nav-btn[data-target]');
+  var sections = [];
+
+  navBtns.forEach(function(btn) {
+    var id = btn.getAttribute('data-target');
+    var el = document.getElementById(id);
+    if (el) sections.push({ btn: btn, el: el });
+  });
+
+  function updateScrollSpy() {
+    var scrollY = window.pageYOffset + 100;
+
+    if (window.pageYOffset > 80) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+
+    var current = null;
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= scrollY) {
+        current = s.btn;
+      }
+    });
+
+    navBtns.forEach(function(b) { b.classList.remove('active'); });
+    if (current) current.classList.add('active');
+  }
+
+  /* ── FADE-IN ON SCROLL ───────────────────────────── */
+  function initFadeIn() {
+    if (prefersReducedMotion) {
+      document.querySelectorAll('.day-section').forEach(function(s) {
+        s.classList.add('visible');
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.07 });
+
+    document.querySelectorAll('.day-section').forEach(function(s) {
+      observer.observe(s);
+    });
+  }
+
+  /* ── SCROLL HANDLER ──────────────────────────────── */
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        updateParallax();
+        updateScrollSpy();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ── SCROLL TO SECTION ───────────────────────────── */
+  window.scrollToSection = function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var navH = nav ? nav.offsetHeight : 0;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  };
+
+  /* ── INIT ────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function() {
+    initAccordions();
+    initLazyImages();
+    initFadeIn();
+    updateScrollSpy();
+  });
+
+  // También ejecutar si DOMContentLoaded ya pasó
+  if (document.readyState !== 'loading') {
+    initAccordions();
+    initLazyImages();
+    initFadeIn();
+    updateScrollSpy();
+  }
+
+})();
+</script>
+
+</body>
+</html>

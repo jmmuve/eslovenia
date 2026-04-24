@@ -1,0 +1,22 @@
+zona: Luxemburgo y sus alrededores
+
+fechas: 21/08/2026 - R2408/2026
+
+viajeros:
+  - Juanma
+  - Neli
+
+vuelos:
+  directos: si
+  evitar_low_cost: si
+  horario_salida: 10:00 - 14:00
+  horario_llegada: 18:00 - 20:00
+  preferencia: barato  # opciones: barato / rapido
+
+vehiculo:
+  alquiler: si
+  plazas: 4 o 5
+  con_equipaje: si
+
+preferencias:
+  - parking incluido en alojamiento o con parking publico cerca

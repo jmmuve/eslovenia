@@ -828,4 +828,19 @@ VENECIA (Aeropuerto)
 
 ---
 
+---
+
+## 🖼️ IDs de Pexels verificados
+
+> Verificados con curl (tamaño >5 KB). Rutas locales en `_images/eslovenia/local/`.
+> Catálogo completo con GPS, tags y metadata: `_images/catalog.yaml`
+
+| Uso | Lugar | ID Pexels | Ruta local | URL verificada |
+|-----|-------|-----------|------------|----------------|
+| Hero (1920×1080) | Lago Bled | 3525983 | `_images/eslovenia/local/3525983.jpeg` | ✅ |
+
+> ⚠️ Este fichero se generó antes del sistema de catálogo de imágenes. Faltan IDs para los headers de días 1–7 y acordeones. Añadirlos en la próxima regeneración siguiendo §1.7 de SPECS.md.
+
+---
+
 *Documento actualizado con todos los datos enriquecidos de la implementación web. Incluye: viajeros, vuelos, parkings con precios, restaurantes con precios, coordenadas GPS, consejos apps (EasyPark, Splid), seguro SCDW, gastronomía completa por zona y datos prácticos.*

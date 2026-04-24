@@ -1,0 +1,104 @@
+<!-- ================================================================
+  mapa.html — MAPA LEAFLET AUTOCONTENIDO
+  ⚠️  L.map() existe SOLO en este fichero. No añadir en base.html ni end.html.
+  ⚠️  Leaflet <link> y <script> en base.html: SIN integrity ni crossorigin.
+
+  INSTRUCCIONES PARA EL AGENTE:
+  1. Leer coordenadas GPS de _cache/gps-coords.md y datos-enriquecidos.md
+  2. Rellenar el array `days` con todos los puntos del itinerario
+  3. Rellenar el array `transfers` con líneas de traslado entre zonas
+  4. Ajustar setView([LAT, LNG], ZOOM) al centro geográfico del destino
+  5. Ajustar la leyenda (.map-legend) para que coincida con los colores de días
+  6. VALIDAR: grep -c 'L\.map(' mapa.html → debe ser exactamente 1
+================================================================ -->
+
+<section id="mapa-ruta" aria-labelledby="mapa-title">
+  <h2 class="section-title" id="mapa-title">🗺️ Mapa de la Ruta</h2>
+  <div id="route-map" style="height:520px;width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)"></div>
+  <div class="map-legend">
+    <!-- ← PERSONALIZAR: una línea por día, color debe coincidir con el array days -->
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2563eb"></div> Día 1 — [descripción]</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#16a34a"></div> Día 2 — [descripción]</div>
+    <!-- ... añadir una por día ... -->
+  </div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MAPA LEAFLET — única inicialización en todo el HTML
+   ⚠️  NO duplicar este bloque en base.html ni end.html
+══════════════════════════════════════════════════════════════ */
+(function() {
+  function initRouteMap() {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var map = L.map('route-map', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([LAT, LNG], ZOOM); // ← PERSONALIZAR
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    function mkIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: '<svg viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="' + color + '"/><circle cx="12" cy="11" r="5" fill="#fff"/></svg>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    var days = [
+      // ← PERSONALIZAR: un objeto por día con color y array de puntos GPS
+      // { color: '#2563eb', points: [
+      //   { lat: 00.0000, lng: 00.0000, name: 'Lugar', info: 'Día 1 — descripción' },
+      // ]},
+    ];
+
+    var allLatLngs = [];
+
+    days.forEach(function(day) {
+      var dayLatLngs = [];
+      day.points.forEach(function(p) {
+        var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
+        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        allLatLngs.push([p.lat, p.lng]);
+        dayLatLngs.push([p.lat, p.lng]);
+      });
+      if (dayLatLngs.length > 1) {
+        L.polyline(dayLatLngs, { color: day.color, weight: 3, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+      }
+    });
+
+    var transfers = [
+      // ← PERSONALIZAR: líneas grises de traslado entre zonas
+      // { from: [LAT1, LNG1], to: [LAT2, LNG2] },
+    ];
+
+    transfers.forEach(function(t) {
+      L.polyline([t.from, t.to], { color: '#d1d5db', weight: 2, opacity: 0.4, dashArray: '4 8' }).addTo(map);
+    });
+
+    if (allLatLngs.length > 0) {
+      map.fitBounds(allLatLngs, { padding: [30, 30] });
+    }
+
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+
+    // Forzar re-renderizado por si el contenedor no tenía dimensiones definitivas al init
+    setTimeout(function() { map.invalidateSize(); }, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouteMap);
+  } else {
+    initRouteMap();
+  }
+})();
+</script>

@@ -1,0 +1,148 @@
+<!-- ================================================================
+  mapa.html — MAPA LEAFLET AUTOCONTENIDO · Eslovenia julio 2026
+  ⚠️  L.map() existe SOLO en este fichero. No añadir en base.html ni end.html.
+  ⚠️  Leaflet <link> y <script> en base.html: SIN integrity ni crossorigin.
+
+  GPS verificados desde _cache/gps-coords.md
+  Validación: grep -c 'L\.map(' mapa.html → 1
+================================================================ -->
+
+<section id="mapa-ruta" aria-labelledby="mapa-title">
+  <h2 class="section-title" id="mapa-title">🗺️ Mapa de la Ruta</h2>
+  <div id="route-map" style="height:520px;width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2563eb"></div> Día 1 — Venecia → Lago Bled</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#16a34a"></div> Día 2 — Vintgar + Lago Bohinj</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#ea580c"></div> Día 3 — Valle del Soča (excursión)</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#9333ea"></div> Día 4 — Predjama → Ljubljana</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#dc2626"></div> Día 5 — Škocjan → Piran</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#0891b2"></div> Día 6 — Costa: Piran · Izola · Sečovlje</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#6b7280"></div> Día 7 — Regreso a Venecia</div>
+  </div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MAPA LEAFLET — única inicialización en todo el HTML
+   ⚠️  NO duplicar este bloque en base.html ni end.html
+══════════════════════════════════════════════════════════════ */
+(function() {
+  function initRouteMap() {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var map = L.map('route-map', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([46.15, 14.0], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    function mkIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: '<svg viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="' + color + '"/><circle cx="12" cy="11" r="5" fill="#fff"/></svg>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    var days = [
+      // Día 1 — Venecia → Lago Bled
+      { color: '#2563eb', points: [
+        { lat: 45.5053, lng: 12.3519, name: 'Aeropuerto Venecia (VCE)', info: 'Día 1 — Aterrizaje 11:15 · Recogida furgoneta' },
+        { lat: 46.3627, lng: 14.0935, name: 'Lago Bled', info: 'Día 1 — Llegada ~14:00 · Primer paseo' },
+        { lat: 46.3686, lng: 14.0927, name: 'Castillo de Bled', info: 'Día 1 — Vista panorámica desde 130 m' },
+        { lat: 46.3614, lng: 14.0882, name: 'Isla de Bled', info: 'Día 1 — Iglesia de la Asunción' },
+      ]},
+      // Día 2 — Base Bled: Vintgar + Bohinj
+      { color: '#16a34a', points: [
+        { lat: 46.3972, lng: 14.0647, name: 'Garganta de Vintgar', info: 'Día 2 — 8:00 AM · 1,6 km de pasarelas' },
+        { lat: 46.2833, lng: 13.8917, name: 'Lago Bohinj', info: 'Día 2 — Tarde · Baño y teleférico de Vogel' },
+      ]},
+      // Día 3 — Excursión Valle del Soča (base Bled)
+      { color: '#ea580c', points: [
+        { lat: 46.4333, lng: 13.7444, name: 'Paso de Vršič (1.611 m)', info: 'Día 3 — 50 curvas empedradas · Parada obligatoria' },
+        { lat: 46.3369, lng: 13.5525, name: 'Río Soča (Bovec)', info: 'Día 3 — Aguas turquesas del Soča' },
+        { lat: 46.2531, lng: 13.5800, name: 'Cascada Kozjak', info: 'Día 3 — 15 min a pie desde la carretera' },
+        { lat: 46.2472, lng: 13.5789, name: 'Kobarid', info: 'Día 3 — Museo de la Primera Guerra Mundial · Cena' },
+      ]},
+      // Día 4 — Predjama → Ljubljana
+      { color: '#9333ea', points: [
+        { lat: 45.8161, lng: 14.1203, name: 'Castillo de Predjama', info: 'Día 4 — Mañana · Castillo medieval en una cueva' },
+        { lat: 46.0569, lng: 14.5058, name: 'Ljubljana (centro)', info: 'Día 4 — Tarde · Capital eslovena · Noche' },
+      ]},
+      // Día 5 — Škocjan → Piran
+      { color: '#dc2626', points: [
+        { lat: 45.6639, lng: 13.9881, name: 'Cuevas de Škocjan', info: 'Día 5 — Mañana · UNESCO · Interior a 12°C' },
+        { lat: 45.5283, lng: 13.5681, name: 'Piran', info: 'Día 5 — Tarde · Ciudad medieval veneciana' },
+        { lat: 45.5133, lng: 13.5917, name: 'Portorož', info: 'Día 5 — Alojamiento · Costa adriática' },
+      ]},
+      // Día 6 — Costa libre
+      { color: '#0891b2', points: [
+        { lat: 45.5283, lng: 13.5681, name: 'Piran', info: 'Día 6 — Paseo por la ciudad medieval' },
+        { lat: 45.5400, lng: 13.6614, name: 'Izola', info: 'Día 6 — Puerto de pescadores · Marisco fresco' },
+        { lat: 45.4833, lng: 13.5986, name: 'Salinas de Sečovlje', info: 'Día 6 — Sal de Piran artesanal desde el s. XIII' },
+      ]},
+      // Día 7 — Regreso a Venecia
+      { color: '#6b7280', points: [
+        { lat: 45.5133, lng: 13.5917, name: 'Portorož (salida)', info: 'Día 7 — Salida 08:30 hacia Venecia' },
+        { lat: 45.5053, lng: 12.3519, name: 'Aeropuerto Venecia (VCE)', info: 'Día 7 — Vuelo de vuelta 12:00 (IB0678)' },
+      ]},
+    ];
+
+    var allLatLngs = [];
+
+    days.forEach(function(day) {
+      var dayLatLngs = [];
+      day.points.forEach(function(p) {
+        var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
+        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        allLatLngs.push([p.lat, p.lng]);
+        dayLatLngs.push([p.lat, p.lng]);
+      });
+      if (dayLatLngs.length > 1) {
+        L.polyline(dayLatLngs, { color: day.color, weight: 3, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+      }
+    });
+
+    // Traslados entre bases (líneas grises)
+    var transfers = [
+      // Venecia → Bled (Día 1)
+      { from: [45.5053, 12.3519], to: [46.3627, 14.0935] },
+      // Bled → Soča (Día 3 excursión, regresa a Bled)
+      { from: [46.3627, 14.0935], to: [46.4333, 13.7444] },
+      // Bled → Predjama (Día 4)
+      { from: [46.3627, 14.0935], to: [45.8161, 14.1203] },
+      // Ljubljana → Škocjan (Día 5)
+      { from: [46.0569, 14.5058], to: [45.6639, 13.9881] },
+      // Portorož → Venecia (Día 7)
+      { from: [45.5133, 13.5917], to: [45.5053, 12.3519] },
+    ];
+
+    transfers.forEach(function(t) {
+      L.polyline([t.from, t.to], { color: '#d1d5db', weight: 2, opacity: 0.4, dashArray: '4 8' }).addTo(map);
+    });
+
+    if (allLatLngs.length > 0) {
+      map.fitBounds(allLatLngs, { padding: [30, 30] });
+    }
+
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+
+    // Forzar re-renderizado por si el contenedor no tenía dimensiones definitivas al init
+    setTimeout(function() { map.invalidateSize(); }, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouteMap);
+  } else {
+    initRouteMap();
+  }
+})();
+</script>

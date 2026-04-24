@@ -1,0 +1,3562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Itinerario completo del viaje a Eslovenia — 13 al 19 de julio, 6 viajeros, 860 km de aventura por los Alpes, Liubliana y la costa adriática.">
+<meta property="og:title" content="Eslovenia 2026 · Itinerario de viaje">
+<meta property="og:description" content="7 días por Eslovenia: Lago Bled, Valle del Soča, Liubliana, Piran y más.">
+<meta property="og:image" content="https://images.pexels.com/photos/3525983/pexels-photo-3525983.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+<title>Eslovenia · Julio 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+:root {
+  --primary: #1B6B4A;
+  --primary-light: #2D9B6E;
+  --primary-dark: #0F4A33;
+  --accent: #D4A853;
+  --bg: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-dark: #1A1A2E;
+  --text: #2C2C2C;
+  --text-light: #6B7280;
+  --turquoise: #0EA5A0;
+  --border: #E5E7EB;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-dark), var(--turquoise));
+}
+
+#hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.pexels.com/photos/3525983/pexels-photo-3525983.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop'), linear-gradient(135deg, var(--primary), var(--turquoise));
+  background-size: cover;
+  background-position: center 50%;
+  will-change: transform;
+}
+
+#hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.15) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  padding: 0 24px;
+}
+
+.hero-flag {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 16px;
+  animation: fadeInDown 0.8s ease both;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  color: #fff;
+  animation: fadeInDown 0.9s ease 0.1s both;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.88);
+  margin-top: 16px;
+  letter-spacing: 0.02em;
+  animation: fadeInDown 1s ease 0.2s both;
+}
+
+.hero-scroll-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 48px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  animation: fadeInDown 1.1s ease 0.3s both;
+}
+
+.hero-scroll-btn:hover { color: #fff; }
+
+.hero-arrow {
+  font-size: 1.5rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   NAV STICKY
+═══════════════════════════════════════ */
+#main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,250,247,0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.3s;
+}
+
+#main-nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+
+.nav-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-inner::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 14px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--primary);
+  transition: left 0.25s, right 0.25s;
+}
+
+.nav-btn:hover { color: var(--primary); }
+.nav-btn:hover::after { left: 16px; right: 16px; }
+.nav-btn.active { color: var(--primary); font-weight: 600; }
+.nav-btn.active::after { left: 16px; right: 16px; }
+
+/* ═══════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════ */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+
+/* ═══════════════════════════════════════
+   SECTION TITLES
+═══════════════════════════════════════ */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 24px;
+  padding-top: 56px;
+}
+
+/* ═══════════════════════════════════════
+   ACCORDION
+═══════════════════════════════════════ */
+.accordion {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.accordion-header {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.accordion-header:hover { background: var(--bg); }
+
+.accordion-header-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.accordion-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary), var(--turquoise));
+}
+
+.accordion-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.accordion-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.accordion-chevron {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.accordion-header[aria-expanded="true"] .accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.accordion-body {
+  padding: 0 20px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.accordion-body[hidden] { display: none; }
+
+/* Accordion body content helpers */
+.accordion-img-wrap {
+  background: linear-gradient(135deg, var(--primary), var(--turquoise));
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 20px 0 20px;
+  aspect-ratio: 16/9;
+}
+
+.accordion-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.accordion-img-wrap img.loaded { opacity: 1; }
+
+.content-section {
+  margin-bottom: 18px;
+}
+
+.content-section h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.content-section p {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bullet-list li {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+  padding: 3px 0 3px 22px;
+  position: relative;
+}
+
+.bullet-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.7rem;
+  top: 6px;
+}
+
+.practical-box {
+  background: var(--bg);
+  border-left: 3px solid var(--turquoise);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.practical-box strong { color: var(--primary-dark); }
+
+.maps-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.map-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.climate-card {
+  background: var(--bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.climate-card strong { color: var(--text); font-size: 0.95rem; }
+
+/* ═══════════════════════════════════════
+   DAY SECTION
+═══════════════════════════════════════ */
+.day-section {
+  margin-top: 56px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.day-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.day-header {
+  position: relative;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--primary-dark), var(--turquoise));
+}
+
+.day-header-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.day-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+}
+
+.day-header-content {
+  position: relative;
+  z-index: 2;
+  padding: 28px 32px;
+  color: #fff;
+  width: 100%;
+}
+
+.day-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--primary-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.day-date {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 4px;
+}
+
+.day-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.day-km-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.95);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════
+   ROUTE TIMELINE
+═══════════════════════════════════════ */
+.route-timeline {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.route-timeline h3 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+
+.timeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.timeline-dot-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 18px;
+}
+
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 0 0 2px var(--primary);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.timeline-line {
+  width: 2px;
+  background: var(--border);
+  flex: 1;
+  min-height: 28px;
+  border-left: 2px dashed var(--border);
+  margin: 4px 0;
+}
+
+.timeline-info {
+  padding-bottom: 8px;
+  flex: 1;
+}
+
+.timeline-place {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.timeline-time {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.timeline-leg {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  padding: 4px 0 4px 32px;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════
+   GASTRO TABLE
+═══════════════════════════════════════ */
+.gastro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+.gastro-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--bg);
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+}
+
+.gastro-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.55;
+}
+
+.gastro-table tr:last-child td { border-bottom: none; }
+.gastro-table tr:nth-child(even) td { background: var(--bg); }
+.gastro-table td:first-child { font-weight: 600; color: var(--primary-dark); white-space: nowrap; }
+
+/* ═══════════════════════════════════════
+   KM TABLE
+═══════════════════════════════════════ */
+#km {
+  margin-top: 56px;
+}
+
+.km-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.km-table th {
+  text-align: left;
+  padding: 12px 20px;
+  background: var(--primary-dark);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.km-table td {
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.km-table tr:last-child td {
+  border-bottom: none;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: rgba(27,107,74,0.06);
+}
+
+.km-table tr:nth-child(even) td { background: var(--bg); }
+.km-table tr:nth-child(odd) td { background: var(--bg-card); }
+.km-table tr:last-child td { background: rgba(27,107,74,0.08) !important; }
+
+/* ═══════════════════════════════════════
+   INFO GENERAL
+═══════════════════════════════════════ */
+#info {
+  margin-top: 56px;
+}
+
+.info-alojamiento-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+.info-alojamiento-table th {
+  text-align: left;
+  padding: 9px 14px;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  border-bottom: 2px solid var(--border);
+}
+
+.info-alojamiento-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.info-alojamiento-table tr:last-child td { border-bottom: none; }
+
+.consejos-list {
+  list-style: none;
+  padding: 0;
+}
+
+.consejos-list li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border);
+}
+
+.consejos-list li:last-child { border-bottom: none; }
+
+.consejos-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════
+   RESTAURANT CARDS
+═══════════════════════════════════════ */
+.restaurant-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.restaurant-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.restaurant-card h5 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.restaurant-card p {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.45;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--bg-dark);
+  color: rgba(255,255,255,0.7);
+  padding: 56px 24px 40px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.footer-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.footer-sub {
+  font-size: 0.88rem;
+  margin-bottom: 32px;
+  color: rgba(255,255,255,0.55);
+}
+
+.footer-ascii {
+  font-family: monospace;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.45);
+  white-space: pre;
+  display: inline-block;
+  text-align: left;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 3rem; }
+  .hero-subtitle { font-size: 1rem; }
+
+  main { padding: 0 16px 48px; }
+
+  .day-header { height: 200px; border-radius: 12px; }
+  .day-header-content { padding: 20px 20px; }
+  .day-title { font-size: 1.4rem; }
+
+  .accordion-thumb { width: 60px; height: 60px; }
+
+  .section-title { font-size: 1.5rem; }
+
+  .restaurant-cards { grid-template-columns: 1fr 1fr; }
+
+  .footer-ascii { font-size: 0.65rem; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  main { padding: 0 24px 56px; }
+  .day-header { height: 250px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .day-section {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Gastronomía section */
+#gastro { margin-top: 56px; }
+
+.gastro-zone-label {
+  display: inline-block;
+  background: rgba(27,107,74,0.1);
+  color: var(--primary-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.warning-box {
+  background: rgba(212,168,83,0.1);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.warning-box strong { color: var(--primary-dark); }
+
+/* ═══════════════════════════════════════
+   VIAJEROS SECTION
+═══════════════════════════════════════ */
+.travelers-section {
+  position: relative;
+  padding: 60px 24px;
+  background: linear-gradient(135deg, var(--primary), var(--turquoise));
+  text-align: center;
+  overflow: hidden;
+}
+
+.travelers-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.pexels.com/photos/8920813/pexels-photo-8920813.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop');
+  background-size: cover;
+  background-position: center;
+}
+
+.travelers-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 74, 51, 0.75);
+}
+
+.travelers-content {
+  position: relative;
+  z-index: 2;
+}
+
+.travelers-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 32px;
+}
+
+.travelers-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.traveler-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.traveler-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  border: 3px solid rgba(255,255,255,0.4);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.traveler-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 768px) {
+  .travelers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .travelers-title { font-size: 1.5rem; }
+}
+
+/* ═══════════════════════════════════════
+   FLIGHTS / BOARDING PASSES
+═══════════════════════════════════════ */
+.flights-section {
+  background: var(--bg);
+  padding: 40px 20px;
+}
+
+.flights-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.flights-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) { .flights-grid { grid-template-columns: 1fr; } }
+
+.boarding-pass {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-left: 5px solid #cc0000;
+}
+
+.bp-header {
+  background: #1a1a1a;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.bp-route {
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bp-iata {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.bp-city {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.bp-arrow {
+  flex: 1;
+  text-align: center;
+  color: #cc0000;
+  font-size: 1.5rem;
+}
+
+.bp-duration {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  display: block;
+}
+
+.bp-footer {
+  border-top: 2px dashed var(--border);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.bp-time {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bp-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════
+   GPS PINS
+═══════════════════════════════════════ */
+.gps-pin {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.gps-pin:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.qvitem {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.qv-bullet {
+  color: var(--accent);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.qv-text {
+  flex: 1;
+}
+
+/* Tabla país */
+.country-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.country-table th {
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  border-bottom: 2px solid var(--border);
+}
+
+.country-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.country-table tr:last-child td { border-bottom: none; }
+.country-table tr:nth-child(even) td { background: var(--bg); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<header id="hero">
+  <div id="hero-bg"></div>
+  <div id="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-flag">🇸🇮</span>
+    <h1 class="hero-title">Eslovenia</h1>
+    <p class="hero-subtitle">13 – 19 de julio &nbsp;·&nbsp; 6 viajeros &nbsp;·&nbsp; 860 km de aventura</p>
+    <button class="hero-scroll-btn" onclick="document.getElementById('main-nav').scrollIntoView({behavior:'smooth'})" aria-label="Explorar itinerario">
+      Explorar itinerario
+      <span class="hero-arrow">↓</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ VIAJEROS ═══════════════════════════════ -->
+<section class="travelers-section">
+  <div class="travelers-bg" onerror="this.style.opacity='0'"></div>
+  <div class="travelers-overlay"></div>
+  <div class="travelers-content">
+    <h2 class="travelers-title">Los viajeros</h2>
+    <div class="travelers-grid">
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--primary)">J</div>
+        <span class="traveler-name">Juanma</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--turquoise)">N</div>
+        <span class="traveler-name">Neli</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--accent)">A</div>
+        <span class="traveler-name">Alicia</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--primary)">D</div>
+        <span class="traveler-name">Diego</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--turquoise)">G</div>
+        <span class="traveler-name">Gemma</span>
+      </div>
+      <div class="traveler-card">
+        <div class="traveler-avatar" style="background:var(--accent)">P</div>
+        <span class="traveler-name">Paco</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ VUELOS ═══════════════════════════════ -->
+<div class="flights-section">
+  <h2 class="flights-title">✈ Vuelos</h2>
+  <div class="flights-grid">
+    <!-- IDA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ IB0677 &nbsp;·&nbsp; Iberia</span>
+        <span class="bp-badge">IDA</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid, España</div>
+          <div class="bp-city">Terminal 4</div>
+        </div>
+        <div class="bp-arrow">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="#cc0000"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+          <span class="bp-duration">2h 25min</span>
+        </div>
+        <div>
+          <div class="bp-iata">VCE</div>
+          <div class="bp-city">Venecia, Italia</div>
+          <div class="bp-city">Marco Polo</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:2px">SALIDA</div>
+          <div class="bp-time">08:50</div>
+          <div style="font-size:0.75rem">Lunes 13 julio 2026</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time">11:15</div>
+          <div style="font-size:0.75rem">Lunes 13 julio 2026</div>
+        </div>
+      </div>
+    </div>
+    <!-- VUELTA -->
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>✈ IB0678 &nbsp;·&nbsp; Iberia</span>
+        <span class="bp-badge">VUELTA</span>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-iata">VCE</div>
+          <div class="bp-city">Venecia, Italia</div>
+          <div class="bp-city">Marco Polo</div>
+        </div>
+        <div class="bp-arrow">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="#cc0000"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+          <span class="bp-duration">2h 40min</span>
+        </div>
+        <div>
+          <div class="bp-iata">MAD</div>
+          <div class="bp-city">Madrid, España</div>
+          <div class="bp-city">Terminal 4</div>
+        </div>
+      </div>
+      <div class="bp-footer">
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:2px">SALIDA</div>
+          <div class="bp-time">12:00</div>
+          <div style="font-size:0.75rem">Domingo 19 julio 2026</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:2px">LLEGADA</div>
+          <div class="bp-time">14:40</div>
+          <div style="font-size:0.75rem">Domingo 19 julio 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav id="main-nav" role="navigation" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <button class="nav-btn" data-target="info" onclick="scrollToSection('info')">🚐 Info General</button>
+    <button class="nav-btn" data-target="mapa-ruta" onclick="scrollToSection('mapa-ruta')">🗺️ Mapa</button>
+    <button class="nav-btn" data-target="dia-1" onclick="scrollToSection('dia-1')">Día 1</button>
+    <button class="nav-btn" data-target="dia-2" onclick="scrollToSection('dia-2')">Día 2</button>
+    <button class="nav-btn" data-target="dia-3" onclick="scrollToSection('dia-3')">Día 3</button>
+    <button class="nav-btn" data-target="dia-4" onclick="scrollToSection('dia-4')">Día 4</button>
+    <button class="nav-btn" data-target="dia-5" onclick="scrollToSection('dia-5')">Día 5</button>
+    <button class="nav-btn" data-target="dia-6" onclick="scrollToSection('dia-6')">Día 6</button>
+    <button class="nav-btn" data-target="dia-7" onclick="scrollToSection('dia-7')">Día 7</button>
+    <button class="nav-btn" data-target="km" onclick="scrollToSection('km')">📏 Km</button>
+    <button class="nav-btn" data-target="gastro" onclick="scrollToSection('gastro')">🍽️ Gastronomía</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════ INFO GENERAL ═══════════════════════════════ -->
+<section id="info" aria-labelledby="info-title">
+  <h2 class="section-title" id="info-title">🚐 Información General</h2>
+
+  <!-- Acordeón 1: Vehículo y Peajes -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-vehiculo">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">Vehículo y Peajes</h3>
+          <p class="accordion-subtitle">Furgoneta 9 plazas · Vinjeta electrónica</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="acc-vehiculo" hidden>
+      <div class="content-section" style="margin-top:20px">
+        <h4>Vehículo recomendado</h4>
+        <p>Para 6 personas con equipaje, la mejor opción es una <strong>furgoneta de 9 plazas</strong> tipo Mercedes Vito o Fiat Talento, recogida directamente en el <strong>Aeropuerto Marco Polo de Venecia</strong>.</p>
+      </div>
+      <ul class="bullet-list" style="margin-bottom:16px">
+        <li>Espacio generoso para 6 maletas grandes más mochilas</li>
+        <li>Más cómoda en las 50 curvas del Paso Vršič que un monovolumen estándar</li>
+        <li>Parking más sencillo en zonas rurales que varios coches</li>
+        <li>El coste se divide entre 6, haciéndola la opción más económica por persona</li>
+        <li>Para el Autotren Bohinj–Soča (opcional), hay vagones específicos para vehículos grandes, aunque conviene confirmar disponibilidad al reservar</li>
+      </ul>
+      <div class="practical-box">
+        <strong>Importante:</strong> Reservar con antelación en julio (temporada alta). Buscar en Sixt, Enterprise o Europcar en el aeropuerto de Venecia.
+      </div>
+      <div class="content-section">
+        <h4>Vinjeta (peaje esloveno)</h4>
+        <p>Nada más cruzar la frontera con Eslovenia, comprar en la <strong>primera gasolinera</strong> la Vinjeta (viñeta electrónica) para circular por autopistas.</p>
+      </div>
+      <div class="practical-box">
+        <strong>Precio:</strong> ~16€ por una semana. Es obligatoria y los controles son frecuentes.<br>
+        <strong>Compra online:</strong> <a href="https://evinjeta.dars.si" target="_blank" rel="noopener" style="color:var(--turquoise)">evinjeta.dars.si</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 2: Alojamientos -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-aloj">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">Alojamientos — 3 bases</h3>
+          <p class="accordion-subtitle">Alpes · Liubliana · Costa</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="acc-aloj" hidden>
+      <div style="margin-top:20px">
+        <table class="info-alojamiento-table">
+          <thead>
+            <tr>
+              <th>Noches</th>
+              <th>Base</th>
+              <th>Duración</th>
+              <th>Precio est.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lun 13 – Mié 15</td>
+              <td>🏔️ Zona Bled / Bohinj (Alpes)</td>
+              <td>3 noches</td>
+              <td>~280–320€/noche</td>
+            </tr>
+            <tr>
+              <td>Jue 16</td>
+              <td>🏙️ Liubliana (capital)</td>
+              <td>1 noche</td>
+              <td>Precio variable</td>
+            </tr>
+            <tr>
+              <td>Vie 17 – Sáb 18</td>
+              <td>🌊 Piran / Portorož (costa)</td>
+              <td>2 noches</td>
+              <td>~250–300€/noche</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="practical-box" style="margin-top:16px">
+          <strong>Consejo para 6 personas:</strong> Buscar apartamentos o casas rurales enteras (no habitaciones de hotel). Filtros esenciales: 4 habitaciones, parking privado para furgoneta grande, cocina equipada.
+        </div>
+        <ul class="bullet-list" style="margin-top:12px">
+          <li><strong>Zona Alpes:</strong> Evitar los hoteles de orilla del lago Bled (carísimos). Buscar en pueblos colindantes: Ribno, Lesce o Bohinjska Bela (5–10 min en coche). ~50€/persona/noche.</li>
+          <li><strong>Liubliana:</strong> Solo una noche, priorizar zona centro o próxima al parking. El centro histórico es peatonal, así que el alojamiento con parking es clave.</li>
+          <li><strong>Costa:</strong> Piran no tiene parking para furgonetas. Buscar en Lucija o Portorož (2 km de Piran, bus gratuito al centro).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 3: Consejos Prácticos -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-consejos">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">Consejos Prácticos</h3>
+          <p class="accordion-subtitle">Dinero · Idioma · Apps · Logística de grupo</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="acc-consejos" hidden>
+      <div style="margin-top:20px">
+        <ul class="consejos-list">
+          <li><strong>Moneda:</strong> Euro (€). Eslovenia es miembro de la Eurozona.</li>
+          <li><strong>Gasolina:</strong> Ligeramente más barata que en España. Llenar el depósito en Eslovenia antes de volver a Italia.</li>
+          <li><strong>Propinas:</strong> No son obligatorias pero se agradecen (~10%). En restaurantes de Piran más turísticos puede ya estar incluida.</li>
+          <li><strong>Idioma:</strong> El esloveno es la lengua oficial, pero el inglés se entiende perfectamente en toda la zona turística.</li>
+          <li><strong>Emergencias:</strong> 112 (Europa).</li>
+          <li><strong>App de mapas:</strong> Google Maps funciona muy bien. Descargar los mapas offline de Eslovenia antes de salir.</li>
+          <li><strong>App de aparcamientos:</strong> En Eslovenia se usa la app <strong>EasyPark</strong> para pagar el parking desde el móvil en la mayoría de ciudades y zonas turísticas (Liubliana, Piran, Portorož, Koper). Funciona igual que en España: registras la matrícula, seleccionas la zona y pagas directamente. Descargarla y registrarse antes de salir.</li>
+          <li><strong>Reservas en julio:</strong> Todo se llena. Reservar alojamiento, cuevas y Autotren con la mayor antelación posible.</li>
+          <li><strong>Presupuesto compartido:</strong> Usaremos la app <strong>Splid</strong> (gratuita, iOS y Android) para registrar y dividir todos los gastos del viaje en tiempo real: gasolina, aparcamientos, entradas, comidas, etc. Cada uno anota lo que paga y al final del viaje la app calcula quién debe a quién. Sin complicaciones ni hojas de cálculo.</li>
+          <li><strong>Picnic:</strong> Llevar una caja de picnic para los días de excursión (Vintgar, Soča) para no depender de restaurantes a mediodía.</li>
+          <li><strong>Temperatura en cuevas:</strong> Llevar siempre una capa de abrigo. Dentro hay ~12°C incluso en verano.</li>
+          <li><strong>Paso de Vršič:</strong> La carretera es estrecha en algunos tramos. Conducir con precaución en furgoneta grande. No hay barandillas en algunas curvas.</li>
+          <li><strong>Seguro vehículo:</strong> Contratar seguro a todo riesgo sin franquicia para conducir con tranquilidad en las 50 curvas del Vršič. En las empresas de alquiler europeas, la modalidad equivalente al "todo riesgo sin franquicia" español se llama <strong>SCDW</strong> (Super Collision Damage Waiver) o <strong>Full Protection / Zero Excess</strong>. El CDW básico (Collision Damage Waiver) que suele venir incluido deja una franquicia de 800–2.000€; hay que contratar adicionalmente el SCDW o "Excess Reduction to Zero" para eliminarla por completo. Verificar que cubra: daños a cristales, neumáticos, bajos y techo (no siempre incluidos en el CDW básico).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón 4: Información del país -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="acc-pais">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🌍 Información del país</h3>
+          <p class="accordion-subtitle">Electricidad · Moneda · Idioma · Clima · Sanidad · Internet · Conducción</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="acc-pais" hidden>
+      <div style="margin-top:20px">
+        <div class="practical-box">
+          <strong>Electricidad:</strong> Enchufes tipo F (Schuko) — los mismos que en España. NO necesitas adaptador.
+        </div>
+        <div class="practical-box">
+          <strong>Moneda:</strong> Euro (€) — Eslovenia pertenece a la Eurozona desde 2007.
+        </div>
+        <div class="practical-box">
+          <strong>Idioma:</strong> Esloveno. En zonas turísticas el inglés funciona perfectamente.<br>
+          Palabras útiles: <em>Hvala</em> (gracias), <em>Prosim</em> (por favor), <em>Dober dan</em> (buenos días).
+        </div>
+
+        <div class="content-section">
+          <h4>Clima en julio</h4>
+          <table class="country-table">
+            <thead>
+              <tr><th>Zona</th><th>Máx</th><th>Mín</th><th>Lluvia</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Alpes / Bled</td><td>26°C</td><td>14°C</td><td>Tardes nubladas, tormentas vespertinas</td></tr>
+              <tr><td>Valle del Soča</td><td>28°C</td><td>15°C</td><td>Similar a Alpes, algo más cálido</td></tr>
+              <tr><td>Liubliana</td><td>28°C</td><td>16°C</td><td>Cálido y húmedo, tormentas frecuentes</td></tr>
+              <tr><td>Costa / Piran</td><td>29°C</td><td>20°C</td><td>Soleado, brisa marina, poca lluvia</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="content-section">
+          <h4>Qué llevar</h4>
+          <ul class="bullet-list">
+            <li>Capas de ropa (las mañanas en los Alpes pueden ser frescas)</li>
+            <li>Abrigo ligero para las cuevas (12°C dentro)</li>
+            <li>Protector solar y gafas de sol</li>
+            <li>Calzado cómodo para caminar</li>
+            <li>Crema antimosquitos para el atardecer junto a los lagos</li>
+          </ul>
+        </div>
+
+        <div class="practical-box">
+          <strong>Sanidad:</strong> Tarjeta Sanitaria Europea válida. Recomendado seguro de viaje con asistencia en carretera para furgoneta.
+        </div>
+        <div class="practical-box">
+          <strong>Internet:</strong> Buena cobertura 4G/5G en toda la zona turística. Eslovenia pertenece a la Unión Europea, por lo que el <strong>roaming funciona exactamente igual que en España</strong>: tu tarifa de datos, llamadas y SMS se aplica sin coste adicional (regulación "Roam Like at Home" de la UE). No es necesario comprar tarjetas SIM locales ni eSIMs. Simplemente activa los datos móviles como si estuvieras en casa. Solo ten en cuenta que si tu tarifa tiene un límite de datos en roaming (las operadoras lo indican en tu contrato), compruébalo antes de salir.
+        </div>
+        <div class="practical-box">
+          <strong>Emergencias:</strong> 112 (Europa). Policía: 113. Ambulancia: 112.
+        </div>
+        <div class="practical-box">
+          <strong>Conducción:</strong> Carretera por la derecha. Vinjeta obligatoria (~16€/semana). Límites: 50 km/h ciudad, 90 km/h carretera, 130 km/h autopista. Luces encendidas obligatorias de día.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ MAPA DE RUTA ═══════════════════════════════ -->
+<section id="mapa-ruta" class="day-section" style="opacity:1;transform:none">
+  <div style="max-width:960px;margin:0 auto;padding:40px 24px 24px">
+    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--primary-dark);margin-bottom:8px">Mapa de la ruta</h2>
+    <p style="color:var(--text-light);margin-bottom:20px">Todos los puntos de visita y la ruta día a día. Haz clic en los marcadores para ver detalles.</p>
+    <div style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.12);border:1px solid var(--border)">
+      <div id="route-map" style="height:520px;width:100%"></div>
+    </div>
+    <div id="map-legend" style="display:flex;flex-wrap:wrap;gap:12px 24px;margin-top:16px;font-size:0.85rem;color:var(--text-light)">
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2563eb;margin-right:4px;vertical-align:middle"></span> Día 1 — Bled</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#16a34a;margin-right:4px;vertical-align:middle"></span> Día 2 — Vintgar + Bohinj</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#ea580c;margin-right:4px;vertical-align:middle"></span> Día 3 — Valle del Soča</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#9333ea;margin-right:4px;vertical-align:middle"></span> Día 4 — Predjama + Liubliana</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#dc2626;margin-right:4px;vertical-align:middle"></span> Día 5 — Škocjan + Piran</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#0891b2;margin-right:4px;vertical-align:middle"></span> Día 6 — Piran + Izola + Salinas</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#6b7280;margin-right:4px;vertical-align:middle"></span> Día 7 — Regreso Venecia</span>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  function initRouteMap() {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var map = L.map('route-map', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([46.25, 14.1], 9);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    function mkIcon(color) {
+      return L.divIcon({
+        className: '',
+        html: '<svg viewBox="0 0 24 36" width="24" height="36"><path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="' + color + '"/><circle cx="12" cy="11" r="5" fill="#fff"/></svg>',
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36]
+      });
+    }
+
+    var days = [
+      { color: '#2563eb', points: [
+        { lat: 46.3683, lng: 14.1103, name: 'Lago Bled', info: 'Día 1 — Lago glaciar, isla con iglesia barroca' },
+        { lat: 46.3697, lng: 14.1098, name: 'Castillo de Bled', info: 'Día 1 — Siglo XI, 130m sobre el lago' },
+        { lat: 46.3620, lng: 14.0975, name: 'Mirador Ojstrica', info: 'Día 1 — La foto clásica del lago' }
+      ]},
+      { color: '#16a34a', points: [
+        { lat: 46.3920, lng: 14.0860, name: 'Garganta de Vintgar', info: 'Día 2 — 1,6 km de pasarelas, cascada Šum' },
+        { lat: 46.2856, lng: 13.8600, name: 'Lago Bohinj', info: 'Día 2 — Lago más grande de Eslovenia' },
+        { lat: 46.2870, lng: 13.8000, name: 'Cascada Savica', info: 'Día 2 — 78 metros de caída' },
+        { lat: 46.2635, lng: 13.8427, name: 'Teleférico Vogel', info: 'Día 2 — Vistas espectaculares' }
+      ]},
+      { color: '#ea580c', points: [
+        { lat: 46.4380, lng: 13.7437, name: 'Paso de Vršič', info: 'Día 3 — 50 curvas, 1.611m altitud' },
+        { lat: 46.3305, lng: 13.6420, name: 'Gran Cañón del Soča', info: 'Día 3 — Velika Korita, paredes verticales' },
+        { lat: 46.2480, lng: 13.5860, name: 'Cascada Kozjak', info: 'Día 3 — Poza esmeralda en cueva' },
+        { lat: 46.3390, lng: 13.5540, name: 'Cascada Boka', info: 'Día 3 — Una de las más grandes del país' },
+        { lat: 46.3380, lng: 13.5530, name: 'Bovec', info: 'Día 3 — Centro del valle' },
+        { lat: 46.2480, lng: 13.5790, name: 'Kobarid', info: 'Día 3 — Museo WWI, Puente de Napoleón' }
+      ]},
+      { color: '#9333ea', points: [
+        { lat: 45.8156, lng: 14.1267, name: 'Castillo de Predjama', info: 'Día 4 — Construido en cueva de 123m' },
+        { lat: 46.0511, lng: 14.5060, name: 'Liubliana', info: 'Día 4 — Capital verde 2016, casco peatonal' }
+      ]},
+      { color: '#dc2626', points: [
+        { lat: 45.6636, lng: 14.0011, name: 'Cuevas de Škocjan', info: 'Día 5 — Patrimonio UNESCO, cañón subterráneo 200m' },
+        { lat: 45.5283, lng: 13.5680, name: 'Piran', info: 'Día 5 — Ciudad veneciana, Plaza Tartini' }
+      ]},
+      { color: '#0891b2', points: [
+        { lat: 45.5344, lng: 13.6557, name: 'Izola', info: 'Día 6 — Puerto pesquero, ambiente auténtico' },
+        { lat: 45.4840, lng: 13.5950, name: 'Salinas de Sečovlje', info: 'Día 6 — Parque Natural, sal Piranska DOP' }
+      ]},
+      { color: '#6b7280', points: [
+        { lat: 45.5050, lng: 12.3519, name: 'Aeropuerto Marco Polo', info: 'Día 7 — Venecia, vuelo de regreso' }
+      ]}
+    ];
+
+    var allLatLngs = [];
+
+    days.forEach(function(day) {
+      var dayLatLngs = [];
+      day.points.forEach(function(p) {
+        var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
+        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        allLatLngs.push([p.lat, p.lng]);
+        dayLatLngs.push([p.lat, p.lng]);
+      });
+      if (dayLatLngs.length > 1) {
+        L.polyline(dayLatLngs, { color: day.color, weight: 3, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+      }
+    });
+
+    // Líneas de conexión entre días (trayectos nocturnos / traslados)
+    var transfers = [
+      { from: [46.3683, 14.1103], to: [46.3920, 14.0860], color: '#d1d5db' },
+      { from: [46.2856, 13.8600], to: [46.3683, 14.1103], color: '#d1d5db' },
+      { from: [46.3683, 14.1103], to: [46.4380, 13.7437], color: '#d1d5db' },
+      { from: [46.2480, 13.5790], to: [46.3683, 14.1103], color: '#d1d5db' },
+      { from: [46.3683, 14.1103], to: [45.8156, 14.1267], color: '#d1d5db' },
+      { from: [46.0511, 14.5060], to: [45.6636, 14.0011], color: '#d1d5db' },
+      { from: [45.6636, 14.0011], to: [45.5283, 13.5680], color: '#d1d5db' },
+      { from: [45.5283, 13.5680], to: [45.5344, 13.6557], color: '#d1d5db' },
+      { from: [45.5344, 13.6557], to: [45.4840, 13.5950], color: '#d1d5db' },
+      { from: [45.5283, 13.5680], to: [45.5050, 12.3519], color: '#d1d5db' }
+    ];
+
+    transfers.forEach(function(t) {
+      L.polyline([t.from, t.to], { color: t.color, weight: 2, opacity: 0.4, dashArray: '4 8' }).addTo(map);
+    });
+
+    map.fitBounds(allLatLngs, { padding: [30, 30] });
+
+    // Habilitar scroll zoom solo al hacer clic en el mapa
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouteMap);
+  } else {
+    initRouteMap();
+  }
+})();
+</script>
+
+<!-- ═══════════════════════════════ DÍA 1 ═══════════════════════════════ -->
+<section id="dia-1" class="day-section" aria-labelledby="dia1-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/3525983/pexels-photo-3525983.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 1</span>
+      <p class="day-date">Lunes, 13 de julio</p>
+      <h2 class="day-title" id="dia1-title">Venecia → Lago Bled</h2>
+      <span class="day-km-badge">🚐 220 km &nbsp;·&nbsp; 2h 30min</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 1 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">✈️ Vuelo IB0677 desde Madrid T4</div>
+          <div class="timeline-time">08:50 — Salida</div>
+        </div>
+      </div>
+      <div class="timeline-leg">2h 25min de vuelo</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">✈️ Aterrizaje en Aeropuerto Marco Polo (Venecia)</div>
+          <div class="timeline-time">11:15</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Recogida de equipaje y furgoneta</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚐 Recogida de equipaje y furgoneta</div>
+          <div class="timeline-time">12:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Salida hacia Eslovenia · Parada en gasolinera para Vinjeta</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚐 Salida hacia Eslovenia</div>
+          <div class="timeline-time">12:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">220 km / ~2h 30min por A4 y carreteras secundarias</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏔️ Llegada a Bled — Check-in en alojamiento</div>
+          <div class="timeline-time">15:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Primer paseo por la orilla del lago (6 km, 1h30min)</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚶 Primer paseo por la orilla del lago</div>
+          <div class="timeline-time">16:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Opcional: Subida al Castillo de Bled para el atardecer (~19€)</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏰 Subida al Castillo de Bled (opcional)</div>
+          <div class="timeline-time">19:00</div>
+        </div>
+      </div>
+      <div class="timeline-step" style="margin-top:8px">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🍽️ Cena en Bled</div>
+          <div class="timeline-time">21:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Lago Bled -->
+  <div class="accordion" id="acc-bled-lago">
+    <button class="accordion-header" aria-expanded="true" aria-controls="body-bled-lago">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/19634983/pexels-photo-19634983.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" class="accordion-thumb" style="width:100%;height:100%;object-fit:cover;display:block" alt="Lago Bled" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Lago Bled</h3>
+          <p class="accordion-subtitle">Lago glaciar · Isla con iglesia barroca · Mirador Ojstrica</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-bled-lago">
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/19634983/pexels-photo-19634983.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Lago Bled con la isla y el castillo al fondo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El lago Bled es un lago glaciar formado hace más de 14.000 años cuando los glaciares modelaron el paisaje de los Alpes Julianos. Sus aguas se alimentan de manantiales termales subterráneos que mantienen una temperatura agradable incluso en invierno. En el centro del lago se encuentra su mayor tesoro: la <strong>isla de Bled</strong> (<em>Blejski otok</em>), la única isla natural de Eslovenia. Sobre esta pequeña extensión de tierra sobresale la <strong>Iglesia de la Asunción</strong>, un edificio barroco del siglo XVII alzado sobre los vestigios de un antiguo templo pagano dedicado a la diosa eslava Živa, protectora del amor y la fertilidad.</p>
+        <p style="margin-top:10px">El lago tiene unos <strong>2 km de longitud</strong> y una profundidad de hasta 30 metros. En su orilla se extiende un sendero señalizado de 6 km que bordea las aguas cristalinas, ideal para un paseo de hora y media.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Paseo a pie alrededor del lago (6 km, 1h 30min)</span>
+            <a href="https://maps.google.com/?q=Lago+Bled+walking+path,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Subida a la Isla en <em>pletna</em> (barca tradicional de madera, ~15€/persona ida y vuelta)</span>
+            <a href="https://maps.google.com/?q=Blejski+otok,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Castillo de Bled (entrada 19€ con funicular; 15€ sin funicular)</span>
+            <a href="https://maps.google.com/?q=Blejski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Mirador de Ojstrica: la foto clásica del lago desde arriba (20 min a pie desde la orilla sur)</span>
+            <a href="https://maps.google.com/?q=Ojstrica+viewpoint,Bled,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Iglesia de San Martín (neogótica, 1905, a los pies del castillo)</span>
+            <a href="https://maps.google.com/?q=Church+of+St+Martin,Bled,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Parking en Bled:</strong> Hay varias zonas de aparcamiento de pago alrededor del lago. Los más céntricos cuestan ~1,50€/h. En julio se llenan rápido.<br>
+        <a href="https://maps.google.com/?q=Grajska+cesta+parking,+Bled,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Castle (Grajska cesta):</strong></a> ~1,20€/h, el más cercano al castillo. Pago con EasyPark o en parquímetro.<br>
+        <a href="https://maps.google.com/?q=Parking+Mlino,+Bled,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Mlino:</strong></a> ~1€/h, en la orilla sur, más tranquilo y cerca del embarcadero de las pletnas.<br>
+        <a href="https://maps.google.com/?q=Velika+Zaka,+Bled,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Velika Zaka:</strong></a> ~1,50€/h, buena opción para la orilla este y el mirador Ojstrica.<br>
+        <strong>Consejo:</strong> Llegar antes de las 10:00 en julio. Pago posible con la app EasyPark.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Lago+Bled" target="_blank" rel="noopener" class="map-btn">📍 Lago Bled</a>
+        <a href="https://maps.google.com/?q=Isla+de+Bled" target="_blank" rel="noopener" class="map-btn">📍 Isla de Bled</a>
+        <a href="https://maps.google.com/?q=Ojstrica+viewpoint,+Bled" target="_blank" rel="noopener" class="map-btn">📍 Mirador Ojstrica</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Alpes / Bled (julio)</strong><br>
+        26°C máx / 14°C mín · Soleado con nubes por la tarde, posibles tormentas vespertinas
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Castillo de Bled -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-bled-castillo">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/20107292/pexels-photo-20107292.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" class="accordion-thumb" style="width:100%;height:100%;object-fit:cover;display:block" alt="Castillo de Bled" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Castillo de Bled</h3>
+          <p class="accordion-subtitle">Siglo XI · Habsburgo · 130m sobre el lago</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-bled-castillo" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/20107292/pexels-photo-20107292.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Castillo de Bled sobre el acantilado" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El Castillo de Bled fue construido originalmente hacia el año <strong>1011</strong> por los príncipes-obispos de Brixen, coronando un acantilado de 130 metros sobre el lago. En <strong>1278</strong> pasó a formar parte del patrimonio de los Habsburgo. Sufrió graves daños en el terremoto de 1511 y fue ampliamente reconstruido. Hoy alberga una capilla gótica del siglo XVI, la forja, una imprenta histórica y el museo del castillo con la historia de la región. Se puede subir en funicular desde el centro del pueblo.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Capilla gótica del siglo XVI</span>
+            <a href="https://maps.google.com/?q=Blejski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Imprenta histórica (puedes imprimir tu propio pergamino)</span>
+            <a href="https://maps.google.com/?q=Blejski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Museo del castillo — historia de la región de Bled</span>
+            <a href="https://maps.google.com/?q=Blejski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Vistas panorámicas del lago desde las murallas</span>
+            <a href="https://maps.google.com/?q=Blejski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Forja histórica</span>
+            <a href="https://maps.google.com/?q=Blejski+grad+forge,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Entrada:</strong> 19€ con funicular / 15€ sin funicular<br>
+        <strong>Horario:</strong> 8:00–20:00 (julio–agosto)<br>
+        <strong>Consejo:</strong> Ir al atardecer (17:30–19:00) para las mejores luces sobre el lago
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Castillo+de+Bled" target="_blank" rel="noopener" class="map-btn">📍 Castillo de Bled</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Alpes / Bled (julio)</strong><br>
+        26°C máx / 14°C mín · Soleado con nubes por la tarde, posibles tormentas vespertinas
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón Gastronomía Día 1 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-1">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Zona Bled / Alpes · Kremna rezina, Potica, Trucha</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-1" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Kremna rezina</td><td>El pastel estrella de Bled: capas de hojaldre, crema pastelera y nata. Icónico desde 1953. Probar en el <strong>Hotel Park</strong> de Bled.</td></tr>
+            <tr><td>Žganci</td><td>Gachas de trigo sarraceno o maíz, el desayuno alpino tradicional</td></tr>
+            <tr><td>Ričet</td><td>Potaje de cebada perlada con verduras y embutido ahumado, plato de montaña contundente</td></tr>
+            <tr><td>Trucha del Soča</td><td>En los restaurantes de la zona alpina, la trucha de río local es excelente</td></tr>
+            <tr><td>Potica</td><td>Pastel enrollado con relleno de nueces, miel y estragón. El postre nacional esloveno</td></tr>
+            <tr><td>Miel eslovena</td><td>Eslovenia tiene una de las tradiciones apícolas más ricas de Europa. Comprar en el mercado local</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes recomendados en Bled</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Gostilna Pri Planincu</h5>
+              <p>Centro de Bled · Cocina eslovena tradicional, platos abundantes. Muy popular entre locales. <strong>~12–18€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna Lectar (Radovljica)</h5>
+              <p>A 7 km de Bled · Taberna del siglo XVII con cocina regional. Famosa por los corazones de pan de especias. <strong>~12–18€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Pizzerija Rustika</h5>
+              <p>Centro de Bled · Pizzas de masa fina, buen sitio para una cena informal. <strong>~8–12€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Oštarija Peglez'n</h5>
+              <p>Centro de Bled · Restaurante más cuidado, cocina eslovena moderna. Reservar mesa. <strong>~25–35€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 2 ═══════════════════════════════ -->
+<section id="dia-2" class="day-section" aria-labelledby="dia2-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/1766838/pexels-photo-1766838.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 2</span>
+      <p class="day-date">Martes, 14 de julio</p>
+      <h2 class="day-title" id="dia2-title">Base Bled — Vintgar + Bohinj</h2>
+      <span class="day-km-badge">🚐 34 km totales</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 2 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚐 Salida hacia Vintgar</div>
+          <div class="timeline-time">09:00 — Imprescindible llegar antes de las 9:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">4 km / 10 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🌊 Garganta de Vintgar</div>
+          <div class="timeline-time">09:00 – 12:00 — Recorrido por la garganta</div>
+        </div>
+      </div>
+      <div class="timeline-leg">30 km / 42 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🍽️ Comida en Bohinj</div>
+          <div class="timeline-time">13:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Tarde en Bohinj: baño, teleférico de Vogel</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏔️ Tarde en Bohinj — Baño, teleférico de Vogel</div>
+          <div class="timeline-time">14:30 – 18:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">30 km / 42 min de vuelta</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Regreso a Bled — Cena</div>
+          <div class="timeline-time">20:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Vintgar -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-vintgar">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/1766838/pexels-photo-1766838.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Garganta de Vintgar" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Garganta de Vintgar</h3>
+          <p class="accordion-subtitle">Descubierta en 1891 · Río Radovna · 1,6 km de pasarelas</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-vintgar" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/1766838/pexels-photo-1766838.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Pasarelas de madera sobre el río turquesa en la Garganta de Vintgar" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>La garganta fue descubierta en <strong>1891</strong> por Jakob Žumer, alcalde de Gorje, y el cartógrafo Benedikt Lergetporer. Fue abierta al público en <strong>1893</strong> con la construcción de pasarelas de madera ancladas a las paredes de la montaña. El desfiladero fue excavado por el <strong>río Radovna</strong>, cuyas paredes alcanzan hasta <strong>100 metros de altura</strong>, separando los montes Boršt y Hom. Forma parte del Parque Nacional de Triglav, cuya montaña más alta, el Triglav, alcanza los 2.864 m.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">1,6 km de pasarelas de madera a lo largo del río, con rápidos, cascadas y pozas turquesas</span>
+            <a href="https://maps.google.com/?q=Blejski+Vintgar,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Cascada Šum al final del recorrido (16 metros de caída)</span>
+            <a href="https://maps.google.com/?q=Slap+Sum,Vintgar,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Paredes de roca de hasta 100 metros de altura</span>
+            <a href="https://maps.google.com/?q=Vintgar+Gorge+entrance,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Centro de Visitantes Vintgar — La visita se hace en un único sentido (de ida)</span>
+            <a href="https://maps.google.com/?q=Vintgar+Gorge+entrance,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Entrada:</strong> 10€ adultos / 5€ niños (3–15 años) / gratuita menores de 3 años<br>
+        <a href="https://maps.google.com/?q=Podhom+80,+4247+Zgornje+Gorje,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking:</strong></a> Gratuito, con buses lanzadera gratuitos al Centro de Visitantes<br>
+        <strong>Duración:</strong> ~3h desde que entras hasta que regresas al coche<br>
+        <strong>Consejo vital:</strong> Ir antes de las 8:30 AM en julio para evitar aglomeraciones masivas
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Vintgar+Gorge" target="_blank" rel="noopener" class="map-btn">📍 Garganta de Vintgar</a>
+        <a href="https://maps.google.com/?q=Podhom+80,+4247+Zgornje+Gorje,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Parking Vintgar</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Alpes / Bled (julio)</strong><br>
+        26°C máx / 14°C mín · Soleado con nubes por la tarde, posibles tormentas vespertinas
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Bohinj -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-bohinj">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/15814337/pexels-photo-15814337.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Lago Bohinj" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Lago Bohinj</h3>
+          <p class="accordion-subtitle">El lago más grande de Eslovenia · Parque Nacional Triglav</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-bohinj" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/15814337/pexels-photo-15814337.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Lago Bohinj con los Alpes al fondo" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El lago Bohinj es el <strong>lago más grande de Eslovenia</strong>, situado en el corazón del Parque Nacional de Triglav, a los pies de los Alpes Julianos, a 526 metros sobre el nivel del mar. Tiene una longitud de algo más de <strong>4 km</strong> y contiene casi 100 millones de metros cúbicos de agua. Se formó durante la <strong>última época glacial</strong>, hace más de 14.000 años. Su valle ya estaba habitado durante la <strong>Edad de Bronce</strong>, cuando la zona se utilizaba para la minería y el trabajo del hierro.</p>
+        <p style="margin-top:10px">A diferencia de Bled, Bohinj permanece prácticamente virgen de construcciones hoteleras. Junto al lago se encuentra la <strong>Iglesia de San Juan Bautista</strong>, con su campanario de 700 años y frescos medievales de los siglos XV y XVI, que es de las más fotogénicas de Eslovenia.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver y hacer</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Baño en el lago (temperatura ~22°C en julio, perfecta)</span>
+            <a href="https://maps.google.com/?q=Lago+Bohinj+beach,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Teleférico de Vogel (vistas espectaculares de los picos alpinos y el lago)</span>
+            <a href="https://maps.google.com/?q=Vogel+cable+car,Bohinj,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Cascada de Savica (4 km del lago, 78 metros de caída, 20 min a pie cuesta arriba por hayedos)</span>
+            <a href="https://maps.google.com/?q=Slap+Savica,Bohinj,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Iglesia de San Juan Bautista junto al puente de piedra en Ribčev Laz</span>
+            <a href="https://maps.google.com/?q=Church+of+St+John+the+Baptist,Ribcev+Laz,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <a href="https://maps.google.com/?q=Parking+Ribcev+Laz,+Bohinj,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Ribčev Laz:</strong></a> ~5€/día para vehículos grandes. En julio llega a saturarse antes de mediodía.<br>
+        <a href="https://maps.google.com/?q=Bohinjska+Bistrica+parking,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Bohinjska Bistrica:</strong></a> Alternativa más económica (~2€/día), a 6 km. Autobús local hasta el lago.<br>
+        <a href="https://maps.google.com/?q=Parking+Slap+Savica,+Bohinj,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Cascada Savica:</strong></a> ~5€/vehículo.<br>
+        <strong>Consejo:</strong> Llegar antes de las 10:00 en julio. Pago posible con la app EasyPark o en efectivo.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Lago+Bohinj" target="_blank" rel="noopener" class="map-btn">📍 Lago Bohinj</a>
+        <a href="https://maps.google.com/?q=Vogel+cable+car,+Bohinj" target="_blank" rel="noopener" class="map-btn">📍 Teleférico Vogel</a>
+        <a href="https://maps.google.com/?q=Slap+Savica,+Bohinj" target="_blank" rel="noopener" class="map-btn">📍 Cascada Savica</a>
+        <a href="https://maps.google.com/?q=Church+of+St+John+the+Baptist,+Ribcev+Laz,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Iglesia San Juan</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Alpes / Bled (julio)</strong><br>
+        26°C máx / 14°C mín · Soleado con nubes por la tarde, posibles tormentas vespertinas
+      </div>
+    </div>
+  </div>
+
+  <!-- Gastronomía Día 2 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-2">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Zona Alpes · mismos platos que el día 1</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-2" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Kremna rezina</td><td>El pastel estrella de Bled, imprescindible si no lo tomaste ayer</td></tr>
+            <tr><td>Žganci</td><td>Gachas de trigo sarraceno o maíz, el desayuno alpino tradicional</td></tr>
+            <tr><td>Ričet</td><td>Potaje de cebada perlada con verduras y embutido ahumado, plato de montaña contundente</td></tr>
+            <tr><td>Trucha del Soča</td><td>Disponible en los restaurantes junto al Lago Bohinj, excelente calidad</td></tr>
+            <tr><td>Picnic junto al lago</td><td>Opción recomendada para el mediodía: comprar en Bled por la mañana y comer en la orilla</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes recomendados cerca de Bohinj</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Gostilna Rupa (Bohinjska Bistrica)</h5>
+              <p>A 6 km del lago · Cocina local auténtica, platos de montaña. Buena relación calidad-precio. <strong>~10–15€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna Kramar (Ribčev Laz)</h5>
+              <p>Junto al lago Bohinj · Terraza con vistas. Trucha del lago y platos eslovenos. <strong>~15–22€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Strud'l (Stara Fužina)</h5>
+              <p>A 2 km del lago · Especialidad en štruklji y postres caseros. Ambiente rústico. <strong>~8–14€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 3 ═══════════════════════════════ -->
+<section id="dia-3" class="day-section" aria-labelledby="dia3-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/8920813/pexels-photo-8920813.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 3</span>
+      <p class="day-date">Miércoles, 15 de julio</p>
+      <h2 class="day-title" id="dia3-title">Excursión Valle del Soča</h2>
+      <span class="day-km-badge">🚐 125 km totales · ~3h 30min conducción</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 3 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Salida desde Bled vía Paso Vršič</div>
+          <div class="timeline-time">08:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">75 km / ~2h 30min — vía Paso Vršič, 50 curvas espectaculares</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🌊 Llegada a Bovec / Valle del Soča</div>
+          <div class="timeline-time">11:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Gran Cañón del Soča + Cascada Kozjak</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏔️ Gran Cañón del Soča + Cascada Kozjak</div>
+          <div class="timeline-time">11:30 – 14:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Descenso a Kobarid</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🍽️ Comida en Kobarid — Visita al Museo si hay tiempo</div>
+          <div class="timeline-time">14:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Inicio regreso a Bled</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚐 Inicio regreso a Bled</div>
+          <div class="timeline-time">17:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">50 km / ~1h 15min vía Autotren o carretera</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Llegada a Bled</div>
+          <div class="timeline-time">19:00</div>
+        </div>
+      </div>
+      <div class="timeline-step" style="margin-top:8px">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🍽️ Cena</div>
+          <div class="timeline-time">21:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <strong>El día clave de la Opción 3.</strong> Al dormir en Bled las 3 noches, si hay mal tiempo se puede reorganizar este día sin cambiar de alojamiento. <strong>Alternativa cómoda — El Autotren (Avtovlak):</strong> hay un tren de coches que conecta Bohinjska Bistrica con Most na Soči, atravesando la montaña por un túnel ferroviario. Se mete la furgoneta en el vagón y en ~40 minutos apareces en el valle. Es una experiencia divertida y ahorra cansancio al conductor. Consultar horarios en <a href="https://www.slovenske-zeleznice.si" target="_blank" rel="noopener" style="color:var(--turquoise)">slovenske-zeleznice.si</a>
+  </div>
+
+  <!-- Acordeón: Paso Vršič -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-vrsic">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/28575776/pexels-photo-28575776.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Paso de Vršič" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Paso de Vršič</h3>
+          <p class="accordion-subtitle">1.611 m · 50 curvas numeradas · Capilla Rusa de la I Guerra Mundial</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-vrsic" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/28575776/pexels-photo-28575776.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Vista aérea del Paso de Vršič con los Alpes Julianos" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El <strong>Paso de Vršič</strong> (pronunciado "Vrshich") es el <strong>puerto de montaña más alto de Eslovenia</strong>, a 1.611 metros de altitud. La carretera fue construida entre 1915 y 1916 por <strong>prisioneros de guerra rusos</strong> durante la Primera Guerra Mundial, bajo condiciones de trabajo extremas. Una avalancha en 1916 mató a más de 300 de ellos. En su memoria se construyó la <strong>Capilla Rusa</strong> (entre las curvas 8 y 9), que se ha convertido en un símbolo del sufrimiento y la paz. Cada tercer domingo de julio se celebra una ceremonia conmemorativa en la capilla.</p>
+        <p style="margin-top:10px">La carretera tiene exactamente <strong>50 curvas numeradas</strong>, 24 en el lado norte y 26 en el sur. Es de asfalto estrecho en algunos tramos, pero perfectamente transitable en furgoneta con precaución. Las vistas de los Alpes Julianos son absolutamente espectaculares.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Las 50 curvas numeradas — un espectáculo en sí mismo</span>
+            <a href="https://maps.google.com/?q=Vrsic+Pass+summit,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Capilla Rusa entre las curvas 8 y 9 — monumento a los prisioneros rusos</span>
+            <a href="https://maps.google.com/?q=Ruska+kapelica,Vrsic,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Curva 50 — punto más alto, vistas panorámicas de los Alpes Julianos</span>
+            <a href="https://maps.google.com/?q=Vrsic+Pass+summit,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Manantial del río Soča justo pasado el puerto</span>
+            <a href="https://maps.google.com/?q=Vrsic+Pass+summit,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Advertencia:</strong> La carretera es estrecha en algunos tramos. Conducir con precaución en furgoneta grande. No hay barandillas en algunas curvas. Prohibido en invierno (cerrado por nieve).<br>
+        <strong>Tiempo de paso:</strong> ~1h desde la base norte hasta el fondo del valle Soča
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Vrsic+Pass" target="_blank" rel="noopener" class="map-btn">📍 Paso de Vršič</a>
+        <a href="https://maps.google.com/?q=Russian+Chapel+Vrsic" target="_blank" rel="noopener" class="map-btn">📍 Capilla Rusa</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Alpes / Valle Soča (julio)</strong><br>
+        28°C máx / 15°C mín · Algo más cálido en el fondo del valle, posibles tormentas
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Valle del Soča -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-soca">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/8920813/pexels-photo-8920813.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Río Soča esmeralda" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Valle del Río Soča</h3>
+          <p class="accordion-subtitle">El río esmeralda · Frente del Isonzo WWI · Gran Cañón · Cascada Kozjak</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-soca" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/8920813/pexels-photo-8920813.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Aguas turquesa esmeralda del río Soča" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El río Soča —conocido como <strong>"el río esmeralda"</strong>— nace en el valle del Trenta, en los Alpes Julianos, a 876 metros de altitud. Su peculiar color azul turquesa-esmeralda se debe a su origen glacial y a la pureza excepcional de sus aguas. Pasa por Bovec, Kobarid y Tolmin, y desemboca finalmente en el Adriático cerca de Monfalcone (Italia).</p>
+        <p style="margin-top:10px">El valle fue escenario de algunas de las batallas más sangrientas de la <strong>Primera Guerra Mundial</strong>: el llamado <strong>Frente del Isonzo</strong> (río Isonzo es el nombre italiano del Soča). Entre mayo de 1915 y noviembre de 1917 se libraron <strong>12 batallas consecutivas</strong> entre Italia y el Imperio Austrohúngaro, con más de 300.000 bajas. La última, la Batalla de Caporetto (octubre de 1917), fue una de las derrotas más devastadoras de la historia italiana. El museo de <strong>Kobarid</strong> conmemora este período con una de las mejores exposiciones de historia bélica de Europa.</p>
+        <p style="margin-top:10px">Curiosidad: Disney filmó escenas de <strong>Las Crónicas de Narnia: El Príncipe Caspian</strong> en estas orillas, dada la belleza irreal del paraje.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Gran Cañón del Soča</strong> (Velika Korita): el río ha excavado un espectacular cañón de paredes verticales. Acceso sencillo desde la carretera.</span>
+            <a href="https://maps.google.com/?q=Velika+korita+Soce,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Cascada Kozjak</strong> (cerca de Kobarid): 15 min a pie desde el parking; cae en una cueva semioculta formando una poza esmeralda irreal.</span>
+            <a href="https://maps.google.com/?q=Slap+Kozjak,Kobarid,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Cascada Boka</strong>: una de las más grandes del país, visible desde un mirador; 15–20 min a pie.</span>
+            <a href="https://maps.google.com/?q=Slap+Boka,Bovec,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Museo de Kobarid</strong> (I Guerra Mundial): uno de los mejores museos bélicos de Europa. Ganó el Premio del Museo Europeo en 1993.</span>
+            <a href="https://maps.google.com/?q=Kobariski+muzej,Kobarid,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Puente de Napoleón</strong> sobre el Soča (en Kobarid)</span>
+            <a href="https://maps.google.com/?q=Napoleon+Bridge,Kobarid,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Osario Italiano</strong> en Kobarid: contiene los restos de 7.014 soldados italianos</span>
+            <a href="https://maps.google.com/?q=Italian+Charnel+House,Kobarid,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <a href="https://maps.google.com/?q=Velika+Korita+Soce,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Gran Cañón del Soča (Velika Korita):</strong></a> Gratuito, a pie de carretera. Espacio limitado en verano, llegar temprano.<br>
+        <a href="https://maps.google.com/?q=Parking+Slap+Kozjak,+Kobarid,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Cascada Kozjak:</strong></a> ~3€/vehículo, junto al inicio del sendero en Kobarid.<br>
+        <a href="https://maps.google.com/?q=Slap+Boka+parking,+Bovec,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Cascada Boka:</strong></a> Gratuito, arcén junto a la carretera. Espacio reducido.<br>
+        <a href="https://maps.google.com/?q=Bovec+center+parking,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Bovec centro:</strong></a> Gratuito en la zona del centro del pueblo.<br>
+        <a href="https://maps.google.com/?q=Parking+Kobarid+museum,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Kobarid:</strong></a> Gratuito, junto al museo y al puente de Napoleón.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Velika+Korita+Soce" target="_blank" rel="noopener" class="map-btn">📍 Gran Cañón del Soča</a>
+        <a href="https://maps.google.com/?q=Slap+Kozjak,+Kobarid" target="_blank" rel="noopener" class="map-btn">📍 Cascada Kozjak</a>
+        <a href="https://maps.google.com/?q=Kobariski+muzej,+Kobarid" target="_blank" rel="noopener" class="map-btn">📍 Museo Kobarid</a>
+        <a href="https://maps.google.com/?q=Bovec,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Bovec</a>
+        <a href="https://maps.google.com/?q=Kobarid,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Kobarid</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Valle del Soča (julio)</strong><br>
+        28°C máx / 15°C mín · Algo más cálido en el fondo del valle, posibles tormentas vespertinas
+      </div>
+    </div>
+  </div>
+
+  <!-- Gastronomía Día 3 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-3">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Valle del Soča · Trucha marmolada · Queso Tolminc DOP</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-3" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Trucha del Soča</td><td>La trucha marmolada autóctona del río Soča es un manjar local. Protegida y de sabor excepcional</td></tr>
+            <tr><td>Queso Tolminc</td><td>Queso semiduro con DOP (Denominación de Origen Protegida) elaborado con leche cruda de vacas Cika autóctonas, en Tolmin, Kobarid y Bovec. Lo llaman "el Rey del Cielo de las Montañas"</td></tr>
+            <tr><td>Queso de Bovec</td><td>Similar al Tolminc, con sabor más intenso y terroso</td></tr>
+            <tr><td>Frtalja</td><td>Tortilla del valle Soča con huevos y queso Tolmin rallado, a veces con patatas y tocino</td></tr>
+            <tr><td>Prosciutto kárstico</td><td>Jamón secado al aire de la región kárstica, considerado por los locales el mejor prosciutto del mundo. Maridarlo con vino Teran (tinto local)</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes recomendados en el Valle del Soča</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Kotlar (Kobarid)</h5>
+              <p>Centro de Kobarid · Cocina tradicional del valle, trucha y queso Tolminc. Precio muy razonable. <strong>~10–16€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Topli Val (Bovec)</h5>
+              <p>Centro de Bovec · Pizzas y platos locales. Ideal para un almuerzo rápido entre cascadas. <strong>~10–15€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna Jazbec (Kobarid)</h5>
+              <p>A 1 km del centro · Terraza agradable, menú variado con platos de la zona. <strong>~14–20€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Hiša Franko (Kobarid)</h5>
+              <p>A 3 km del centro · Restaurante con estrella Michelin de la chef Ana Roš. Experiencia gastronómica de alto nivel. <strong>~80–120€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 4 ═══════════════════════════════ -->
+<section id="dia-4" class="day-section" aria-labelledby="dia4-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/9312903/pexels-photo-9312903.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 4</span>
+      <p class="day-date">Jueves, 16 de julio</p>
+      <h2 class="day-title" id="dia4-title">Castillo de Predjama → Liubliana</h2>
+      <span class="day-km-badge">🚐 170 km · ~2h 05min</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 4 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Salida desde Bled</div>
+          <div class="timeline-time">09:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">115 km / 1h 20min por autopista A2</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏰 Llegada al Castillo de Predjama</div>
+          <div class="timeline-time">11:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Visita al castillo</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏰 Visita al castillo</div>
+          <div class="timeline-time">11:00 – 13:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">9 km · Opcional: Cuevas de Postojna</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🕳️ Cuevas de Postojna (opcional, si hay tiempo y ganas)</div>
+          <div class="timeline-time">13:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">55 km / 45 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚐 Salida hacia Liubliana</div>
+          <div class="timeline-time">16:00</div>
+        </div>
+      </div>
+      <div class="timeline-step" style="margin-top:8px">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏙️ Llegada a Liubliana — Check-in</div>
+          <div class="timeline-time">17:00</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Paseo por el casco histórico</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🚶 Paseo por el casco histórico</div>
+          <div class="timeline-time">17:30 – 21:00</div>
+        </div>
+      </div>
+      <div class="timeline-step" style="margin-top:8px">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🍽️ Cena</div>
+          <div class="timeline-time">21:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Castillo Predjama -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-predjama">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/9312903/pexels-photo-9312903.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Castillo de Predjama incrustado en la roca" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Castillo de Predjama</h3>
+          <p class="accordion-subtitle">Construido en cueva de 123m · Erazem "Robin Hood esloveno" · Siglo XII</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-predjama" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/9312903/pexels-photo-9312903.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Castillo de Predjama incrustado en el acantilado" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>El Castillo de Predjama es uno de los castillos más espectaculares y únicos del mundo: está literalmente <strong>construido en la boca de una cueva</strong>, incrustado en un acantilado de <strong>123 metros</strong> de altura. Su nombre significa en esloveno "castillo delante de la cueva".</p>
+        <p style="margin-top:10px">El castillo original fue construido en el siglo XII, aunque no aparece mencionado por escrito hasta el siglo XIII, con el nombre de Luegg. Su aspecto actual de estilo gótico centroeuropeo data de la reconstrucción de <strong>1570</strong> por el Barón Von Cobenzl.</p>
+        <p style="margin-top:10px">La leyenda más famosa del castillo es la de <strong>Erazem de Predjama</strong> (Erazem Luegger), un caballero rebelde esloveno del siglo XV considerado el "Robin Hood esloveno": robaba a los ricos comerciantes de la ruta Viena–Trieste para dárselo a los pobres. Aliado con el Rey de Hungría, se enfrentó al Emperador Federico III de los Habsburgo. Las tropas austriacas asediaron el castillo durante más de un año sin poder tomarlo, ya que Erazem sobrevivía gracias a un <strong>pasadizo secreto</strong> excavado en la roca que llegaba hasta lo alto de la montaña (de hecho, un túnel subterráneo conecta el castillo con las cuevas de Postojna, a 10 km de distancia). Fue finalmente traicionado y asesinado en 1484.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Castillo de Predjama — Salón del Trono y estancias medievales</span>
+            <a href="https://maps.google.com/?q=Predjamski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Los calabozos, sala de torturas y la cueva de asedio</span>
+            <a href="https://maps.google.com/?q=Predjamski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Audioguía disponible en español — la foto desde el aparcamiento ya justifica la parada</span>
+            <a href="https://maps.google.com/?q=Predjamski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Cuevas de Postojna (opcional, 9 km del castillo)</span>
+            <a href="https://maps.google.com/?q=Postojnska+jama,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Entrada:</strong> 11,90€ / Entrada combinada Predjama + Postojna: 31,90€<br>
+        <a href="https://maps.google.com/?q=Parking+Predjama+Castle,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking:</strong></a> Gratuito, amplio aparcamiento justo frente al castillo. Sin problemas de espacio.<br>
+        <strong>Duración recomendada:</strong> 1,5–2h<br>
+        <strong>Consejo:</strong> Comprar online evita colas. La visita exterior por sí sola ya es espectacular.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Predjama+Castle" target="_blank" rel="noopener" class="map-btn">📍 Castillo de Predjama</a>
+        <a href="https://maps.google.com/?q=Postojna+Cave" target="_blank" rel="noopener" class="map-btn">📍 Cuevas de Postojna</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Interior / Liubliana (julio)</strong><br>
+        28°C máx / 16°C mín · Cálido y húmedo, tormentas por la tarde frecuentes
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Liubliana -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-liubliana">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/6594360/pexels-photo-6594360.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Liubliana capital de Eslovenia" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Liubliana</h3>
+          <p class="accordion-subtitle">Capital verde 2016 · Emona romana · Plečnik · Dragón</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-liubliana" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/6594360/pexels-photo-6594360.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Liubliana con el castillo y el río Ljubljanica" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>Liubliana lleva habitada desde época prehistórica. Los romanos fundaron aquí el campamento militar de <strong>Emona</strong> en el siglo I a.C. Tras pasar por manos de los francos y los Habsburgo, Napoleón la convirtió en capital del <strong>Reino de Iliria</strong> (1809–1813). Tras la Primera Guerra Mundial formó parte del Reino de los Serbios, Croatas y Eslovenos; tras la Segunda, de Yugoslavia. En <strong>1991</strong>, con la independencia de Eslovenia, Liubliana se convirtió en capital del nuevo estado. En <strong>2016</strong> recibió el título de <strong>Capital Verde Europea</strong>.</p>
+        <p style="margin-top:10px">Tiene unos <strong>280.000 habitantes</strong> y es una ciudad pensada para caminar: el casco histórico es completamente peatonal. El río Ljubljanica atraviesa el centro conectando los principales puentes y monumentos.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver (tarde–noche)</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Puente Triple (Tromostovje):</strong> el más icónico de la ciudad, obra del arquitecto Jože Plečnik</span>
+            <a href="https://maps.google.com/?q=Tromostovje,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Puente del Dragón (Zmajski most):</strong> símbolo de la ciudad, con cuatro dragones de bronce en las esquinas (1901)</span>
+            <a href="https://maps.google.com/?q=Zmajski+most,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Mercado Central:</strong> diseñado por Plečnik en 1942, a orillas del Ljubljanica. Abierto de lunes a sábado</span>
+            <a href="https://maps.google.com/?q=Osrednja+trznica,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Castillo de Liubliana:</strong> siglo XV. Subida en funicular desde la Plaza Krekov (6€). Entrada completa 19€</span>
+            <a href="https://maps.google.com/?q=Ljubljanski+grad,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Barrio Metelkova Mesto:</strong> antiguo cuartel convertido en centro de arte alternativo</span>
+            <a href="https://maps.google.com/?q=Metelkova+mesto,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Parque Tivoli:</strong> el pulmón verde de la ciudad</span>
+            <a href="https://maps.google.com/?q=Park+Tivoli,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Catedral de San Nicolás:</strong> cúpula verde y torres gemelas barrocas, junto al mercado</span>
+            <a href="https://maps.google.com/?q=Stolnica+svetega+Nikolaja,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Plaza Prešeren:</strong> el corazón del casco histórico</span>
+            <a href="https://maps.google.com/?q=Presernov+trg,Ljubljana,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Parking en Liubliana:</strong> El centro histórico es peatonal. Evitar entrar con la furgoneta al casco antiguo.<br>
+        <a href="https://maps.google.com/?q=P%2BR+Dolgi+most,+Ljubljana,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking P+R Dolgi most:</strong></a> ~1,20€/día completo con billete de autobús al centro incluido. Ideal para furgonetas.<br>
+        <a href="https://maps.google.com/?q=Parking+Kongresni+trg,+Ljubljana,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Kongresni trg (centro):</strong></a> ~1,80€/h, subterráneo, cerca de la Plaza Prešeren.<br>
+        <a href="https://maps.google.com/?q=Parking+NUK,+Ljubljana,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking NUK 2 (Tivoli):</strong></a> ~1,20€/h, junto al Parque Tivoli, más económico que los del centro.<br>
+        <strong>Consejo:</strong> El P+R (Park &amp; Ride) es la mejor opción para furgonetas. Pago con EasyPark o tarjeta.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Triple+Bridge,+Ljubljana" target="_blank" rel="noopener" class="map-btn">📍 Puente Triple</a>
+        <a href="https://maps.google.com/?q=Ljubljana+Castle" target="_blank" rel="noopener" class="map-btn">📍 Castillo</a>
+        <a href="https://maps.google.com/?q=Central+Market+Ljubljana" target="_blank" rel="noopener" class="map-btn">📍 Mercado Central</a>
+        <a href="https://maps.google.com/?q=Metelkova+Mesto,+Ljubljana" target="_blank" rel="noopener" class="map-btn">📍 Metelkova</a>
+        <a href="https://maps.google.com/?q=Preseren+Square,+Ljubljana" target="_blank" rel="noopener" class="map-btn">📍 Plaza Prešeren</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Liubliana (julio)</strong><br>
+        28°C máx / 16°C mín · Cálido y húmedo, tormentas por la tarde frecuentes
+      </div>
+    </div>
+  </div>
+
+  <!-- Gastronomía Día 4 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-4">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Liubliana · Jota · Kranjska klobasa · Štruklji</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-4" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Jota</td><td>Sopa de chucrut (col fermentada) con judías, patata y costilla de cerdo. El plato de invierno por excelencia</td></tr>
+            <tr><td>Kranjska klobasa</td><td>La salchicha de Carniola, muy ahumada. Con mostaza, rábano picante y pan. Un clásico mencionado por primera vez en 1896</td></tr>
+            <tr><td>Štruklji</td><td>Masa enrollada con rellenos dulces o salados (queso, nueces, manzana). Se come como plato o guarnición</td></tr>
+            <tr><td>Potica</td><td>El pastel nacional esloveno, enrollado con nueces y miel</td></tr>
+            <tr><td>Sopa de calabaza</td><td>Con aceite de semilla de calabaza esloveno (dorado y de sabor intenso), producto local de calidad</td></tr>
+            <tr><td>Cevapcici</td><td>Albóndigas alargadas de carne picada, herencia balcánica. En Gostilna Sokol, una de las tabernas más antiguas</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes recomendados en Liubliana</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Druga Violina</h5>
+              <p>Casco antiguo · Platos tradicionales eslovenos, ambiente popular. Proyecto social muy querido en la ciudad. <strong>~10–15€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna Sokol</h5>
+              <p>Casco antiguo · Una de las tabernas más antiguas, famosa por los cevapcici y la cerveza. <strong>~12–18€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Pivnica Union</h5>
+              <p>Cerca de Metelkova · Cervecería Union con menú de comida típica eslovena. Buen precio. <strong>~10–15€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Odprta Kuhna (Open Kitchen)</h5>
+              <p>Mercado Central · Street food gourmet los viernes de marzo a octubre. Puestos variados. <strong>~8–14€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna na Gradu</h5>
+              <p>En el castillo · Cocina eslovena de calidad con vistas panorámicas. Más elevado de precio. <strong>~25–35€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 5 ═══════════════════════════════ -->
+<section id="dia-5" class="day-section" aria-labelledby="dia5-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/11003752/pexels-photo-11003752.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 5</span>
+      <p class="day-date">Viernes, 17 de julio</p>
+      <h2 class="day-title" id="dia5-title">Liubliana → Škocjan → Piran</h2>
+      <span class="day-km-badge">🚐 122 km · ~1h 35min</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 5 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏙️ Liubliana</div>
+          <div class="timeline-time">09:00 — Salida</div>
+        </div>
+      </div>
+      <div class="timeline-leg">77 km / 55 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🕳️ Cuevas de Škocjan (UNESCO)</div>
+          <div class="timeline-time">~10:00 — Visita guiada ~2h</div>
+        </div>
+      </div>
+      <div class="timeline-leg">45 km / 40 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🌊 Piran</div>
+          <div class="timeline-time">Tarde — Casco veneciano, Plaza Tartini</div>
+        </div>
+      </div>
+      <div class="timeline-leg">2 km</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Portorož / Lucija (alojamiento)</div>
+          <div class="timeline-time">Noche</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Cuevas de Škocjan -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-skocjan">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary-dark),#222)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem">🕳️</div>
+        </div>
+        <div>
+          <h3 class="accordion-title">Cuevas de Škocjan</h3>
+          <p class="accordion-subtitle">Patrimonio UNESCO 1986 · Cañón subterráneo 200m · Río Reka</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-skocjan" hidden>
+      <div class="content-section" style="margin-top:20px">
+        <h4>Historia</h4>
+        <p>Las cuevas de Škocjan son un <strong>Patrimonio de la Humanidad de la UNESCO</strong> (desde 1986) y una de las formaciones kársticas más impresionantes del mundo. La región del Karst (Carso) —de donde proviene el nombre genérico de este tipo de fenómeno geológico a nivel mundial— dio nombre a todos los sistemas kársticos del planeta.</p>
+        <p style="margin-top:10px">El sistema de cuevas se formó por el hundimiento de los valles eslovenos que crearon un sistema de cámaras subterráneas. El <strong>río Reka</strong> entra en las grutas a través de una garganta cerca de la localidad de Škocjan y fluye bajo tierra hasta el Lago Muerto, para después dirigirse hacia el Mar Adriático. El cañón subterráneo tiene una profundidad de más de <strong>200 metros</strong>, con cámaras de proporciones épicas. Las paredes parecen sacadas de una película de El Señor de los Anillos.</p>
+        <p style="margin-top:10px">A diferencia de Postojna (más turística y accesible en tren eléctrico), Škocjan es más salvaje, más dramática y más auténtica. La visita es guiada y se hace en grupo. No se permiten fotos en el interior.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Cañón subterráneo de más de 200 metros de profundidad</span>
+            <a href="https://maps.google.com/?q=Skocjanske+jame,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">El río Reka fluyendo bajo tierra — sonido impresionante</span>
+            <a href="https://maps.google.com/?q=Skocjanske+jame,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Formaciones de estalactitas y estalagmitas milenarias</span>
+            <a href="https://maps.google.com/?q=Skocjanske+jame,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Puentes colgantes sobre el abismo interior · Lago Muerto al final del recorrido</span>
+            <a href="https://maps.google.com/?q=Skocjanske+jame,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Horario:</strong> junio–septiembre, 10:00–17:00, visita guiada cada hora<br>
+        <a href="https://maps.google.com/?q=Skocjan+Caves+parking,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking:</strong></a> Gratuito<br>
+        <strong>Duración:</strong> ~2h de visita guiada<br>
+        <strong>Imprescindible:</strong> Llevar ropa de abrigo (dentro hay ~12°C incluso en verano)<br>
+        <strong>Reserva previa:</strong> Obligatoria en julio en <a href="https://www.park-skocjanske-jame.si" target="_blank" rel="noopener" style="color:var(--turquoise)">park-skocjanske-jame.si</a>
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Skocjan+Caves" target="_blank" rel="noopener" class="map-btn">📍 Cuevas de Škocjan</a>
+      </div>
+      <div class="climate-card">
+        <strong>⛅ Clima — Interior kárstico (julio)</strong><br>
+        28°C máx / 16°C mín · Interior de la cueva 12°C todo el año · Llevar capa de abrigo
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Piran -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-piran">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/11003752/pexels-photo-11003752.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Piran joya de la costa eslovena" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Piran</h3>
+          <p class="accordion-subtitle">Ciudad veneciana · Plaza Tartini · Murallas medievales · Giuseppe Tartini 1692</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-piran" hidden>
+      <div class="accordion-img-wrap">
+        <img src="https://images.pexels.com/photos/11003752/pexels-photo-11003752.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop" alt="Piran panorámica desde el mar Adriático" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="content-section">
+        <h4>Historia</h4>
+        <p>Piran es la joya de la <strong>costa eslovena</strong>, un pueblo medieval de arquitectura veneciana que parece trasladado directamente del Adriático italiano. La ciudad fue fundada por los griegos y Roma la romanizó con el nombre de <em>Piranon</em>. Desde el siglo XII hasta finales del XVIII estuvo bajo el dominio de la <strong>República de Venecia</strong>, que dejó una huella imborrable en su arquitectura, idioma y cultura.</p>
+        <p style="margin-top:10px">Las <strong>murallas de Piran</strong> comenzaron a construirse en el siglo VII y a lo largo de casi 800 años fueron ampliadas. Hoy la parte mejor conservada está abierta al público con vistas impresionantes de la bahía.</p>
+        <p style="margin-top:10px">La <strong>Plaza Tartini</strong> (Tartinijev trg) es el corazón de Piran, una plaza ovalada rodeada de casas de colores pastel. Lleva el nombre de <strong>Giuseppe Tartini</strong> (1692–1770), el violinista y compositor nacido aquí y famoso por su sonata "El Trino del Diablo". En el centro de la plaza hay una estatua en su honor.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Plaza Tartini:</strong> el centro histórico, con su ambiente veneciano único</span>
+            <a href="https://maps.google.com/?q=Tartinijev+trg,Piran,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Murallas medievales:</strong> vistas panorámicas espectaculares de la bahía y la costa</span>
+            <a href="https://maps.google.com/?q=Piran+city+walls,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Campanario Iglesia de San Jorge:</strong> las mejores vistas de Piran y el Adriático</span>
+            <a href="https://maps.google.com/?q=Church+of+St+George,Piran,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Callejuelas del casco medieval:</strong> perderse sin rumbo es el plan</span>
+            <a href="https://maps.google.com/?q=Tartinijev+trg,Piran,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text"><strong>Parking Fornače:</strong> aparcar aquí (~2€/h) y entrar a pie al casco histórico</span>
+            <a href="https://maps.google.com/?q=Parking+Fornace,Piran,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <strong>Parking:</strong> Piran está prácticamente restringida al tráfico de vehículos.<br>
+        <a href="https://maps.google.com/?q=Parking+Fornace,+Piran,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Fornače:</strong></a> ~2€/h (~18€/día). El más cercano al casco histórico, a 10 min a pie. Pago con EasyPark.<br>
+        <a href="https://maps.google.com/?q=Parking+Arze,+Lucija,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Arze (Lucija):</strong></a> ~1€/h (~8€/día). A 2 km de Piran, con bus lanzadera gratuito al centro cada 15 min.<br>
+        <a href="https://maps.google.com/?q=Parking+Portoroz,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Portorož:</strong></a> Varios parkings, ~1,50€/h. Bus gratuito a Piran.<br>
+        <strong>Alojamiento:</strong> Buscar en Portorož o Lucija (2 km), más económico y con parking para furgoneta.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Piran,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Piran</a>
+        <a href="https://maps.google.com/?q=Tartini+Square,+Piran" target="_blank" rel="noopener" class="map-btn">📍 Plaza Tartini</a>
+        <a href="https://maps.google.com/?q=Piran+City+Wall" target="_blank" rel="noopener" class="map-btn">📍 Murallas</a>
+        <a href="https://maps.google.com/?q=Parking+Fornace,+Piran" target="_blank" rel="noopener" class="map-btn">📍 Parking Fornače</a>
+        <a href="https://maps.google.com/?q=Portoroz,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Portorož</a>
+      </div>
+      <div class="climate-card">
+        <strong>☀️ Clima — Costa / Piran (julio)</strong><br>
+        29°C máx / 20°C mín · Soleado, brisa marina, poca lluvia
+      </div>
+    </div>
+  </div>
+
+  <!-- Gastronomía Día 5 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-5">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Costa eslovena · Mariscos adriáticos · Prosciutto kárstico</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-5" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Mariscos y pescado fresco</td><td>Almejas (Piranke), mejillones, lubina, dorada. Los restaurantes de la orilla son excelentes</td></tr>
+            <tr><td>Arroz negro con calamares</td><td>De influencia veneciana, uno de los platos costeros más representativos</td></tr>
+            <tr><td>Prosciutto kárstico + Teran</td><td>El jamón curado del Karst, maridado con el vino tinto Teran. La combinación regional más típica</td></tr>
+            <tr><td>Jamón kárstico con mozzarella</td><td>Antipasto clásico de la zona, con queso fresco local</td></tr>
+            <tr><td>Buzara de mejillones</td><td>Mejillones en salsa de vino blanco, ajo y pan rallado</td></tr>
+            <tr><td>Fritos de calamares</td><td>Calamares rebozados frescos, en cualquier "ribarnica" (pescadería-restaurante) frente al mar</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes en Piran</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Restaurante Ivo</h5>
+              <p>Junto al puerto · Calamares, mejillones y arroz con marisco. Muy bien valorado por los locales. <strong>~15–22€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Fritolin pri Cantini</h5>
+              <p>Junto al puerto pesquero · Fritos de pescado y mariscos para llevar o comer en terraza. Informal y barato. <strong>~8–12€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Pri Mari</h5>
+              <p>Callejón del casco antiguo · Pequeño y auténtico. Pescado del día y pasta casera. <strong>~14–20€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Restaurantes Plaza Tartini</h5>
+              <p>Frente a la plaza · Los restaurantes junto al mar ofrecen buena calidad-precio. Más turísticos pero con ambiente. <strong>~18–28€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 6 ═══════════════════════════════ -->
+<section id="dia-6" class="day-section" aria-labelledby="dia6-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/3848158/pexels-photo-3848158.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 6</span>
+      <p class="day-date">Sábado, 18 de julio</p>
+      <h2 class="day-title" id="dia6-title">Día en la Costa — Piran, Izola, Salinas</h2>
+      <span class="day-km-badge">🚐 ~25 km · Día de relax</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 6 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Portorož / alojamiento</div>
+          <div class="timeline-time">Mañana</div>
+        </div>
+      </div>
+      <div class="timeline-leg">2 km / bus gratis</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🌊 Piran</div>
+          <div class="timeline-time">Mañana completa — Baño, callejear, mercado</div>
+        </div>
+      </div>
+      <div class="timeline-leg">7 km / 10 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🐟 Izola</div>
+          <div class="timeline-time">Después de comer — Puerto pesquero</div>
+        </div>
+      </div>
+      <div class="timeline-leg">8 km / 10 min</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🧂 Salinas de Sečovlje</div>
+          <div class="timeline-time">Tarde (opcional) — Parque Natural</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Izola -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-izola">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--turquoise))">
+          <img src="https://images.pexels.com/photos/9244253/pexels-photo-9244253.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Izola puerto adriático" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Izola</h3>
+          <p class="accordion-subtitle">Isla unida al continente s.XVIII · Puerto pesquero · Iglesia San Mauro</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-izola" hidden>
+      <div class="content-section" style="margin-top:20px">
+        <h4>Historia</h4>
+        <p>Izola (en esloveno "isla") era originalmente una pequeña isla unida al continente en el siglo XVIII por un dique y una calzada. Como Piran, fue una ciudad veneciana durante siglos, visible en su arquitectura. Es un pueblo pesquero más tranquilo y auténtico que Piran, sin el turismo masificado. Su puerto aún está lleno de barcos pesqueros locales.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Puerto pesquero — ideal para ver las barcas de pesca</span>
+            <a href="https://maps.google.com/?q=Izola+harbor,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Iglesia de San Mauro (siglo XV, con campanario visible desde el mar)</span>
+            <a href="https://maps.google.com/?q=Church+of+San+Maure,Izola,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Paseo marítimo y calles del casco histórico, más tranquilas que las de Piran</span>
+            <a href="https://maps.google.com/?q=Izola+promenade,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Terrazas de restaurantes de pescado fresco directamente en el puerto</span>
+            <a href="https://maps.google.com/?q=Izola+harbor,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <a href="https://maps.google.com/?q=Parking+Izola+harbor,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Izola centro:</strong></a> ~1€/h. Aparcamiento junto al puerto, cerca del casco histórico.<br>
+        <a href="https://maps.google.com/?q=Parking+Lonka,+Izola,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Lonka:</strong></a> Gratuito, a 5 min a pie del centro. Buena opción para furgonetas.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Izola,+Slovenia" target="_blank" rel="noopener" class="map-btn">📍 Izola</a>
+      </div>
+      <div class="climate-card">
+        <strong>☀️ Clima — Costa / Piran (julio)</strong><br>
+        29°C máx / 20°C mín · Soleado, brisa marina, poca lluvia
+      </div>
+    </div>
+  </div>
+
+  <!-- Acordeón: Salinas Sečovlje -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-salinas">
+      <div class="accordion-header-content">
+        <div class="accordion-thumb-wrap" style="width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#a8d8ea,#d4a853)">
+          <img src="https://images.pexels.com/photos/8414049/pexels-photo-8414049.jpeg?auto=compress&cs=tinysrgb&w=160&h=160&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block" alt="Salinas de Sečovlje vista aérea" loading="lazy" onerror="this.style.opacity='0'">
+        </div>
+        <div>
+          <h3 class="accordion-title">Salinas de Sečovlje</h3>
+          <p class="accordion-subtitle">Siglo XIII · Parque Natural · Sal Piranska DOP</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-salinas" hidden>
+      <div class="content-section" style="margin-top:20px">
+        <h4>Historia</h4>
+        <p>Las Salinas de Sečovlje son uno de los humedales más importantes de la costa adriática eslovena, cerca de la frontera con Croacia. La producción de sal aquí data de la <strong>Edad Media</strong> (siglo XIII). Hoy son un <strong>Parque Natural</strong> y Reserva de la Biosfera, y un museo al aire libre sobre la producción tradicional de sal. La sal de Piran (<em>Piranska sol</em>) tiene <strong>Denominación de Origen</strong> y es famosa en toda Europa.</p>
+      </div>
+      <div class="content-section">
+        <h4>Qué ver</h4>
+        <ul class="bullet-list" style="list-style:none;padding:0">
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Parque Natural de las Salinas — Museo al aire libre sobre producción tradicional de sal</span>
+            <a href="https://maps.google.com/?q=Secoveljske+soline,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Museo de la sal — historia de la producción salinera desde el siglo XIII</span>
+            <a href="https://maps.google.com/?q=Salt+museum+Secovlje,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Observación de aves y paseos entre los estanques de colores rojizos y rosas</span>
+            <a href="https://maps.google.com/?q=Secoveljske+soline,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+          <li class="qvitem">
+            <span class="qv-bullet">✦</span>
+            <span class="qv-text">Compra de sal Piranska DOP directamente en las salinas</span>
+            <a href="https://maps.google.com/?q=Secoveljske+soline,Slovenia" target="_blank" rel="noopener" class="gps-pin" title="Ver en Google Maps"><svg viewBox="0 0 24 24" width="16" height="16" fill="#c00"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div class="practical-box">
+        <a href="https://maps.google.com/?q=Secovlje+Salina+Nature+Park+parking,+Slovenia" target="_blank" rel="noopener" style="color:var(--turquoise)"><strong>📍 Parking Salinas (entrada Lera):</strong></a> ~5€/vehículo (incluido en la entrada al parque).<br>
+        <strong>Entrada:</strong> ~8€ adultos / ~5€ niños.
+      </div>
+      <div class="maps-group">
+        <a href="https://maps.google.com/?q=Secovlje+Salina+Nature+Park" target="_blank" rel="noopener" class="map-btn">📍 Salinas de Sečovlje</a>
+      </div>
+      <div class="climate-card">
+        <strong>☀️ Clima — Costa (julio)</strong><br>
+        29°C máx / 20°C mín · Soleado, brisa marina, poca lluvia
+      </div>
+    </div>
+  </div>
+
+  <!-- Gastronomía Día 6 -->
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-6">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">🍽️ Dónde y qué comer</h3>
+          <p class="accordion-subtitle">Costa eslovena · Pescado fresco · Mariscos · Teran</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-6" hidden>
+      <div style="margin-top:16px">
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Pescado fresco del Adriático</td><td>Lubina, dorada, merluza. En los restaurantes directamente frente al mar de Izola</td></tr>
+            <tr><td>Mariscos — Almejas Piranke</td><td>Las almejas de la bahía de Piran son especialmente sabrosas</td></tr>
+            <tr><td>Buzara de mejillones</td><td>Mejillones en salsa de vino blanco, ajo y pan rallado</td></tr>
+            <tr><td>Prosciutto kárstico + Teran</td><td>Maridaje clásico de la zona kárstica, el vino Teran es el mejor acompañante</td></tr>
+            <tr><td>Fritos de calamares</td><td>En cualquier pescadería-restaurante frente al mar, recién salidos del aceite</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Restaurantes recomendados en la costa</h4>
+          <div class="restaurant-cards">
+            <div class="restaurant-card">
+              <h5>Gostilna Sidro (Izola)</h5>
+              <p>Puerto de Izola · Pescado fresco del día, ambiente de puerto pesquero auténtico. <strong>~12–18€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Ribič (Izola)</h5>
+              <p>Frente al mar · Mariscos y pescado a la parrilla. Buena calidad sin precios turísticos. <strong>~15–22€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Fritolin pri Cantini (Piran)</h5>
+              <p>Puerto pesquero · Fritos de pescado para llevar. Perfecto para un almuerzo informal. <strong>~8–12€/persona</strong></p>
+            </div>
+            <div class="restaurant-card">
+              <h5>Gostilna za Gradom (Piran)</h5>
+              <p>Casco antiguo · Cocina casera a precios locales, fuera de la zona más turística. <strong>~10–16€/persona</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DÍA 7 ═══════════════════════════════ -->
+<section id="dia-7" class="day-section" aria-labelledby="dia7-title">
+  <div class="day-header">
+    <div class="day-header-bg" style="background-image:url('https://images.pexels.com/photos/13224212/pexels-photo-13224212.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop')"></div>
+    <div class="day-header-overlay"></div>
+    <div class="day-header-content">
+      <span class="day-badge">Día 7</span>
+      <p class="day-date">Domingo, 19 de julio</p>
+      <h2 class="day-title" id="dia7-title">Regreso a Venecia</h2>
+      <span class="day-km-badge">🚐 190 km · ~2h</span>
+    </div>
+  </div>
+
+  <!-- Timeline Día 7 -->
+  <div class="route-timeline">
+    <h3>Recorrido del día</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🏠 Salida desde Portorož/Piran</div>
+          <div class="timeline-time">08:30</div>
+        </div>
+      </div>
+      <div class="timeline-leg">190 km / ~2h vía autopista A1/E61 + Italia</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">✈️ Llegada al Aeropuerto Marco Polo (Venecia)</div>
+          <div class="timeline-time">10:30 — Entrega furgoneta + check-in + control de seguridad</div>
+        </div>
+      </div>
+      <div class="timeline-leg">Check-in y facturación de equipajes</div>
+      <div class="timeline-step">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot" style="background:var(--accent);box-shadow:0 0 0 2px var(--accent)"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🛫 Vuelo IB0678 hacia Madrid T4</div>
+          <div class="timeline-time">12:00 — Salida</div>
+        </div>
+      </div>
+      <div class="timeline-leg">2h 40min de vuelo</div>
+      <div class="timeline-step" style="margin-top:8px">
+        <div class="timeline-dot-col">
+          <div class="timeline-dot" style="background:var(--accent);box-shadow:0 0 0 2px var(--accent)"></div>
+        </div>
+        <div class="timeline-info">
+          <div class="timeline-place">🛬 Aterrizaje en Madrid T4</div>
+          <div class="timeline-time">14:40</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="practical-box" style="margin-top:0">
+    <strong>Ventaja de la Opción 3:</strong> Salir desde Piran a las 8:00 AM es mucho más cómodo que salir desde Bled (que requeriría madrugar más). La costa está ~2h de Venecia.<br><br>
+    <strong>Antes de salir:</strong> Llenar el depósito en Eslovenia antes de cruzar a Italia (la gasolina es ligeramente más barata). Recuerda devolver la furgoneta con el mismo nivel de combustible.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ RESUMEN KM ═══════════════════════════════ -->
+<section id="km" aria-labelledby="km-title">
+  <h2 class="section-title" id="km-title">📏 Resumen de Kilómetros</h2>
+  <table class="km-table">
+    <thead>
+      <tr>
+        <th>Tramo</th>
+        <th>Km</th>
+        <th>Tiempo aprox.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Venecia → Bled</td><td>220 km</td><td>2h 30min</td></tr>
+      <tr><td>Bled → Vintgar</td><td>4 km</td><td>10 min</td></tr>
+      <tr><td>Vintgar → Bohinj</td><td>30 km</td><td>42 min</td></tr>
+      <tr><td>Bohinj → Bled (vuelta)</td><td>30 km</td><td>42 min</td></tr>
+      <tr><td>Bled → Bovec (vía Vršič)</td><td>75 km</td><td>2h</td></tr>
+      <tr><td>Bovec → Bled (vuelta)</td><td>50 km</td><td>1h 15min</td></tr>
+      <tr><td>Bled → Castillo Predjama</td><td>115 km</td><td>1h 20min</td></tr>
+      <tr><td>Predjama → Liubliana</td><td>55 km</td><td>45 min</td></tr>
+      <tr><td>Liubliana → Cuevas Škocjan</td><td>77 km</td><td>55 min</td></tr>
+      <tr><td>Škocjan → Piran</td><td>45 km</td><td>40 min</td></tr>
+      <tr><td>Piran → Venecia (aeropuerto)</td><td>190 km</td><td>2h</td></tr>
+      <tr><td><strong>Total km del viaje</strong></td><td><strong>~860 km</strong></td><td></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════ GASTRONOMÍA GENERAL ═══════════════════════════════ -->
+<section id="gastro" aria-labelledby="gastro-title">
+  <h2 class="section-title" id="gastro-title">🍽️ Gastronomía Eslovena</h2>
+
+  <div class="accordion">
+    <button class="accordion-header" aria-expanded="false" aria-controls="body-gastro-general">
+      <div class="accordion-header-content">
+        <div>
+          <h3 class="accordion-title">Platos imprescindibles de Eslovenia</h3>
+          <p class="accordion-subtitle">Guía completa por zonas — 13 platos + bebidas típicas</p>
+        </div>
+      </div>
+      <span class="accordion-chevron">▾</span>
+    </button>
+    <div class="accordion-body" id="body-gastro-general" hidden>
+      <div style="margin-top:16px">
+        <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin-bottom:12px">Platos principales</h4>
+        <table class="gastro-table">
+          <thead><tr><th>Plato</th><th>Descripción</th><th>Zona</th></tr></thead>
+          <tbody>
+            <tr><td>Kremna rezina</td><td>Pastel de hojaldre, crema y nata. El postre de Bled</td><td><span class="gastro-zone-label">Bled</span></td></tr>
+            <tr><td>Trucha del Soča</td><td>Trucha marmolada autóctona de río, manjar protegido</td><td><span class="gastro-zone-label">Valle Soča</span></td></tr>
+            <tr><td>Queso Tolminc</td><td>DOP, leche cruda de vaca Cika, sabor terroso y dulce</td><td><span class="gastro-zone-label">Valle Soča</span></td></tr>
+            <tr><td>Jota</td><td>Sopa de chucrut, judías y cerdo ahumado</td><td><span class="gastro-zone-label">Nacional</span></td></tr>
+            <tr><td>Kranjska klobasa</td><td>La salchicha ahumada de Carniola, con mostaza y rábano</td><td><span class="gastro-zone-label">Liubliana</span></td></tr>
+            <tr><td>Štruklji</td><td>Masa enrollada con rellenos dulces o salados</td><td><span class="gastro-zone-label">Nacional</span></td></tr>
+            <tr><td>Potica</td><td>Pastel enrollado con nueces, miel y estragón. El dulce nacional</td><td><span class="gastro-zone-label">Nacional</span></td></tr>
+            <tr><td>Frtalja</td><td>Tortilla con queso Tolmin</td><td><span class="gastro-zone-label">Valle Soča</span></td></tr>
+            <tr><td>Prosciutto kárstico + Teran</td><td>Jamón curado kárstico con vino tinto local</td><td><span class="gastro-zone-label">Karst/Costa</span></td></tr>
+            <tr><td>Mariscos adriáticos</td><td>Calamares, mejillones, almejas, lubina fresca</td><td><span class="gastro-zone-label">Costa</span></td></tr>
+            <tr><td>Žganci</td><td>Gachas de trigo sarraceno. Desayuno alpino</td><td><span class="gastro-zone-label">Alpes</span></td></tr>
+            <tr><td>Ričet</td><td>Potaje de cebada con embutido. Plato de montaña</td><td><span class="gastro-zone-label">Alpes</span></td></tr>
+            <tr><td>Sopa de calabaza</td><td>Con aceite de semilla de calabaza dorado</td><td><span class="gastro-zone-label">Liubliana</span></td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--primary-dark);margin:24px 0 12px">Bebidas típicas</h4>
+        <table class="gastro-table">
+          <thead><tr><th>Bebida</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td>Teran</td><td>Vino tinto de la región del Karst, intenso y tánico. El más tradicional de Eslovenia</td></tr>
+            <tr><td>Vino de Brda</td><td>Blancos y tintos excelentes de la región vinícola de Brda (frontera con Italia)</td></tr>
+            <tr><td>Miel eslovena</td><td>Eslovenia tiene una de las tradiciones apícolas más ricas de Europa. Comprar en mercados locales</td></tr>
+            <tr><td>Pivo (cerveza)</td><td>La cerveza Union (de Liubliana) es la más popular del país</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  <p class="footer-title">Eslovenia 2026 · 🇸🇮</p>
+  <p class="footer-sub">13 – 19 de julio · 6 viajeros · 860 km de aventura</p>
+  <pre class="footer-ascii">VENECIA (Aeropuerto) → [220 km]
+        ↓
+BLED / BOHINJ [3 noches]
+  ├── Lago Bled + Castillo
+  ├── Garganta de Vintgar (4 km al norte)
+  ├── Lago Bohinj (30 km al suroeste)
+  └── Excursión: Valle del Soča vía Vršič [día completo]
+        ↓ [115 km]
+CASTILLO DE PREDJAMA
+        ↓ [55 km]
+LIUBLIANA [1 noche]
+  ├── Centro histórico, Puente Triple
+  ├── Castillo de Liubliana
+  └── Barrio Metelkova
+        ↓ [77 km]
+CUEVAS DE ŠKOCJAN
+        ↓ [45 km]
+PIRAN / PORTOROŽ [2 noches]
+  ├── Piran (casco medieval veneciano)
+  ├── Izola (pueblo pesquero)
+  └── Salinas de Sečovlje
+        ↓ [190 km]
+VENECIA (Aeropuerto)</pre>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── ACORDEONES ──────────────────────────────────── */
+  function initAccordions() {
+    const headers = document.querySelectorAll('.accordion-header');
+
+    headers.forEach(function(header) {
+      const bodyId = header.getAttribute('aria-controls');
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+
+      // Si está marcado como expanded en el HTML, abrir
+      if (header.getAttribute('aria-expanded') === 'true') {
+        body.removeAttribute('hidden');
+      }
+
+      header.addEventListener('click', function() {
+        const isOpen = header.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          // Cerrar
+          header.setAttribute('aria-expanded', 'false');
+          body.setAttribute('hidden', '');
+        } else {
+          // Abrir
+          header.setAttribute('aria-expanded', 'true');
+          body.removeAttribute('hidden');
+        }
+      });
+
+      // Soporte teclado
+      header.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          header.click();
+        }
+      });
+    });
+  }
+
+  /* ── LAZY LOAD CON FADE-IN ───────────────────────── */
+  function initLazyImages() {
+    const images = document.querySelectorAll('.accordion-img-wrap img, .accordion-thumb');
+    images.forEach(function(img) {
+      if (img.complete && img.naturalWidth > 0) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function() {
+          img.classList.add('loaded');
+        });
+        img.addEventListener('error', function() {
+          // Si falla, el contenedor ya tiene el gradiente de fallback
+          img.style.display = 'none';
+        });
+      }
+    });
+  }
+
+  /* ── PARALLAX HERO ───────────────────────────────── */
+  var heroBg = document.getElementById('hero-bg');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updateParallax() {
+    if (prefersReducedMotion || !heroBg) return;
+    var scrolled = window.pageYOffset;
+    heroBg.style.transform = 'translateY(' + (scrolled * 0.4) + 'px)';
+  }
+
+  /* ── SCROLL SPY + NAV ────────────────────────────── */
+  var nav = document.getElementById('main-nav');
+  var navBtns = document.querySelectorAll('.nav-btn[data-target]');
+  var sections = [];
+
+  navBtns.forEach(function(btn) {
+    var id = btn.getAttribute('data-target');
+    var el = document.getElementById(id);
+    if (el) sections.push({ btn: btn, el: el });
+  });
+
+  function updateScrollSpy() {
+    var scrollY = window.pageYOffset + 100;
+
+    // Nav background
+    if (window.pageYOffset > 80) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+
+    // Active button
+    var current = null;
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= scrollY) {
+        current = s.btn;
+      }
+    });
+
+    navBtns.forEach(function(b) { b.classList.remove('active'); });
+    if (current) current.classList.add('active');
+  }
+
+  /* ── FADE-IN ON SCROLL ───────────────────────────── */
+  function initFadeIn() {
+    if (prefersReducedMotion) {
+      document.querySelectorAll('.day-section').forEach(function(s) {
+        s.classList.add('visible');
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.07 });
+
+    document.querySelectorAll('.day-section').forEach(function(s) {
+      observer.observe(s);
+    });
+  }
+
+  /* ── SCROLL HANDLER ──────────────────────────────── */
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        updateParallax();
+        updateScrollSpy();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ── SCROLL TO SECTION ───────────────────────────── */
+  window.scrollToSection = function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var navH = nav ? nav.offsetHeight : 0;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  };
+
+  /* ── INIT ────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function() {
+    initAccordions();
+    initLazyImages();
+    initFadeIn();
+    updateScrollSpy();
+  });
+
+  // También ejecutar si DOMContentLoaded ya pasó
+  if (document.readyState !== 'loading') {
+    initAccordions();
+    initLazyImages();
+    initFadeIn();
+    updateScrollSpy();
+  }
+
+})();
+</script>
+</body>
+</html>
