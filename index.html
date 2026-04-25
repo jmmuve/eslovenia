@@ -1591,9 +1591,10 @@ footer {
       zoomControl: true
     }).setView([46.25, 14.1], 9);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 18
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
     }).addTo(map);
 
     function mkIcon(color) {
@@ -1655,7 +1656,12 @@ footer {
       var dayLatLngs = [];
       day.points.forEach(function(p) {
         var marker = L.marker([p.lat, p.lng], { icon: mkIcon(day.color) }).addTo(map);
-        marker.bindPopup('<strong>' + p.name + '</strong><br>' + p.info);
+        var gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+        var popupHtml =
+          '<strong>' + p.name + '</strong> ' +
+          '<a href="' + gmapsUrl + '" target="_blank" rel="noopener" title="Abrir en Google Maps" style="text-decoration:none;vertical-align:middle">📍</a>' +
+          '<br>' + p.info;
+        marker.bindPopup(popupHtml);
         allLatLngs.push([p.lat, p.lng]);
         dayLatLngs.push([p.lat, p.lng]);
       });
