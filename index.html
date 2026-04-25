@@ -1591,10 +1591,9 @@ footer {
       zoomControl: true
     }).setView([46.25, 14.1], 9);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
     }).addTo(map);
 
     function mkIcon(color) {
@@ -1672,15 +1671,22 @@ footer {
 
     // Líneas de conexión entre días (trayectos nocturnos / traslados)
     var transfers = [
+      // Día 1 — Venecia (aeropuerto) → Bled (ida)
+      { from: [45.5050, 12.3519], to: [46.3683, 14.1103], color: '#d1d5db' },
+      // Día 2 — Bled → Vintgar y vuelta Bohinj → Bled
       { from: [46.3683, 14.1103], to: [46.3920, 14.0860], color: '#d1d5db' },
       { from: [46.2856, 13.8600], to: [46.3683, 14.1103], color: '#d1d5db' },
-      { from: [46.3683, 14.1103], to: [46.4380, 13.7437], color: '#d1d5db' },
+      // Día 3 — Bled → Lago Jasna (primer punto del paso) y vuelta Kobarid → Bled
+      { from: [46.3683, 14.1103], to: [46.4744, 13.7822], color: '#d1d5db' },
       { from: [46.2480, 13.5790], to: [46.3683, 14.1103], color: '#d1d5db' },
+      // Día 4 — Bled → Predjama y traslado nocturno Liubliana → Škocjan (D4→D5)
       { from: [46.3683, 14.1103], to: [45.8156, 14.1267], color: '#d1d5db' },
       { from: [46.0511, 14.5060], to: [45.6636, 14.0011], color: '#d1d5db' },
+      // Día 5 — Škocjan → Piran (con check-in en Kovač en medio, simplificado)
       { from: [45.6636, 14.0011], to: [45.5283, 13.5680], color: '#d1d5db' },
-      { from: [45.5283, 13.5680], to: [45.5344, 13.6557], color: '#d1d5db' },
-      { from: [45.5344, 13.6557], to: [45.4840, 13.5950], color: '#d1d5db' },
+      // Día 6 — Piran (mañana) → Strunjan (primera parada nueva)
+      { from: [45.5283, 13.5680], to: [45.5394, 13.6019], color: '#d1d5db' },
+      // Día 7 — Portorož/Piran → Venecia (aeropuerto)
       { from: [45.5283, 13.5680], to: [45.5050, 12.3519], color: '#d1d5db' }
     ];
 
